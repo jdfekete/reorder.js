@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Leaf Order Test</title>
+<script src="../science.v1.js"></script>
+<script src="../reorder.v1.js"></script>
+
+<h1>Leaf Order Test</h1>
+
+<script>
+    function eucl(a, b) {
+	var x = b - a;
+	return x*x;
+    };
+  var data = [3, 4, 1, 2];
+  var x = reorder.leafOrder().distance(eucl)(data);
+
+  console.log("Order: ", reorder.permute(data, x));
+</script>
+</html>

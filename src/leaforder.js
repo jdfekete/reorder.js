@@ -15,18 +15,39 @@
 
 reorder.leafOrder = function() {
     var distanceMatrix = null,
-        distance = science.stats.distance.euclidean,
-        root = null, 
-        isLeaf = function(n) { return n.depth == 0; }
+        distance = reorder.distance.euclidean,
+	linkage = "complete",
+	debug = 0,
+        leavesMap = {},
+        orderMap = {};
+
+    function isLeaf(n) {
+	return n.depth == 0;
+    }
+
     function leaves(n) {
 	if (n == null) return [];
-	if (isLeaf(n)) return [n.observation];
+	if (n.id in leavesMap)
+	    return leavesMap[n.id];
+	return (leavesMap[n.id] = _leaves(n));
+    }
+
+    function _leaves(n) {
+	if (n == null) return [];
+	if (n.depth == 0) return [n.id];
 	return leaves(n.left).concat(leaves(n.right));
     }
-    
+
     function order(v, i, j) {
-	if (isLeaf(v))
-	    return [0, [v]];
+	var key = "k"+v.id + "-"+i+"-"+j; // ugly key
+	if (key in orderMap) 
+	    return orderMap[key];
+	return (orderMap[key] = _order(v, i, j));
+    }
+    
+    function _order(v, i, j) {
+	if (v.depth == 0) //isLeaf(v))
+	    return [0, [v.id]];
 	var l = v.left, r = v.right;
 	var L = leaves(l), R = leaves(r);
 	
@@ -39,7 +60,7 @@ reorder.leafOrder = function() {
 	}
 	else 
 	    throw {error: "Node is not common ancestor of "+i+", "+j};
-	var Wl = leaver(w.left), Wr = leaves(w.right);
+	var Wl = leaves(w.left), Wr = leaves(w.right);
 	var Ks = Wr.indexOf(i) != -1 ? Wl : Wr;
 	if (Ks.length == 0) 
 	    Ks = [i];
@@ -49,51 +70,83 @@ reorder.leafOrder = function() {
 	if (Ls.length == 0)
 	    Ls = [j];
 
-	var maximum = Infinity, optimal_order = [];
+	var max = Infinity, optimal_order = [];
 
-	for (var k in Ks) {
-	    var w_max = order(w, i, k);
-	    for (var l in Ls) {
-		var x_max = order(x, l, j);
-		var sim = w_max[0] + distanceMatrix[k][l] + x_max[0];
+	for (var k = 0; k < Ks.length; k++) {
+	    var w_max = order(w, i, Ks[k]);
+	    for (var m = 0; m < Ls.length; m++) {
+		var x_max = order(x, Ls[m], j);
+		var sim = w_max[0] + distanceMatrix[Ks[k]][Ls[m]] + x_max[0];
 		if (sim < max) {
 		    max = sim;
-		    optimal_order = w_max.order.concat(x_max.order);
+		    optimal_order = w_max[1].concat(x_max[1]);
 		}
 	    }
 	}
 	return [max, optimal_order];
     }
 
-    function order(v) {
+    function orderFull(v) {
+        leavesMap = {};
+        orderMap = {};
 	var max = Infinity,
 	    optimal_order = [],
 	    left = leaves(v.left),
 	    right = leaves(v.right);
 	
-	for (var i in left) {
-	    for (var j in right) {
-		var so = order(v, i. j);
+	if (debug)
+	    console.log(reorder.printhcluster(v,0));
+
+	for (var i = 0; i < left.length; i++) {
+	    for (var j = 0; j < right.length; j++) {
+		var so = order(v, left[i], right[j]);
 		if (so[0] < max) {
 		    max = so[0];
 		    optimal_order = so[1];
 		}
 	    }
 	}
+	distanceMatrix = null;
 	return optimal_order;
     }
+
+    function leafOrder(vector) {
+	if (distanceMatrix == null)
+	    distanceMatrix = (reorder.dist().distance(distance))(vector);
+	var hcluster = science.stats.hcluster()
+		.linkage(linkage)
+		.distanceMatrix(distanceMatrix);
+	return orderFull(hcluster(vector));
+    }
+
+    leafOrder.debug = function(x) {
+	if (!arguments.length) return debug;
+	debug = x;
+	return leafOrder;
+    };
 
     leafOrder.distance = function(x) {
 	if (!arguments.length) return distance;
 	distance = x;
+	distanceMatrix = null;
 	return leafOrder;
     };
 
-    function leafOrder(vector) {
-	var hcluster = science.stats.hcluster().distance(distance);
-	distanceMatrix = (reorder.dist().distance(distance))(vector);
-	return order(hcluster(vector));
-    }
+    leafOrder.linkage = function(x) {
+	if (!arguments.length) return linkage;
+	linkage = x;
+	return leafOrder;
+    };
+
+    leafOrder.distanceMatrix = function(x) {
+	if (!arguments.length) return distanceMatrix;
+	// copy
+	distanceMatrix = x.map(function(y) { return y.slice(0); });
+	return leafOrder;
+    };
+
+    leafOrder.orderFull = orderFull;
+
 
     return leafOrder;
 };

@@ -1,16 +1,24 @@
-reorder.random = function(n) {
-    var permutation = [], i;
-    
-    for (i=0; i < n; i++)
-	permutation.push(i);
-    for (i=0; i<(n-1); i++) { 
-	var random = Math.floor(Math.random()*(n-i))+i;
-	if (random != i) {
-	    var tmp = permutation[random];
-	    permutation[random]=permutation[i]; 
-	    permutation[i]=tmp;
+/* Fisher-Yates shuffle.
+   See http://bost.ocks.org/mike/shuffle/
+ */
+reorder.randomPermute = function(array, i, j) {
+    if (arguments.length < 3) {
+	j = array.length;
+	if (arguments.length < 2) {
+	    i = 0;
 	}
-    }  
-    return permutation;
+    }
+    var m = j-i, t, k;
+    while (m > 0) {
+	k = i+Math.floor(Math.random() * m--);
+	t = array[i+m];
+	array[i+m] = array[k];
+	array[k] = t;
+    }
+    return array;
+};
+
+reorder.randomPermutation = function(n) {
+    return reorder.randomPermute(reorder.permutation(n));
 };
 
