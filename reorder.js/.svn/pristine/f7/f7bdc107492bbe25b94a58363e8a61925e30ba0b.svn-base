@@ -1,0 +1,385 @@
+require("science");
+require("../reorder.v1");
+require("../reorder.v1");
+var seedrandom = require('seedrandom');
+
+var vows = require("vows"),
+    assert = require("assert");
+
+var suite = vows.describe("reorder.order");
+
+Math.seedrandom('reorder');
+
+assert.ORdeepEqual = function(actual, expected_list) {
+    for (var i = 0; i < expected_list.length; i++) {
+	var expected = expected_list[i];
+	if (deepEqual(actual, expected)) {
+	    assert.ok(actual, "Assert OK");
+	    return true;
+	}
+    }
+    assert.fail(actual, expected_list, "Assert: Expectations failed");
+    return false;
+  };
+
+
+function eucl(a, b) {
+    var x = b - a;
+    return x*x;
+};
+
+function fortytwo(a) { return a+42; }
+
+function lesssimple() {
+    var prefix = reorder.range(0, 10),
+        suffix;
+
+    var prev =10,
+        data = [prev],
+        next,
+        i, j;
+
+    for (i = 0; i < 30; i++) {
+        next = Math.random()+prev;
+        data.push(next);
+        prev = next;
+    }
+    suffix = reorder.range(Math.ceil(prev+1), Math.ceil(prev+21));
+    i = prefix.length;
+    j = i+data.length;
+    data = prefix.concat(data).concat(suffix);
+    //console.log("Original   : "+data);
+    var randata = reorder.randomPermute(data.slice(0), i, j);
+    //console.log("Shuffled   : "+randata);
+    var x = reorder.order().distance(eucl).limits(i, j)(randata);
+    //console.log("Permutation: "+randata);
+    assert.deepEqual(
+        reorder.stablepermute(randata, x), data);
+}
+
+function insert_simple(v, i, j) {
+    var x = reorder.order()
+            .distance(eucl)
+            .except([i, j])
+            (v);
+    assert.deepEqual(reorder.stablepermute(v, x),
+                     reorder.range(42, 42+v.length));
+}
+
+function insert_lesssimple() {
+    var plen = Math.round(Math.random()*20),
+        mlen = Math.round(Math.random()*20)+2,
+        slen = Math.round(Math.random()*20),
+        cut = Math.round(Math.random()*(plen+slen));
+    var prefix = reorder.range(42, 42+plen),
+        middle = reorder.range(42+plen, 42+plen+mlen),
+        suffix = reorder.range(42+plen+mlen, 42+plen+mlen+slen),
+        shuffled = reorder.randomPermute(prefix.concat(suffix));
+    
+    shuffled = shuffled.slice(0, cut)
+        .concat(middle)
+        .concat(shuffled.slice(cut));
+    //console.log("i="+cut+", j="+(cut+middle.length));
+    var x = reorder.order()
+            .distance(eucl)
+            .except([cut, cut+middle.length])
+            (shuffled);
+    assert.deepEqual(reorder.stablepermute(shuffled, x),
+                     prefix.concat(middle.concat(suffix)));
+    
+}
+
+suite.addBatch({
+    "order": {
+        "simple": function() {
+            var data = [-1, -2, 0, 2, 1, 4, 3, 10, 11, 12];
+            var x = reorder.order()
+                    .distance(eucl)
+                    .limits(3, 7)(data);
+            assert.deepEqual(reorder.stablepermute(data, x),
+                             [-1, -2, 0, 1, 2, 3, 4, 10, 11, 12]);
+        },
+        "lesssimple": lesssimple,
+        "evenharder": function() {
+            for (n = 10; n-- > 0; ) lesssimple();
+	},
+	"equiv-simple": function() {
+            var data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo),
+		shuffled = reorder.randomPermute(data.slice(0));
+            
+            var x = reorder.order()
+		    .distance(eucl)(shuffled);
+            assert.deepEqual(reorder.stablepermute(shuffled, x), data);
+	},
+	"equiv-simple2": function() {
+	    var data = [
+		[1, 1, 1, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 1, 1, 1],
+		[0, 0, 0, 0, 0, 0, 1, 1, 0],
+		[0, 0, 0, 1, 1, 1, 1, 1, 0],
+		[0, 0, 0, 1, 1, 1, 0, 0, 0],
+		[0, 0, 1, 1, 1, 1, 0, 0, 0]
+	    ];
+            
+            var x = reorder.order()
+//		    .distance(reorder.distance.manhattan)
+		    .linkage("single")
+		    .debug(0)(data);
+//	    console.log(toLetter(x));
+            assert.deepEqual(reorder.stablepermute(reorder.range(0,data.length), x),
+			     toNum([ 'a', 'f', 'e', 'd', 'c', 'b' ]));
+	},
+/*
+	"equiv-simple3": function() {
+	    var data = reorder.transpose([
+		[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+		[0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+		[1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1],
+		[1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1],
+		[0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+		[0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+		[0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0]
+		]);
+            
+            var x = reorder.order()
+		    .linkage("single")
+		    .debug(0)(data);
+	    console.log(toLetter(x));
+            assert.deepEqual(reorder.stablepermute(data, x),
+			     toNum(['n','j','a','e','f','i','m','p','b','o','l','g','d','c','k','h']));
+	},
+*/
+        "insert-simple": function() {
+            var prefix = [0, 1, 2, 3].map(fortytwo),
+                middle = [4, 5, 6, 7, 8].map(fortytwo),
+                suffix = [9, 10, 11, 12].map(fortytwo),
+                shuffled = reorder.randomPermute(prefix.concat(suffix));
+            
+            shuffled = shuffled.slice(0, 5)
+                .concat(middle)
+                .concat(shuffled.slice(5));
+            var x = reorder.order()
+                    .distance(eucl)
+                    .except([5, 5+middle.length])
+                    (shuffled);
+            assert.deepEqual(reorder.stablepermute(shuffled, x),
+                             reorder.range(0, 13).map(fortytwo));
+        },
+        "insert-1": function() {
+            insert_simple([74,44,48,72,70,67,46,53,76,52,45,42,49,77,47,68,43,73,51,55,54,69,75,50,56,57,58,59,60,61,62,63,64,65,66,71],24, 24+11);
+        },
+        "insert-2": function() {
+            insert_simple([44,70,69,66,43,71,46,73,67,47,65,68,42,72,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,48,49,45], 14, 14+15);
+        },
+        "insert-3": function() {
+            var data = [[1,1,0],
+                        [0,0,1],
+                        [1,1,0],
+                        [1,1,0],
+                        [0,0,1],
+                        [0,1,0],
+                        [0,1,0],
+                        [1,0,1],
+                        [1,1,0],
+                        [0,1,1],
+                        [0,0,1]
+                       ];
+            var x = reorder.order()
+                    .limits(1,10)
+                    .except([5, 10])
+                    .debug(0)
+                    (data);
+        // Since several rows are identical, there are multiple
+	// possible correct orderings
+	assert.ORdeepEqual(
+	    x,
+	    [
+		[0, 3, 2, 5, 6, 7, 8, 9, 4, 1, 10],
+		[0, 2, 3, 5, 6, 7, 8, 9, 4, 1, 10],
+		[0, 3, 2, 5, 6, 7, 8, 9, 1, 4, 10],
+		[0, 2, 3, 5, 6, 7, 8, 9, 1, 4, 10]
+	    ]);
+        },
+        "insert-4": function() {
+            var data = [[1,1,0],
+                        [0,0,1],
+                        [1,1,0],
+                        [1,1,0],
+                        [0,0,1],
+                        [0,1,0],
+                        [0,1,0],
+                        [1,0,1],
+                        [1,1,0],
+                        [0,1,1],
+                        [0,0,1]
+                       ];
+            var x = reorder.order()
+		    .limits(1,11)
+		    .except([3, 8])
+                    .debug(0)
+                    (data);
+        // Since several rows are identical, there are multiple
+	// possible correct orderings
+	assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
+        },
+	"insert-5": function() {
+	    var data = 
+		    [
+			[NaN,NaN,NaN],
+			[1,1,0],
+			[0,0,1],
+			[0,0,1],
+			[0,0,1],
+			[1,1,0],
+			[1,1,0],
+			[0,1,1],
+			[1,1,0],
+			[1,0,1],
+			[0,1,0],
+			[0,1,0],
+		    ];
+	    var x = reorder.order()
+		    .limits(1,12)
+		    .except([2, 4, 7, 12])
+		    .debug(0)
+	    (data);
+	    // Since several rows are identical, there are multiple
+	    // possible correct orderings
+	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
+	},
+	"insert-6": function() {
+	    var data = 
+		    [[1,1,0],
+		     [0,0,1],
+		     [1,1,0],
+		     [1,1,0],
+		     [0,0,1],
+		     [0,1,0],
+		     [0,1,0],
+		     [1,0,1],
+		     [1,1,0],
+		     [0,1,1],
+		     [0,0,1]
+		    ];
+	    var x = reorder.order()
+		    .limits(1,11)
+		    .except([1, 6])
+		    .debug(0)
+	    (data);
+	    // Since several rows are identical, there are multiple
+	    // possible correct orderings
+	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
+	},
+	"insert-7": function() {
+	    var data = 
+		    [
+			[0,0,1],
+			[1,1,0],
+			[1,1,0],
+			[0,0,1],
+			[0,1,0],
+			[0,1,0],
+			[1,0,1],
+			[1,1,0],
+			[0,1,1],
+			[0,0,1]
+		    ];
+	    var x = reorder.order()
+		    .limits(1,10)
+		    .except([5, 9])
+		    .debug(0)
+	    (data);
+	    // Since several rows are identical, there are multiple
+	    // possible correct orderings
+	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
+	},
+        "insert-lesssimple": insert_lesssimple,
+        "insert-evenharder": function() {
+            for (var i = 0; i < 20; i++) {
+                //console.log("Loop "+i);
+                insert_lesssimple();
+            }
+        }
+    }
+});
+
+function deepEqual(actual, expected) {
+  if (actual === expected) {
+    return true;
+
+  // } else if (Buffer.isBuffer(actual) && Buffer.isBuffer(expected)) {
+  //   if (actual.length != expected.length) return false;
+
+  //   for (var i = 0; i < actual.length; i++) {
+  //     if (actual[i] !== expected[i]) return false;
+  //   }
+  //   return true;
+
+  } else if (actual instanceof Date && expected instanceof Date) {
+    return actual.getTime() === expected.getTime();
+
+  } else if (typeof actual != 'object' && typeof expected != 'object') {
+    return actual == expected;
+
+  } else {
+    return objEquiv(actual, expected);
+  }
+};
+
+// Taken from node/lib/assert.js
+function isUndefinedOrNull(value) {
+  return value === null || value === undefined;
+}
+
+// Taken from node/lib/assert.js
+function isArguments(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+}
+
+// Taken from node/lib/assert.js
+function objEquiv(a, b) {
+  if (isUndefinedOrNull(a) || isUndefinedOrNull(b))
+    return false;
+  if (a.prototype !== b.prototype) return false;
+  if (isArguments(a)) {
+    if (!isArguments(b)) {
+      return false;
+    }
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return deepEqual(a, b);
+  }
+  try {
+    var ka = Object.keys(a),
+        kb = Object.keys(b),
+        key, i;
+  } catch (e) {
+    return false;
+  }
+  if (ka.length != kb.length)
+    return false;
+  ka.sort();
+  kb.sort();
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i])
+      return false;
+  }
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+function toNum(a) {
+    return a.map(function(l) { return l.charCodeAt(0)-97; });
+}
+
+function toLetter(a) {
+    return a.map(function(l) { return String.fromCharCode(97+l); });
+}
+
+
+suite.export(module);

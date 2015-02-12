@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Bertin Heatmap</title>
+<style>
+
+@import url(../style.css?20120427);
+
+.background {
+  fill: #eee;
+}
+
+line {
+  stroke: #aaa;
+}
+
+</style>
+<script src="http://d3js.org/d3.v2.min.js?2.8.1"></script>
+<script src="../../lib/science.v1.js"></script>
+<script src="../../reorder.v1.js"></script>
+<body>
+
+<h1>Bertin Heatmap</h1>
+
+<aside style="margin-top:80px;">
+<p>Order: <select id="order">
+  <option value="name">by Name</option>
+  <option value="count">by Frequency</option>
+  <option value="group">by Cluster</option>
+  <option value="leafOrder">by Leaf Order</option>
+</select>
+
+<p>Distance: <select id="distance">
+  <option value="manhattan" selected="true">Manhattan</option>
+  <option value="euclidean">Euclidean</option>
+  <option value="chebyshev">Chebyshev</option>
+  <option value="hamming">Hamming</option>
+  <option value="jaccard">Jaccard</option>
+  <option value="braycurtis">Braycurtis</option>
+</select>
+<p>Use the drop-down menu to reorder the matrix and explore the data.
+
+<p>Built with <a href="http://d3js.org/">d3.js</a>. Modified by <a href="http://www.aviz.fr/~fekete">Jean-Daniel Fekete</a> to explore reordering algorithms.
+</aside>
+
+
+<script>
+var margin = {top: 80, right: 0, bottom: 10, left: 80},
+    width = 1024,
+    height = 1024;
+
+  d3.json("Bertin_merovingiens2.json", function(json) {
+      var matrix = json,
+      names = matrix.map(function(e, i) { return String.fromCharCode("a".charCodeAt(0)+i); }),
+      w = Math.min(width / matrix.length, height / matrix[0].length);
+
+      width = w*matrix.length;
+      height = w*matrix[0].length;
+
+      var x = d3.scale.ordinal().rangeBands([0, width]).domain(names),
+          z = d3.scale.linear().domain([0, 1]).range(["white", "black"]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .style("margin-left", -margin.left + "px")
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+  svg.append("rect")
+      .attr("class", "background")
+      .attr("width", width)
+      .attr("height", height);
+
+  var column = svg.selectAll(".column")
+      .data(matrix)
+    .enter().append("g")
+      .attr("id", function(d, i) { return "col"+i; })
+      .attr("class", "col")
+      .attr("transform", function(d, i) { return "translate(" + x(i) + ")"; })
+      .each(column);
+
+  column.append("line")
+	  .attr("y2", height);
+
+  column.append("text")
+      .attr("x", w/2)
+      .attr("y", -6)
+//      .attr("dy", ".32em")
+      .attr("text-anchor", "center")
+      .text(function(d, i) { return names[i]; });
+
+  var row = svg.selectAll(".row")
+      .data(matrix[0])
+    .enter().append("g")
+      .attr("id", function(d, i) { return "row"+i; })
+      .attr("class", "row")
+      .attr("transform", function(d, i) { return "translate(0," + i*w + ")"; });
+
+  row.append("line")
+      .attr("x1", width);
+
+  row.append("text")
+      .attr("x", -20)
+      .attr("y", w / 2)
+      .attr("dy", ".32em")
+      .attr("text-anchor", "start")
+	  .text(function(d, i) { return ""+(i+1); });
+
+  function column(col) {
+    var cell = d3.select(this).selectAll(".cell")
+	  .data(col)
+      .enter().append("rect")
+        .attr("class", "cell")
+	  .attr("y", function(d, i) { return i*w; })
+	  .attr("width", w)
+	  .attr("height", w)
+//        .style("fill-opacity", function(d) { return z(d); })
+	  .style("fill", function(d) { return z(d); })
+//        .on("mouseover", mouseover)
+//        .on("mouseout", mouseout);
+      ;
+  }
+
+      function order(perm) {
+	  x.domain(perm);
+
+	  var t = svg.transition().duration(1500);
+	  
+	  t.selectAll(".col")
+	      .delay(function(d, i) { return x(i) * 4; })
+	      .attr("transform", function(d, i) { return "translate(" + x(i) + ")"; });
+      }
+
+      var timeout = setTimeout(function() { }, 5000);
+
+      d3.select("#order").on("change", function() {
+	  clearTimeout(timeout);
+	  order(this.value);
+      });
+
+	d3.select("#distance").on("change", function() {
+	    clearTimeout(timeout);
+	    distance(this.value);
+	});
+
+  });
+</script>

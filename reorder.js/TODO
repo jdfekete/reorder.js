@@ -1,0 +1,18 @@
+Interaction:
+	drag row/columns
+	zoom in/out
+	MatLink
+
+Reordering:
+	Dijkstra distance matrix
+	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
+	Inverse Cuthill-McKee
+	Tables/bipartite networks
+	Biclustering
+	Contingency tables methods:
+		PCA ordering
+		Correspondence analysis
+	Chun-Hou Chen methods: http://gap.stat.sinica.edu.tw/Papers/GAP_2002.pdf
+		 Elliptical
+	Barycenter method: http://www.informatica.si/PDF/29-3/13_Makinen-The%20Barycenter%20Heuristic....pdf
+	
