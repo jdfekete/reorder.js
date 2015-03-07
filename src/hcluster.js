@@ -5,7 +5,7 @@ if (typeof science == "undefined") {
 
 science.stats.hcluster = function() {
   var distance = reorder.distance.euclidean,
-      linkage = "simple", // simple, complete or average
+      linkage = "single", // single, complete or average
       distMatrix = null;
 
   function hcluster(vectors) {
