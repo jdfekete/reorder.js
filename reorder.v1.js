@@ -348,7 +348,8 @@ reorder.graph = function(nodes, links) {
     var graph = {},
         linkDistance = 1,
         edges,
-        distances;
+        distances,
+	components;
 
     graph.nodes = function(x) {
       if (!arguments.length) return nodes;
@@ -395,7 +396,7 @@ reorder.graph = function(nodes, links) {
 	    edges[i] = [];
         }
         for (i = 0; i < links.length; ++i) {
-	    var o = links[i];
+	    o = links[i];
 	    edges[o.source.index].push(o);
 	    if (o.source.index != o.target.index)
 		edges[o.target.index].push(o);
@@ -412,7 +413,7 @@ reorder.graph = function(nodes, links) {
     }
     graph.distance = distance;
 
-    graph.neighbors = function(node) {
+    function neighbors(node) {
 	var e = edges[node], ret = [];
 	for (var i = 0; i < e.length; ++i) {
 	    var o = e[i];
@@ -422,7 +423,8 @@ reorder.graph = function(nodes, links) {
 		ret.push(o.source);
 	}
 	return ret;
-    };
+    }
+    graph.neighbors = neighbors;
 
     graph.other = function(o, node) {
 	if (typeof o == "number")
@@ -431,6 +433,52 @@ reorder.graph = function(nodes, links) {
 	    return o.target;
 	else 
 	    return o.source;
+    };
+
+    function compute_components() {
+	var stack = [],
+	    comp = 0, comps = [], ccomp,
+	    n = nodes.length,
+	    i, j, v, l, o, e;
+
+	for (i = 0; i < n; i++)
+	    nodes[i].comp = 0;
+
+	for (j = 0; j < n; j++) {
+	    if (nodes[j].comp != 0)
+		continue;
+	    comp = comp+1; // next connected component
+	    nodes[j].comp = comp;
+	    stack.push(j);
+	    ccomp = [j]; // current connected compnent list
+
+	    while (stack.length) {
+		v = stack.shift();
+		l = edges[v];
+		for (i = 0; i < l.length; i++) {
+		    e = l[i];
+		    o = e.source;
+		    if (o.index == v)
+			o = e.target;
+		    if (o.index == v) // loop
+			continue;
+		    if (o.comp == 0) {
+			o.comp = comp;
+			ccomp.push(o.index);
+			stack.push(o.index);
+		    }
+		}
+	    }
+	    if (ccomp.length)
+		comps.push(ccomp);
+	}
+	return comps;
+    }
+
+    graph.components = function() {
+	if (! components)
+	    components = compute_components();
+	return components;
     };
 
     return graph;
