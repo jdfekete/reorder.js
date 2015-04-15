@@ -344,10 +344,11 @@ reorder.heap = function(comp) {
 reorder.permutation = reorder.range;
 
 
-reorder.graph = function(nodes, links) {
+reorder.graph = function(nodes, links, directed) {
     var graph = {},
         linkDistance = 1,
         edges,
+	inEdges, outEdges,
         distances,
 	components;
 
@@ -365,6 +366,12 @@ reorder.graph = function(nodes, links) {
 	if (!arguments.length) return linkDistance;
 	linkDistance = typeof x === "function" ? x : +x;
 	return graph;
+    };
+
+    graph.directed = function(x) {
+      if (!arguments.length) return directed;
+      directed = x;
+      return graph;
     };
 
     function init() {
@@ -395,11 +402,25 @@ reorder.graph = function(nodes, links) {
         for (i = 0; i < nodes.length; ++i) {
 	    edges[i] = [];
         }
+
+	if (directed) {
+            inEdges = Array(nodes.length);
+	    outEdges = Array(nodes.length);
+            for (i = 0; i < nodes.length; ++i) {
+		inEdges[i] = [];
+		outEdges[i] = [];
+	    }
+	}
+
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
 	    edges[o.source.index].push(o);
+	    if (directed)
+		inEdges[o.source.index].push(o);
 	    if (o.source.index != o.target.index)
 		edges[o.target.index].push(o);
+	    if (directed)
+		outEdges[o.target.index].push(o);
 	}
 
 	return graph;
@@ -407,6 +428,8 @@ reorder.graph = function(nodes, links) {
     graph.init = init;
 
     graph.edges = function(node) { return edges[node]; };
+    graph.inEdges = function(node) { return inEdges[node]; };
+    graph.outEdges = function(node) { return outEdges[node]; };
 
     function distance(i) {
 	return distances[i];
@@ -489,20 +512,24 @@ reorder.mat2graph = function(mat, directed) {
 	links = [],
 	i, j, v, m;
     
+    for (i = 0; i < n; i++)
+	nodes.push({id: i});
+
     for (i = 0; i < n; i++) {
 	v = mat[i];
-	nodes.push({id: i});
-	m = directed ? n : i+1;
+	m = directed ? v.length : i+1;
 	m = Math.min(m, v.length);
 	for (j = 0; j < m; j++) {
+	    if (j == nodes.length)
+		nodes.push({id: j});
 	    if (v[j] != 0) {
 		links.push({source: i, target: j, value: v[j]});
+		if (! directed)
+		    links.push({source: j, target: i, value: v[j]});
 	    }
 	}
     }
-    return reorder.graph()
-	.nodes(nodes)
-	.links(links)
+    return reorder.graph(nodes, links, directed)
 	.init();
 };
 reorder.graph2mat = function(graph, directed) {
@@ -511,17 +538,128 @@ reorder.graph2mat = function(graph, directed) {
 	n = nodes.length,
 	i, l, mat;
 
-    mat = Array(n);
-    for (i = 0; i < n; i++) {
-	mat[i] = science.zeroes(n);
+    if (! directed)
+	directed = graph.directed();
+    if (directed) {
+	var row_perm = [], rows = 0, 
+	    col_perm = [], cols = 0;
+	
+	for (i = 0; i < n; i++) {
+	    if (graph.inEdges(i).length != 0)
+		row_perm.push(rows++);
+	    else
+		row_perm.push(-1);
+
+	    if (graph.outEdges(i).length != 0)
+		col_perm.push(cols++);
+	    else
+		col_perm.push(-1);
+	}
+	mat = Array(rows);
+	for (i = 0; i < rows; i++)
+	    mat[i] = science.zeroes(cols);
+	
+	for (i = 0; i < links.length; i++) {
+	    l = links[i];
+	    mat[row_perm[l.source.index]][col_perm[l.target.index]] = l.value ? l.value : 1;
+	}
     }
-    for (i = 0; i < links.length; i++) {
-	l = links[i];
-	mat[l.source.index][l.target.index] = l.value ? l.value : 1;
-	if (! directed)
-	    mat[l.target.index][l.source.index] = l.value ? l.value : 1;
+    else {
+	mat = Array(n);
+	for (i = 0; i < n; i++) 
+	    mat[i] = science.zeroes(n);
+	
+	for (i = 0; i < links.length; i++) {
+	    l = links[i];
+	    mat[l.source.index][l.target.index] = l.value ? l.value : 1;
+	}
     }
     return mat;
+};
+reorder.barycenter = function(graph, comps) {
+    var perm = [];
+    // Compute the barycenter heuristic on each connected component
+    if (! comps) {
+	comps = graph.components();
+    }
+    for (var i = 0; i < comps.length; i++)
+	perm = perm.concat(reorder.barycenter1(graph, comps[i]));n
+    return perm;
+};
+
+function inverse_perm(perm) {
+    var inv = {};
+    for (var i = 0; i < perm.length; i++) {
+	inv[perm[i]] = i;
+    }
+    return inv;
+}
+
+// Take the list of neighbor indexes and return the median according to 
+// P. Eades and N. Wormald, Edge crossings in drawings of bipartite graphs.
+// Algorithmica, vol. 11 (1994) 379–403.
+function median(neighbors) {
+    if (neighbors.length == 1)
+	return neighbors[0];
+    if (neighbors.length == 2)
+	return (neighbors[0]+neighbors[1])/2;
+    neighbors.sort();
+    if (neighbors.length % 2)
+	return neighbors[neighbors.length/2];
+    var rm = neighbors.length/2,
+	lm = rm - 1,
+	rspan = neighbors[neighbors.length-1] - neighbors[rm],
+	lspan = neighbors[lm] - neighbors[0];
+    if (lspan == rspan)
+	return (neighbors[lm] + neighbors[rm])/2;
+    else
+	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
+}
+
+reorder.barycenter1 = function(graph, comp, iter) {
+    var nodes = graph.nodes(),
+	perm1, inv1,
+	perm2, inv2,
+	i, tmp;
+
+    if (comp.length < 3)
+	return comp;
+
+    if (! iter)
+	iter = 20;
+
+    perm1 = comp;
+    inv1 = inverse_perm(perm1);
+    perm2 = perm1.slice(); // copy
+    inv2 = inv1; // no need to copy
+    
+    while (iter--) {
+	for (i = 0; i < perm1.length; i++) {
+	    // Compute the median/barycenter for this node and set
+	    // its (real) value into node.mval
+	    var v = nodes[perm1[i]],
+		neighbors = graph.neighbors(v.index).map(function(n) {
+		    return inv1[n.index];
+		});
+	    v.median = median(neighbors);
+	}
+	perm1.sort(function(a, b) {
+	    var d = nodes[a].median - nodes[b].median;
+	    if (d == 0) {
+		// If both values are equal,
+		// place the odd degree vertex on the left of the even
+		// degree vertex
+		d = (graph.edges(b).length%2) - (graph.edges(a).length%2);
+	    }
+	    if (d < 0) return -1;
+	    else if (d > 0) return 1;
+	    return 0;
+	});
+	inv1 = inverse_perm(perm1);
+	tmp = perm1; perm1 = perm2; perm2 = tmp;
+	tmp = inv1; inv1 = inv2; inv2 = tmp;
+    }
+    return perm2;
 };
 reorder.dijkstra = function(graph) {
     var g = graph, dijkstra = {};

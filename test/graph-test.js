@@ -12,9 +12,7 @@ suite.addBatch({
 	"simple": function() {
 	    var nodes = [{id: 0}, {id: 1}, {id: 2}],
 	        links = [{source: 0, target: 1}, {source:1, target: 2}];
-	    var graph = reorder.graph()
-		.nodes(nodes)
-		.links(links)
+	    var graph = reorder.graph(nodes, links)
 		.init();
 	    assert.equal(graph.nodes().length, 3);
 	    assert.equal(graph.links().length, 2);

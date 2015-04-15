@@ -11,7 +11,7 @@ var suite = vows.describe("reorder.graph2mat");
 Math.seedrandom('reorder');
 
 suite.addBatch({
-    "graph": {
+    "graph2mat": {
 	"simple": function() {
 	    var mat = [
 		[0, 1, 0],
@@ -20,7 +20,7 @@ suite.addBatch({
 	    ];
 	    var graph = reorder.mat2graph(mat);
 	    assert.equal(graph.nodes().length, 3);
-	    assert.equal(graph.links().length, 2);
+	    assert.equal(graph.links().length, 4);
 	    var m2 = reorder.graph2mat(graph);
 	    assert.deepEqual(m2, mat);
 	},

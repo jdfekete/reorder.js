@@ -22,6 +22,7 @@ reorder.v1.js: \
 	src/graph.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
+	src/barycenter.js \
 	src/dijkstra.js \
 	src/dist.js \
 	src/random.js \

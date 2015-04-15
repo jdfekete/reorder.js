@@ -1,7 +1,8 @@
-reorder.graph = function(nodes, links) {
+reorder.graph = function(nodes, links, directed) {
     var graph = {},
         linkDistance = 1,
         edges,
+	inEdges, outEdges,
         distances,
 	components;
 
@@ -19,6 +20,12 @@ reorder.graph = function(nodes, links) {
 	if (!arguments.length) return linkDistance;
 	linkDistance = typeof x === "function" ? x : +x;
 	return graph;
+    };
+
+    graph.directed = function(x) {
+      if (!arguments.length) return directed;
+      directed = x;
+      return graph;
     };
 
     function init() {
@@ -49,11 +56,25 @@ reorder.graph = function(nodes, links) {
         for (i = 0; i < nodes.length; ++i) {
 	    edges[i] = [];
         }
+
+	if (directed) {
+            inEdges = Array(nodes.length);
+	    outEdges = Array(nodes.length);
+            for (i = 0; i < nodes.length; ++i) {
+		inEdges[i] = [];
+		outEdges[i] = [];
+	    }
+	}
+
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
 	    edges[o.source.index].push(o);
+	    if (directed)
+		inEdges[o.source.index].push(o);
 	    if (o.source.index != o.target.index)
 		edges[o.target.index].push(o);
+	    if (directed)
+		outEdges[o.target.index].push(o);
 	}
 
 	return graph;
@@ -61,6 +82,8 @@ reorder.graph = function(nodes, links) {
     graph.init = init;
 
     graph.edges = function(node) { return edges[node]; };
+    graph.inEdges = function(node) { return inEdges[node]; };
+    graph.outEdges = function(node) { return outEdges[node]; };
 
     function distance(i) {
 	return distances[i];
