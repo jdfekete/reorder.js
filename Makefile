@@ -20,6 +20,7 @@ reorder.v1.js: \
 	src/heap.js \
 	src/permutation.js \
 	src/graph.js \
+	src/mat2graph.js \
 	src/dijkstra.js \
 	src/dist.js \
 	src/random.js \
