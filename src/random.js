@@ -22,3 +22,15 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
+reorder.randomMatrix = function(n, p) {
+    var mat = science.zeroes(10, 10), i, j;
+
+    for (i = 0; i < 10; i++) {
+	for (j = 0; j < i+1; j++) {
+	    if (Math.random() < p) {
+		mat[i][j] = mat[j][i] = 1;
+	    }
+	}
+    }
+    return mat;
+}

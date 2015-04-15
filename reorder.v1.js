@@ -505,6 +505,24 @@ reorder.mat2graph = function(mat, directed) {
 	.links(links)
 	.init();
 };
+reorder.graph2mat = function(graph, directed) {
+    var nodes = graph.nodes(),
+	links = graph.links(),
+	n = nodes.length,
+	i, l, mat;
+
+    mat = Array(n);
+    for (i = 0; i < n; i++) {
+	mat[i] = science.zeroes(n);
+    }
+    for (i = 0; i < links.length; i++) {
+	l = links[i];
+	mat[l.source.index][l.target.index] = l.value ? l.value : 1;
+	if (! directed)
+	    mat[l.target.index][l.source.index] = l.value ? l.value : 1;
+    }
+    return mat;
+};
 reorder.dijkstra = function(graph) {
     var g = graph, dijkstra = {};
 
@@ -653,6 +671,18 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
+reorder.randomMatrix = function(n, p) {
+    var mat = science.zeroes(10, 10), i, j;
+
+    for (i = 0; i < 10; i++) {
+	for (j = 0; j < i+1; j++) {
+	    if (Math.random() < p) {
+		mat[i][j] = mat[j][i] = 1;
+	    }
+	}
+    }
+    return mat;
+}
 reorder.permute = function(list, indexes) {
     var m = indexes.length;
     var copy = list.slice(0);
