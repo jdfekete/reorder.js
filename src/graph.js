@@ -104,7 +104,7 @@ reorder.graph = function(nodes, links) {
 	    comp = comp+1; // next connected component
 	    nodes[j].comp = comp;
 	    stack.push(j);
-	    ccomp = [j]; // current connected compnent list
+	    ccomp = [j]; // current connected component list
 
 	    while (stack.length) {
 		v = stack.shift();
