@@ -20,6 +20,7 @@ reorder.v1.js: \
 	src/heap.js \
 	src/permutation.js \
 	src/graph.js \
+	src/printmat.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
 	src/barycenter.js \

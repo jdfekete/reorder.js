@@ -79,11 +79,50 @@ reorder.graph = function(nodes, links, directed) {
 
 	return graph;
     }
+
     graph.init = init;
 
     graph.edges = function(node) { return edges[node]; };
-    graph.inEdges = function(node) { return inEdges[node]; };
-    graph.outEdges = function(node) { return outEdges[node]; };
+
+    function inEdges(node) {
+	if (directed)
+	    return inEdges[node];
+	return edges[node];
+    }
+    graph.inEdges = inEdges;
+
+    function outEdges(node) {
+	if (directed)
+	    return outEdges[node];
+	return edges[node];
+    }
+    graph.outEdges = outEdges;
+
+    graph.sinks = function() {
+	var sinks = [],
+	    i;
+	if (! directed)
+	    return reorder.range(nodes.length);
+
+	for (i = 0; i < nodes.length; i++) {
+	    if (outEdges(i).length == 0)
+		sinks.push(i);
+	}
+	return sinks;
+    };
+
+    graph.sources = function() {
+	var sources = [],
+	    i;
+	if (! directed)
+	    return reorder.range(nodes.length);
+
+	for (i = 0; i < nodes.length; i++) {
+	    if (inEdges(i).length == 0)
+		sources.push(i);
+	}
+	return sources;
+    };
 
     function distance(i) {
 	return distances[i];
@@ -146,8 +185,10 @@ reorder.graph = function(nodes, links, directed) {
 		    }
 		}
 	    }
-	    if (ccomp.length)
+	    if (ccomp.length) {
+		ccomp.sort();
 		comps.push(ccomp);
+	    }
 	}
 	return comps;
     }

@@ -17,7 +17,7 @@ suite.addBatch({
 	    ];
 	    var graph = reorder.mat2graph(mat);
 	    assert.equal(graph.nodes().length, 3);
-	    assert.equal(graph.links().length, 4);
+	    assert.equal(graph.links().length, 2);
 	},
 	"lesssimple": function() {
 	    var mat = [

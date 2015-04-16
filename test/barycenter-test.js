@@ -15,7 +15,12 @@ suite.addBatch({
 		[1, 0, 1, 0, 1],
 		[0, 1, 0, 1, 1],
 		[1, 1, 1, 0, 0]],
-		expect = [1, 2, 3, 4];
+		graph = reorder.mat2graph(mat, true),
+		expect = [0, 1, 3, 2, 4];
+	    reorder.printmat(mat);
+	    perm = reorder.barycenter(graph);
+	    reorder.printmat(mat, perm[1], perm[0]);
+	    assert.deepEqual(perm, expect);
 	}
     }
 });

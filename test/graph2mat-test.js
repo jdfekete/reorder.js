@@ -20,7 +20,7 @@ suite.addBatch({
 	    ];
 	    var graph = reorder.mat2graph(mat);
 	    assert.equal(graph.nodes().length, 3);
-	    assert.equal(graph.links().length, 4);
+	    assert.equal(graph.links().length, 2);
 	    var m2 = reorder.graph2mat(graph);
 	    assert.deepEqual(m2, mat);
 	},

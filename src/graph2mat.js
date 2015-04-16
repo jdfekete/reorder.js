@@ -36,6 +36,7 @@ reorder.graph2mat = function(graph, directed) {
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
 	    mat[l.source.index][l.target.index] = l.value ? l.value : 1;
+	    mat[l.target.index][l.source.index] = l.value ? l.value : 1;
 	}
     }
     return mat;

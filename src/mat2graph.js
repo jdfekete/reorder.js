@@ -16,8 +16,6 @@ reorder.mat2graph = function(mat, directed) {
 		nodes.push({id: j});
 	    if (v[j] != 0) {
 		links.push({source: i, target: j, value: v[j]});
-		if (! directed)
-		    links.push({source: j, target: i, value: v[j]});
 	    }
 	}
     }
