@@ -25,18 +25,19 @@ suite.addBatch({
 	    assert.deepEqual(m2, mat);
 	},
 	"lesssimple": function() {
-	    var mat = reorder.randomMatrix(10, 0.2),
+	    var mat = reorder.randomMatrix(0.2, 10),
 		graph = reorder.mat2graph(mat),
 		m2 = reorder.graph2mat(graph);
-	    //console.log(mat);
 	    assert.deepEqual(m2, mat);
 	},
 	"hard": function() {
 	    for (var i = 10; i < 100; i += 20) {
-		var mat = reorder.randomMatrix(i, Math.sqrt(5/(i*i))),
-		    graph = reorder.mat2graph(mat),
-		    m2 = reorder.graph2mat(graph);
-		assert.deepEqual(m2, mat);
+		for (var j = 10; j < 100; j += 20) {
+		    var mat = reorder.randomMatrix(0.2, i, j, false),
+			graph = reorder.mat2graph(mat, true),
+			m2 = reorder.graph2mat(graph);
+		    assert.deepEqual(m2, mat);
+		}
 	    }
 	}
     }

@@ -7,33 +7,31 @@ reorder.graph2mat = function(graph, directed) {
     if (! directed)
 	directed = graph.directed();
     if (directed) {
-	var row_perm = [], rows = 0, 
-	    col_perm = [], cols = 0;
+	var rows = n, 
+	    cols = n;
 	
-	for (i = 0; i < n; i++) {
+	for (i = n-1; i >= 0; i--) {
 	    if (graph.inEdges(i).length != 0)
-		row_perm.push(rows++);
+		break;
 	    else
-		row_perm.push(-1);
-
-	    if (graph.outEdges(i).length != 0)
-		col_perm.push(cols++);
-	    else
-		col_perm.push(-1);
+		rows--;
 	}
-	mat = Array(rows);
-	for (i = 0; i < rows; i++)
-	    mat[i] = science.zeroes(cols);
+	for (i = n-1; i >= 0; i--) {
+	    if (graph.outEdges(i).length != 0)
+		break;
+	    else
+		cols--;
+	}
+	//console.log("Rows: "+rows+" Cols: "+cols);
+	mat = science.zeroes(rows, cols);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
-	    mat[row_perm[l.source.index]][col_perm[l.target.index]] = l.value ? l.value : 1;
+	    mat[l.source.index][l.target.index] = l.value ? l.value : 1;
 	}
     }
     else {
-	mat = Array(n);
-	for (i = 0; i < n; i++) 
-	    mat[i] = science.zeroes(n);
+	mat = science.zeroes(n, n);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];

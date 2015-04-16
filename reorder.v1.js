@@ -541,33 +541,31 @@ reorder.graph2mat = function(graph, directed) {
     if (! directed)
 	directed = graph.directed();
     if (directed) {
-	var row_perm = [], rows = 0, 
-	    col_perm = [], cols = 0;
+	var rows = n, 
+	    cols = n;
 	
-	for (i = 0; i < n; i++) {
+	for (i = n-1; i >= 0; i--) {
 	    if (graph.inEdges(i).length != 0)
-		row_perm.push(rows++);
+		break;
 	    else
-		row_perm.push(-1);
-
-	    if (graph.outEdges(i).length != 0)
-		col_perm.push(cols++);
-	    else
-		col_perm.push(-1);
+		rows--;
 	}
-	mat = Array(rows);
-	for (i = 0; i < rows; i++)
-	    mat[i] = science.zeroes(cols);
+	for (i = n-1; i >= 0; i--) {
+	    if (graph.outEdges(i).length != 0)
+		break;
+	    else
+		cols--;
+	}
+	//console.log("Rows: "+rows+" Cols: "+cols);
+	mat = science.zeroes(rows, cols);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
-	    mat[row_perm[l.source.index]][col_perm[l.target.index]] = l.value ? l.value : 1;
+	    mat[l.source.index][l.target.index] = l.value ? l.value : 1;
 	}
     }
     else {
-	mat = Array(n);
-	for (i = 0; i < n; i++) 
-	    mat[i] = science.zeroes(n);
+	mat = science.zeroes(n, n);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
@@ -809,14 +807,41 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
-reorder.randomMatrix = function(n, p) {
-    var mat = science.zeroes(10, 10), i, j;
+reorder.randomMatrix = function(p, n, m, sym) {
+    if (! m)
+	m = n;
+    if (n != m)
+	sym = false;
+    else if (! sym)
+	sym = true;
+    var mat = science.zeroes(n, m), i, j, cnt;
 
-    for (i = 0; i < 10; i++) {
-	for (j = 0; j < i+1; j++) {
-	    if (Math.random() < p) {
+    if (sym) {
+	for (i = 0; i < n; i++) {
+	    cnt = 0;
+	    for (j = 0; j < i+1; j++) {
+		if (Math.random() < p) {
+		    mat[i][j] = mat[j][i] = 1;
+		    cnt++;
+		}
+	    }
+	    if (cnt == 0) {
+		j = Math.floor(Math.random()*n/2);
 		mat[i][j] = mat[j][i] = 1;
 	    }
+	}
+    }
+    else {
+	for (i = 0; i < n; i++) {
+	    cnt = 0;
+	    for (j = 0; j < m; j++) {
+		if (Math.random() < p) {
+		    mat[i][j] = 1;
+		    cnt++;
+		}
+	    }
+	    if (cnt == 0)
+		mat[i][Math.floor(Math.random()*m)] = 1;
 	}
     }
     return mat;

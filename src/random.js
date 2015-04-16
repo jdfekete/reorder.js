@@ -22,14 +22,41 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
-reorder.randomMatrix = function(n, p) {
-    var mat = science.zeroes(10, 10), i, j;
+reorder.randomMatrix = function(p, n, m, sym) {
+    if (! m)
+	m = n;
+    if (n != m)
+	sym = false;
+    else if (! sym)
+	sym = true;
+    var mat = science.zeroes(n, m), i, j, cnt;
 
-    for (i = 0; i < 10; i++) {
-	for (j = 0; j < i+1; j++) {
-	    if (Math.random() < p) {
+    if (sym) {
+	for (i = 0; i < n; i++) {
+	    cnt = 0;
+	    for (j = 0; j < i+1; j++) {
+		if (Math.random() < p) {
+		    mat[i][j] = mat[j][i] = 1;
+		    cnt++;
+		}
+	    }
+	    if (cnt == 0) {
+		j = Math.floor(Math.random()*n/2);
 		mat[i][j] = mat[j][i] = 1;
 	    }
+	}
+    }
+    else {
+	for (i = 0; i < n; i++) {
+	    cnt = 0;
+	    for (j = 0; j < m; j++) {
+		if (Math.random() < p) {
+		    mat[i][j] = 1;
+		    cnt++;
+		}
+	    }
+	    if (cnt == 0)
+		mat[i][Math.floor(Math.random()*m)] = 1;
 	}
     }
     return mat;
