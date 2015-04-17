@@ -1,4 +1,4 @@
-reorder.barycenter = function(graph, comps, iter) {
+reorder.barycenter = function(graph, iter, comps) {
     var perm = [];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
@@ -35,14 +35,14 @@ function median(neighbors) {
 reorder.barycenter1 = function(graph, comp, iter) {
     var nodes = graph.nodes(),
 	layer1, layer2,
-	layer, layer_inv,
+	layer,
 	i, v, neighbors;
 
     if (comp.length < 3)
 	return comp;
 
     if (! iter)
-	iter = 20;
+	iter = 10;
     else if ((iter%2)==1)
 	iter++; // want even number of iterations
 
@@ -53,10 +53,12 @@ reorder.barycenter1 = function(graph, comp, iter) {
 	return graph.inEdges(n).length!=0;
     });
 
+    for (i = 0; i < layer2.length; i++)
+	nodes[layer2[i]].pos = i;
+
     for (layer = layer1;
 	 iter--;
 	 layer = (layer == layer1) ? layer2 : layer1) {
-	layer_inv = inverse_permutation(layer);
 	for (i = 0; i < layer.length; i++) {
 	    // Compute the median/barycenter for this node and set
 	    // its (real) value into node.mval
@@ -67,10 +69,10 @@ reorder.barycenter1 = function(graph, comp, iter) {
 		neighbors = graph.inEdges(v.index);
 	    neighbors = neighbors.map(function(e) {
 		    var n = e.source == v ? e.target : e.source;
-		    return layer_inv[n.index];
+		    return nodes[n.index].pos;
 	    });
 	    v.median = median(neighbors);
-	    console.log('median['+i+']='+v.median);
+	    //console.log('median['+i+']='+v.median);
 	}
 	layer.sort(function(a, b) {
 	    var d = nodes[a].median - nodes[b].median;
@@ -84,6 +86,8 @@ reorder.barycenter1 = function(graph, comp, iter) {
 	    else if (d > 0) return 1;
 	    return 0;
 	});
+	for (i = 0; i < layer2.length; i++)
+	    nodes[layer[i]].pos = i;
     }
     return [ layer1, layer2];
 };
