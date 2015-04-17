@@ -4,6 +4,8 @@ require("../reorder.v1");
 
 var vows = require("vows"),
     assert = require("assert");
+var seedrandom = require('seedrandom');
+Math.seedrandom('reorder');
 
 var suite = vows.describe("reorder.ca");
 
@@ -18,7 +20,7 @@ suite.addBatch({
 		res = reorder.ca(mat, 0.0001);
 
 	    //assert.isTrue(true);
-	    assert.inDeltaArray(res, [-0.5354605, -0.2626774, 0.8026722], 0.001);
+	    assert.inDeltaArray(res, [0.5354605, 0.2626774, -0.8026722], 0.001);
 	}
     }
 });

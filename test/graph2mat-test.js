@@ -1,14 +1,14 @@
 require("science")
 require("../reorder.v1");
 require("../reorder.v1");
-var seedrandom = require('seedrandom');
 
 var vows = require("vows"),
     assert = require("assert");
+var seedrandom = require('seedrandom');
+Math.seedrandom('reorder');
 
 var suite = vows.describe("reorder.graph2mat");
 
-Math.seedrandom('reorder');
 
 suite.addBatch({
     "graph2mat": {

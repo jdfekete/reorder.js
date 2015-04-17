@@ -74,6 +74,27 @@ suite.addBatch({
 			 12);
 	    assert.equal(reorder.count_crossings(graph, layer1, layer2),
 			 12);
+	},
+	"count_crossings_hard": function() {
+	    for (var i = 10; i < 100; i += 20) {
+		for (var j = 10; j < 100; j += 20) {
+		    var mat = reorder.randomMatrix(0.2, i, j, false),
+			graph = reorder.mat2graph(mat, true),
+			comps = graph.components(),
+			comp = comps.reduce(function(a, b) {
+			    return  (a.length > b.length) ? a : b;
+			});
+		    comp.sort();
+		    var layer1 = comp.filter(function(n) {
+			    return graph.outEdges(n).length!=0;
+			}),
+			layer2 = comp.filter(function(n) {
+			    return graph.inEdges(n).length!=0;
+			});
+		    assert.equal(reorder.count_crossings(graph, layer1, layer2),
+				 naive_count_crossings(graph, layer1, layer2));
+		}
+	    }
 	}
     }
 });

@@ -43,8 +43,18 @@ function matrix(json) {
    	.distance(science.stats.distance.manhattan)(adjacency);
     
   leafOrder.forEach(function(lo, i) {
-      nodes[lo].leafOrder = i;
+      nodes[i].leafOrder = lo;
   });
+
+  var barycenter = reorder.barycenter(
+      reorder.graph()
+	  .nodes(json.nodes)
+	  .links(json.links).init());
+
+  barycenter[0].forEach(function(lo, i) {
+      nodes[i].barycenter = lo;
+  });
+
 
   // Precompute the orders.
   var orders = {
@@ -54,10 +64,8 @@ function matrix(json) {
 	var x = nodes[b].group - nodes[a].group;
 	return (x != 0) ?  x : d3.ascending(nodes[a].name, nodes[b].name);
     }),
-    leafOrder:  nodes.map(function(n) { return n.leafOrder; })
-      //d3.range(n).sort(function(a, b) {
-      //return nodes[b].leafOrder - nodes[a].leafOrder;
-      //})
+    leafOrder:  nodes.map(function(n) { return n.leafOrder; }),
+    barycenter:  nodes.map(function(n) { return n.barycenter; })
   };
 
   // The default sort order.

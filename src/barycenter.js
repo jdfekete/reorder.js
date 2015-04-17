@@ -37,8 +37,8 @@ function median(neighbors) {
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
 function count_crossings(graph, north, south) {
     var i, j, southPos = [], n,
-	firstIndex, treeSize, tree, cc, index, weightSum,
-	invert = false;
+	firstIndex, treeSize, tree, index, weightSum,
+	invert = false, crosscount;
 
     if (north.length < south.length) {
 	var tmp = north;
@@ -50,15 +50,18 @@ function count_crossings(graph, north, south) {
     var south_inv = inverse_permutation(south);
 
     for (i = 0; i < north.length; i++) {
-	if (invert)
-	    n = graph.inEdges(north[i]);
-	else
-	    n = graph.outEdges(north[i]);
-	n = n.map(function(e) {
-	    if (invert)
-		return south_inv[e.target.index];
-	    return south_inv[e.source.index];
-	});
+	if (invert) {
+	    n = graph.inEdges(north[i])
+		.map(function(e) {
+		    return south_inv[e.target.index];
+		});
+	}
+	else {
+	    n = graph.outEdges(north[i])
+		.map(function(e) {
+		    return south_inv[e.source.index];
+		});
+	}
 	n.sort();
 	southPos = southPos.concat(n);
     }
@@ -70,18 +73,17 @@ function count_crossings(graph, north, south) {
     firstIndex -= 1;
     tree = science.zeroes(treeSize);
 
-    cc = 0;
+    crosscount = 0;
     for (i = 0; i < southPos.length; i++) {
 	index = southPos[i] + firstIndex;
 	tree[index]++;
 	while (index > 0) {
-	    if (index%2) cc += tree[index+1];
+	    if (index%2) crosscount += tree[index+1];
 	    index = (index - 1) >> 1;
 	    tree[index]++;
 	}
-	
     }
-    return cc;
+    return crosscount;
 }
 reorder.count_crossings = count_crossings;
 
@@ -95,7 +97,7 @@ reorder.barycenter1 = function(graph, comp, iter) {
 	return comp;
 
     if (! iter)
-	iter = 10;
+	iter = 24;
     else if ((iter%2)==1)
 	iter++; // want even number of iterations
 
