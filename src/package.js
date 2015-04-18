@@ -23,6 +23,9 @@ require("util").puts(JSON.stringify({
 	"vows": "0.8.1",
 	"jsonfile": "2.0.0"
     },
+    "scripts": {
+	"test": "vows; echo"
+    },
     "licenses": [
 	{
 	    "type": "BSD-3",

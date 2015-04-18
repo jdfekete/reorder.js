@@ -726,19 +726,20 @@ function median(neighbors) {
 	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
 }
 
-reorder.barycenter1 = function(graph, comp, iter) {
+reorder.barycenter1 = function(graph, comp, max_iter) {
     var nodes = graph.nodes(),
-	layer1, layer2,
-	layer,
+	layer1, layer2, crossings, iter,
+	best_layer1, best_layer2, best_crossings, best_iter,
+	layer, 
 	i, v, neighbors;
 
     if (comp.length < 3)
 	return comp;
 
-    if (! iter)
-	iter = 24;
-    else if ((iter%2)==1)
-	iter++; // want even number of iterations
+    if (! max_iter)
+	max_iter = 24;
+    else if ((max_iter%2)==1)
+	max_iter++; // want even number of iterations
 
     layer1 = comp.filter(function(n) {
 	return graph.outEdges(n).length!=0;
@@ -750,9 +751,14 @@ reorder.barycenter1 = function(graph, comp, iter) {
     for (i = 0; i < layer2.length; i++)
 	nodes[layer2[i]].pos = i;
 
-    for (layer = layer1;
-	 iter--;
-	 layer = (layer == layer1) ? layer2 : layer1) {
+    best_crossings = count_crossings(graph, layer1, layer2);
+    best_layer1 = layer1;
+    best_layer2 = layer2;
+    best_iter = 0;
+
+    for (layer = layer1, iter = 0;
+	 iter < max_iter;
+	 iter++, layer = (layer == layer1) ? layer2 : layer1) {
 	for (i = 0; i < layer.length; i++) {
 	    // Compute the median/barycenter for this node and set
 	    // its (real) value into node.mval
@@ -782,8 +788,16 @@ reorder.barycenter1 = function(graph, comp, iter) {
 	});
 	for (i = 0; i < layer2.length; i++)
 	    nodes[layer[i]].pos = i;
+	crossings = count_crossings(graph, layer1, layer2);
+	if (crossings < best_crossings) {
+	    best_crossings = crossings;
+	    best_layer1 = layer1;
+	    best_layer2 = layer2;
+	    best_iter = iter;
+	}
     }
-    return [layer1, layer2];
+    console.log('Best iter: '+best_iter);
+    return [best_layer1, best_layer2, best_crossings];
 };
 reorder.dijkstra = function(graph) {
     var g = graph, dijkstra = {};

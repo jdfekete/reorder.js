@@ -19,6 +19,8 @@ suite.addBatch({
 		expect = [0, 1, 3, 2, 4];
 	    reorder.printmat(mat);
 	    perm = reorder.barycenter(graph);
+	    console.log('VOrder: %j, HOrder: %j, Crossings: %d',
+			perm[1], perm[0], perm[2]);
 	    reorder.printmat(mat, perm[1], perm[0]);
 	    //assert.deepEqual(perm, expect);
 	}
