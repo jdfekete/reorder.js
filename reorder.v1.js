@@ -5,6 +5,26 @@ reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
 reorder.normalize = science.lin.normalize;
 
+reorder.displaymat = function(mat, rowperm, colperm) {
+    var i, j, row, col, str;
+    if (! rowperm) {
+	rowperm = reorder.range(mat.length);
+    }
+    if (! colperm) {
+	colperm = reorder.range(mat[0].length);
+    }
+    console.log('Matrix:');
+    for (i = 0; i < mat.length; i++) {
+	row = rowperm ? mat[rowperm[i]] : mat[i];
+	str = "";
+	for (j = 0; j < row.length; j++) {
+	    col = colperm ? row[colperm[j]] : row[j];
+	    str += col ? '*' : ' ';
+	}
+	console.log(str);
+    }
+};
+
 reorder.printmat = function(m) {
     var i, j, row, line;
     for (i = 0; i < m.length; i++) {
@@ -341,6 +361,21 @@ reorder.heap = function(comp) {
 
     return Heap;
 };
+reorder.bandwidth = function(graph, order) {
+    if (! order)
+	order = reorder.range(graph.nodes().length);
+
+    var inv = inverse_permutation(order),
+	links = graph.links(),
+	i, e, d, max = 0;
+
+    for (i = 0; i < links.length; i++) {
+	e = links[i];
+	d = Math.abs(inv[e.source.index]-inv[e.target.index]);
+	max = Math.max(max, d);
+    }
+    return max;
+};
 reorder.permutation = reorder.range;
 
 
@@ -420,6 +455,9 @@ reorder.graph = function(nodes, links, directed) {
 		outEdges[i] = [];
 	    }
 	}
+	else {
+	    inEdges = outEdges = edges;
+	}
 
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
@@ -437,21 +475,43 @@ reorder.graph = function(nodes, links, directed) {
 
     graph.init = init;
 
-    graph.edges = function(node) { return edges[node]; };
+    function edges(node) { 
+	if (typeof node != "number") {
+	    node = node.index;
+	    console.log('received node %d', node);
+	}
+	return edges[node]; 
+    };
+    graph.edges = edges;
+    graph.degree = function(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return edges[node].length; 
+    };
 
     function inEdges(node) {
-	if (directed)
-	    return inEdges[node];
-	return edges[node];
+	if (typeof node != "number")
+	    node = node.index;
+	return inEdges[node];
     }
     graph.inEdges = inEdges;
+    graph.inDegree = function(node) {
+	if (typeof node != "number")
+	    node = node.index;
+	return inEdges[node].length; 
+    };
 
-    function outEdges(node) {
-	if (directed)
-	    return outEdges[node];
-	return edges[node];
+    function outEdges(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return outEdges[node];
     }
     graph.outEdges = outEdges;
+    graph.outDegree = function(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return outEdges[node].length; 
+    };
 
     graph.sinks = function() {
 	var sinks = [],
@@ -556,19 +616,6 @@ reorder.graph = function(nodes, links, directed) {
 
     return graph;
 };
-reorder.printmat = function(mat, rowperm, colperm) {
-    var i, j, row, col, str;
-    console.log('Matrix:');
-    for (i = 0; i < mat.length; i++) {
-	row = rowperm ? mat[rowperm[i]] : mat[i];
-	str = "";
-	for (j = 0; j < row.length; j++) {
-	    col = colperm ? row[colperm[j]] : row[j];
-	    str += col ? '*' : ' ';
-	}
-	console.log(str);
-    }
-}
 reorder.mat2graph = function(mat, directed) {
     var n = mat.length,
 	nodes = [],
@@ -1981,4 +2028,59 @@ reorder.ca = function(v, eps) {
     return eigenvector1;
 };
 
+reorder.cuthill_mckee = function(graph, comps) {
+    var i, order = [];
+    if (! comps) {
+	comps = graph.components();
+    }
+    for (i = 0; i < comps.length; i++) {
+	order = order.concat(reorder.cuthill_mckee1(graph, comps[i]));
+    }
+    return order;
+};
+
+
+reorder.cuthill_mckee1 = function(graph, comp) {
+    if (comp.length < 2)
+	return comp;
+
+    var nodes = graph.nodes(),
+	start = comp[0], 
+	min_deg = graph.degree(start),
+	i, n, edges, e,
+	visited = {},
+	queue = [],
+	order = [];
+    
+    for (i = 0; i < comp.length; i++) {
+	n = nodes[comp[i]].index;
+	if (graph.degree(n) < min_deg) {
+	    min_deg = graph.degree(n);
+	    start = n;
+	    if (min_deg == 1)
+		break;
+	}
+    }
+    queue = [start]; //TODO replace with a proper queue
+    while (queue.length != 0) {
+	n = queue.shift();
+	if (visited[n])
+	    continue;
+	visited[n] = true;
+	order.push(n);
+	e = graph.edges(n)
+	    .map(function(edge) { return graph.other(edge, n).index; })
+	    .filter(function(n) { return !visited[n]; })
+	    .sort(function(a, b) { // ascending by degree
+		return graph.degree(a) - graph.degree(b);
+	    });
+
+	queue = queue.concat(e);
+    }
+    return order;
+};
+
+reorder.reverse_cuthill_mckee = function(graph, comps) {
+    return reorder.cuthill_mckee(graph, comps).reverse();
+};
 })(this);

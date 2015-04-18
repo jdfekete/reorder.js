@@ -1,4 +1,4 @@
-require("science")
+require("science");
 require("../reorder.v1");
 require("../reorder.v1");
 

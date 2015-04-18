@@ -1,3 +1,23 @@
+reorder.displaymat = function(mat, rowperm, colperm) {
+    var i, j, row, col, str;
+    if (! rowperm) {
+	rowperm = reorder.range(mat.length);
+    }
+    if (! colperm) {
+	colperm = reorder.range(mat[0].length);
+    }
+    console.log('Matrix:');
+    for (i = 0; i < mat.length; i++) {
+	row = rowperm ? mat[rowperm[i]] : mat[i];
+	str = "";
+	for (j = 0; j < row.length; j++) {
+	    col = colperm ? row[colperm[j]] : row[j];
+	    str += col ? '*' : ' ';
+	}
+	console.log(str);
+    }
+};
+
 reorder.printmat = function(m) {
     var i, j, row, line;
     for (i = 0; i < m.length; i++) {

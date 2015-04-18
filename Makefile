@@ -18,9 +18,9 @@ reorder.v1.js: \
 	src/transpose.js \
 	src/correlation.js \
 	src/heap.js \
+	src/bandwidth.js \
 	src/permutation.js \
 	src/graph.js \
-	src/printmat.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
 	src/count_crossings.js \
@@ -37,7 +37,8 @@ reorder.v1.js: \
 	src/poweriteration.js \
 	src/sortorder.js \
 	src/pca1d.js \
-	src/ca.js
+	src/ca.js \
+	src/cuthill_mckee.js
 
 test: all
 	@npm test

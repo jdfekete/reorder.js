@@ -65,6 +65,9 @@ reorder.graph = function(nodes, links, directed) {
 		outEdges[i] = [];
 	    }
 	}
+	else {
+	    inEdges = outEdges = edges;
+	}
 
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
@@ -82,21 +85,43 @@ reorder.graph = function(nodes, links, directed) {
 
     graph.init = init;
 
-    graph.edges = function(node) { return edges[node]; };
+    function edges(node) { 
+	if (typeof node != "number") {
+	    node = node.index;
+	    console.log('received node %d', node);
+	}
+	return edges[node]; 
+    };
+    graph.edges = edges;
+    graph.degree = function(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return edges[node].length; 
+    };
 
     function inEdges(node) {
-	if (directed)
-	    return inEdges[node];
-	return edges[node];
+	if (typeof node != "number")
+	    node = node.index;
+	return inEdges[node];
     }
     graph.inEdges = inEdges;
+    graph.inDegree = function(node) {
+	if (typeof node != "number")
+	    node = node.index;
+	return inEdges[node].length; 
+    };
 
-    function outEdges(node) {
-	if (directed)
-	    return outEdges[node];
-	return edges[node];
+    function outEdges(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return outEdges[node];
     }
     graph.outEdges = outEdges;
+    graph.outDegree = function(node) { 
+	if (typeof node != "number")
+	    node = node.index;
+	return outEdges[node].length; 
+    };
 
     graph.sinks = function() {
 	var sinks = [],
