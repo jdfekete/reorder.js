@@ -186,7 +186,7 @@ reorder.graph = function(nodes, links, directed) {
 		}
 	    }
 	    if (ccomp.length) {
-		ccomp.sort();
+		ccomp.sort(function(a,b){ return a-b; });
 		comps.push(ccomp);
 	    }
 	}

@@ -23,6 +23,7 @@ reorder.v1.js: \
 	src/printmat.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
+	src/count_crossings.js \
 	src/barycenter.js \
 	src/dijkstra.js \
 	src/dist.js \

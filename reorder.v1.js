@@ -541,7 +541,7 @@ reorder.graph = function(nodes, links, directed) {
 		}
 	    }
 	    if (ccomp.length) {
-		ccomp.sort();
+		ccomp.sort(function(a,b){ return a-b; });
 		comps.push(ccomp);
 	    }
 	}
@@ -636,6 +636,62 @@ reorder.graph2mat = function(graph, directed) {
     }
     return mat;
 };
+// Wilhelm Barth, Petra Mutzel, Michael Jünger: 
+// Simple and Efficient Bilayer Cross Counting.
+// J. Graph Algorithms Appl. 8(2): 179-194 (2004)
+function count_crossings(graph, north, south) {
+    var i, j, n,
+	firstIndex, treeSize, tree, index, weightSum,
+	invert = false, crosscount;
+
+    // Choose the smaller axis
+    if (north.length < south.length) {
+	var tmp = north;
+	north = south;
+	south = tmp;
+	invert = true;
+    }
+
+    var south_inv = inverse_permutation(south),
+	southsequence = [];
+
+    for (i = 0; i < north.length; i++) {
+	if (invert) {
+	    n = graph.inEdges(north[i])
+		.map(function(e) {
+		    return south_inv[e.target.index];
+		});
+	}
+	else {
+	    n = graph.outEdges(north[i])
+		.map(function(e) {
+		    return south_inv[e.source.index];
+		});
+	}
+	n.sort(function(a,b){ return a-b; });
+	southsequence = southsequence.concat(n);
+    }
+    
+    firstIndex = 1;
+    while (firstIndex < south.length)
+	firstIndex <<= 1;
+    treeSize = 2 * firstIndex - 1;
+    firstIndex -= 1;
+    tree = science.zeroes(treeSize);
+
+    crosscount = 0;
+    for (i = 0; i < southsequence.length; i++) {
+	index = southsequence[i] + firstIndex;
+	tree[index]++;
+	while (index > 0) {
+	    if (index%2) crosscount += tree[index+1];
+	    index = (index - 1) >> 1;
+	    tree[index]++;
+	}
+    }
+    return crosscount;
+}
+reorder.count_crossings = count_crossings;
 reorder.barycenter = function(graph, iter, comps) {
     var perm = [];
     // Compute the barycenter heuristic on each connected component
@@ -657,7 +713,7 @@ function median(neighbors) {
 	return neighbors[0];
     if (neighbors.length == 2)
 	return (neighbors[0]+neighbors[1])/2;
-    neighbors.sort();
+    neighbors.sort(function(a,b){ return a-b; });
     if (neighbors.length % 2)
 	return neighbors[(neighbors.length-1)/2];
     var rm = neighbors.length/2,
@@ -670,61 +726,6 @@ function median(neighbors) {
 	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
 }
 
-// Wilhelm Barth, Petra Mutzel, Michael Jünger: 
-// Simple and Efficient Bilayer Cross Counting.
-// J. Graph Algorithms Appl. 8(2): 179-194 (2004)
-function count_crossings(graph, north, south) {
-    var i, j, southPos = [], n,
-	firstIndex, treeSize, tree, index, weightSum,
-	invert = false, crosscount;
-
-    if (north.length < south.length) {
-	var tmp = north;
-	north = south;
-	south = tmp;
-	invert = true;
-    }
-
-    var south_inv = inverse_permutation(south);
-
-    for (i = 0; i < north.length; i++) {
-	if (invert) {
-	    n = graph.inEdges(north[i])
-		.map(function(e) {
-		    return south_inv[e.target.index];
-		});
-	}
-	else {
-	    n = graph.outEdges(north[i])
-		.map(function(e) {
-		    return south_inv[e.source.index];
-		});
-	}
-	n.sort();
-	southPos = southPos.concat(n);
-    }
-    
-    firstIndex = 1;
-    while (firstIndex < south.length)
-	firstIndex <<= 1;
-    treeSize = 2 * firstIndex - 1;
-    firstIndex -= 1;
-    tree = science.zeroes(treeSize);
-
-    crosscount = 0;
-    for (i = 0; i < southPos.length; i++) {
-	index = southPos[i] + firstIndex;
-	tree[index]++;
-	while (index > 0) {
-	    if (index%2) crosscount += tree[index+1];
-	    index = (index - 1) >> 1;
-	    tree[index]++;
-	}
-    }
-    return crosscount;
-}
-reorder.count_crossings = count_crossings;
-
 reorder.barycenter1 = function(graph, comp, iter) {
     var nodes = graph.nodes(),
 	layer1, layer2,
@@ -735,7 +736,7 @@ reorder.barycenter1 = function(graph, comp, iter) {
 	return comp;
 
     if (! iter)
-	iter = 10;
+	iter = 24;
     else if ((iter%2)==1)
 	iter++; // want even number of iterations
 

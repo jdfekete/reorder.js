@@ -20,7 +20,8 @@ require("util").puts(JSON.stringify({
     "devDependencies": {
 	"seedrandom": "2.3.11",
 	"uglify-js": "2.4.20",
-	"vows": "0.8.1"
+	"vows": "0.8.1",
+	"jsonfile": "2.0.0"
     },
     "licenses": [
 	{
