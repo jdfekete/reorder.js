@@ -46,14 +46,20 @@ function matrix(json) {
       nodes[i].leafOrder = lo;
   });
 
-  var barycenter = reorder.barycenter(
-      reorder.graph()
+  var graph = reorder.graph()
 	  .nodes(json.nodes)
-	  .links(json.links).init());
+	  .links(json.links).init(),
+      barycenter = reorder.barycenter(graph);
 
   barycenter[0].forEach(function(lo, i) {
       nodes[i].barycenter = lo;
   });
+
+  var rcm = reorder.reverse_cuthill_mckee(graph);
+  rcm.forEach(function(lo, i) {
+      nodes[i].rcm = lo;
+  });
+
 
 
   // Precompute the orders.
@@ -65,7 +71,8 @@ function matrix(json) {
 	return (x != 0) ?  x : d3.ascending(nodes[a].name, nodes[b].name);
     }),
     leafOrder:  nodes.map(function(n) { return n.leafOrder; }),
-    barycenter:  nodes.map(function(n) { return n.barycenter; })
+    barycenter:  nodes.map(function(n) { return n.barycenter; }),
+    rcm: nodes.map(function(n) { return n.rcm; }),
   };
 
   // The default sort order.
