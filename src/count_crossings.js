@@ -6,6 +6,16 @@ function count_crossings(graph, north, south) {
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
 
+    if (north==undefined) {
+	var comp = reorder.permutation(graph.nodes().length);
+	north = comp.filter(function(n) {
+	    return graph.outEdges(n).length!=0;
+	}),
+	south = comp.filter(function(n) {
+	    return graph.inEdges(n).length!=0;
+	});
+    }
+
     // Choose the smaller axis
     if (north.length < south.length) {
 	var tmp = north;

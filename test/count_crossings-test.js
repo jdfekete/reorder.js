@@ -34,7 +34,7 @@ function naive_count_crossings(graph, north, south) {
     return count;
 }
 
-function dohard(mat) {
+function dotest(mat) {
     var graph = reorder.mat2graph(mat, true),
 	comps = graph.components(),
 	comp = comps.reduce(function(a, b) {
@@ -95,7 +95,7 @@ suite.addBatch({
 			 12);
 	},
 	"bug": function() {
-	    dohard([
+	    dotest([
     [0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
     [0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -132,7 +132,7 @@ suite.addBatch({
 	    for (var i = 10; i < 100; i += 20) {
 		for (var j = 10; j < 100; j += 20) {
 		    var mat = reorder.randomMatrix(0.2, i, j, false);
-		    dohard(mat);
+		    dotest(mat);
 		}
 	    }
 	}

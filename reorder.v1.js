@@ -1,5 +1,5 @@
 (function(exports){
-reorder = {version: "0.0.2"}; // semver
+reorder = {version: "0.0.3"}; // semver
 
 reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
@@ -644,6 +644,16 @@ function count_crossings(graph, north, south) {
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
 
+    if (north==undefined) {
+	var comp = reorder.permutation(graph.nodes().length);
+	north = comp.filter(function(n) {
+	    return graph.outEdges(n).length!=0;
+	}),
+	south = comp.filter(function(n) {
+	    return graph.inEdges(n).length!=0;
+	});
+    }
+
     // Choose the smaller axis
     if (north.length < south.length) {
 	var tmp = north;
@@ -693,14 +703,18 @@ function count_crossings(graph, north, south) {
 }
 reorder.count_crossings = count_crossings;
 reorder.barycenter = function(graph, iter, comps) {
-    var perm = [];
+    var perms = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
 	comps = graph.components();
     }
-    for (var i = 0; i < comps.length; i++)
-	perm = perm.concat(reorder.barycenter1(graph, comps[i], iter));
-    return perm;
+    for (var i = 0; i < comps.length; i++) {
+	var p = reorder.barycenter1(graph, comps[i], iter);
+	perms = [ perms[0].concat(p[0]),
+		  perms[1].concat(p[1]),
+		  perms[2]+p[2] ];
+    }
+    return perms;
 };
 
 // Take the list of neighbor indexes and return the median according to 
@@ -733,8 +747,16 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	layer, 
 	i, v, neighbors;
 
-    if (comp.length < 3)
-	return comp;
+    layer1 = comp.filter(function(n) {
+	return graph.outEdges(n).length!=0;
+    });
+    layer2 = comp.filter(function(n) {
+	return graph.inEdges(n).length!=0;
+    });
+    if (comp.length < 3) {
+	return [layer1, layer2,
+		count_crossings(graph, layer1, layer2)];
+    }
 
     if (! max_iter)
 	max_iter = 24;
@@ -786,7 +808,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	    else if (d > 0) return 1;
 	    return 0;
 	});
-	for (i = 0; i < layer2.length; i++)
+	for (i = 0; i < layer.length; i++)
 	    nodes[layer[i]].pos = i;
 	crossings = count_crossings(graph, layer1, layer2);
 	if (crossings < best_crossings) {
@@ -796,7 +818,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	    best_iter = iter;
 	}
     }
-    console.log('Best iter: '+best_iter);
+    //console.log('Best iter: '+best_iter);
     return [best_layer1, best_layer2, best_crossings];
 };
 reorder.dijkstra = function(graph) {

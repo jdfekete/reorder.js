@@ -14,5 +14,12 @@ Reordering:
 		Correspondence analysis
 	Chun-Hou Chen methods: http://gap.stat.sinica.edu.tw/Papers/GAP_2002.pdf
 		 Elliptical
-	Barycenter method: http://www.informatica.si/PDF/29-3/13_Makinen-The%20Barycenter%20Heuristic....pdf
-	
+
+Reordering done:
+	Barycenter method:
+		   http://www.informatica.si/PDF/29-3/13_Makinen-The%20Barycenter%20Heuristic....pdf
+	Optimal Leaf Ordering
+		Ziv Bar-Joseph, Erik D. Demaine, David K. Gifford, Angèle M. Hamel, Tommy S. Jaakkola and Nathan Srebro
+		K-ary Clustering with Optimal Leaf Ordering for Gene Expression Data.
+		Bioinformatics, 19(9), pp 1070-8, 2003
+		http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf

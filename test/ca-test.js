@@ -9,6 +9,19 @@ Math.seedrandom('reorder');
 
 var suite = vows.describe("reorder.ca");
 
+function inDeltaArray(actual, expected, delta) {
+  var n = expected.length, i = -1;
+  if (actual.length !== n) return false;
+  while (++i < n) if (!inDeltaNumber(actual[i], expected[i], delta)) return false;
+  return true;
+}
+
+function inDeltaNumber(actual, expected, delta) {
+    var d = Math.abs(actual-expected);
+    //console.log("d="+d+": "+((d < delta) ? "pass" : "fail"));
+    return d < delta;
+}
+
 suite.addBatch({
     "ca": {
 	"simple": function() {
@@ -20,7 +33,10 @@ suite.addBatch({
 		res = reorder.ca(mat, 0.0001);
 
 	    //assert.isTrue(true);
-	    assert.inDeltaArray(res, [-0.5354605, -0.2626774, 0.8026722], 0.001);
+	    if (!inDeltaArray(res, [-0.5354605, -0.2626774, 0.8026722], 0.001)
+		&&  !inDeltaArray(res, [0.5354605, 0.2626774, -0.8026722], 0.001)) {
+		assert.fail(actual, expected, message || "expected {actual} to be in within *" + delta + "* of {expected}", null, assert.inDelta);
+	    }
 	}
     }
 });
