@@ -1,5 +1,5 @@
 (function(exports){
-reorder = {version: "0.0.3"}; // semver
+reorder = {version: "0.0.4"}; // semver
 
 reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
@@ -916,7 +916,7 @@ reorder.dijkstra = function(graph) {
 	    path.unshift(v);
 	}
 	return path;
-    }
+    };
 
     return dijkstra;
 };
