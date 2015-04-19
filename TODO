@@ -6,7 +6,6 @@ Interaction:
 Reordering:
 	Dijkstra distance matrix
 	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
-	Inverse Cuthill-McKee
 	Tables/bipartite networks
 	Biclustering
 	Contingency tables methods:
@@ -23,3 +22,4 @@ Reordering done:
 		K-ary Clustering with Optimal Leaf Ordering for Gene Expression Data.
 		Bioinformatics, 19(9), pp 1070-8, 2003
 		http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
+	Inverse Cuthill-McKee
