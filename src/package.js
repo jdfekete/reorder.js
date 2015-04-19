@@ -1,7 +1,7 @@
 require("./core");
 
 require("util").puts(JSON.stringify({
-    "name": "reorder",
+    "name": "reorder.js",
     "version": reorder.version,
     "description": "Matrix reordering in JavaScript.",
     "keywords": ["matrix", "reordering", "mathematics"],

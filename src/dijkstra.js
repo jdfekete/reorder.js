@@ -46,7 +46,7 @@ reorder.dijkstra = function(graph) {
 	    path.unshift(v);
 	}
 	return path;
-    }
+    };
 
     return dijkstra;
 };
