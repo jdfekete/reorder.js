@@ -131,7 +131,7 @@ suite.addBatch({
 	"hard": function() {
 	    for (var i = 10; i < 100; i += 20) {
 		for (var j = 10; j < 100; j += 20) {
-		    var mat = reorder.randomMatrix(0.2, i, j, false);
+		    var mat = reorder.random_matrix(0.2, i, j, false);
 		    dotest(mat);
 		}
 	    }

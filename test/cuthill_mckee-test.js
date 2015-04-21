@@ -1,4 +1,5 @@
 require("science");
+Queue = require('tiny-queue');
 require("../reorder.v1");
 require("../reorder.v1");
 
@@ -30,7 +31,7 @@ suite.addBatch({
 	},
 	"harder": function() {
 	    for (var i = 10; i < 100; i += 20) {
-		var mat = reorder.randomMatrix(0.2, i),
+		var mat = reorder.random_matrix(0.2, i),
 		    graph = reorder.mat2graph(mat),
 		    bw = reorder.bandwidth(graph),
 		    order = reorder.reverse_cuthill_mckee(graph);

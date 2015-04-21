@@ -7,14 +7,27 @@ reorder.graph = function(nodes, links, directed) {
 	components;
 
     graph.nodes = function(x) {
-      if (!arguments.length) return nodes;
-      nodes = x;
-      return graph;
+	if (!arguments.length) return nodes;
+	nodes = x;
+	return graph;
     };
+
+    graph.nodes_indices = function() {
+	return nodes.map(function(n) {
+	    return n.index;
+	});
+    };
+
     graph.links = function(x) {
-      if (!arguments.length) return links;
-      links = x;
-      return graph;
+	if (!arguments.length) return links;
+	links = x;
+	return graph;
+    };
+    graph.links_indices = function() {
+	return links.map(function(l) {
+	    return { source: l.source.index,
+		     target: l.target.index };
+	});
     };
     graph.linkDistance = function(x) {
 	if (!arguments.length) return linkDistance;
@@ -23,14 +36,15 @@ reorder.graph = function(nodes, links, directed) {
     };
 
     graph.directed = function(x) {
-      if (!arguments.length) return directed;
-      directed = x;
-      return graph;
+	if (!arguments.length) return directed;
+	directed = x;
+	return graph;
     };
 
     function init() {
 	var i, o, n = nodes.length, m = links.length;
 
+	components = undefined;
 	for (i = 0; i < n; ++i) {
 	    (o = nodes[i]).index = i;
 	    o.weight = 0;
@@ -72,10 +86,10 @@ reorder.graph = function(nodes, links, directed) {
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
 	    edges[o.source.index].push(o);
-	    if (directed)
-		inEdges[o.source.index].push(o);
 	    if (o.source.index != o.target.index)
 		edges[o.target.index].push(o);
+	    if (directed)
+		inEdges[o.source.index].push(o);
 	    if (directed)
 		outEdges[o.target.index].push(o);
 	}
@@ -211,7 +225,7 @@ reorder.graph = function(nodes, links, directed) {
 		}
 	    }
 	    if (ccomp.length) {
-		ccomp.sort(function(a,b){ return a-b; });
+		ccomp.sort(reorder.cmp_number);
 		comps.push(ccomp);
 	    }
 	}

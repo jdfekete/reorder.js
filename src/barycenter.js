@@ -23,7 +23,7 @@ function median(neighbors) {
 	return neighbors[0];
     if (neighbors.length == 2)
 	return (neighbors[0]+neighbors[1])/2;
-    neighbors.sort(function(a,b){ return a-b; });
+    neighbors.sort(reorder.cmp_number);
     if (neighbors.length % 2)
 	return neighbors[(neighbors.length-1)/2];
     var rm = neighbors.length/2,

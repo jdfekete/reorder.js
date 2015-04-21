@@ -15,7 +15,8 @@ require("util").puts(JSON.stringify({
 	}
     ],
     "dependencies": {
-	"science": "1.9.2"
+	"science": "1.9.2",
+	"tiny-queue": "0.2.1"
     },
     "devDependencies": {
 	"seedrandom": "2.3.11",
@@ -24,7 +25,7 @@ require("util").puts(JSON.stringify({
 	"jsonfile": "2.0.0"
     },
     "scripts": {
-	"test": "vows; echo"
+	"test": "vows --nocolor; echo"
     },
     "licenses": [
 	{

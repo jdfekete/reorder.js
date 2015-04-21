@@ -40,7 +40,7 @@ function count_crossings(graph, north, south) {
 		    return south_inv[e.source.index];
 		});
 	}
-	n.sort(function(a,b){ return a-b; });
+	n.sort(reorder.cmp_number);
 	southsequence = southsequence.concat(n);
     }
     
@@ -49,7 +49,7 @@ function count_crossings(graph, north, south) {
 	firstIndex <<= 1;
     treeSize = 2 * firstIndex - 1;
     firstIndex -= 1;
-    tree = science.zeroes(treeSize);
+    tree = reorder.zeroes(treeSize);
 
     crosscount = 0;
     for (i = 0; i < southsequence.length; i++) {

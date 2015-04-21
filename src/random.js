@@ -22,14 +22,14 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
-reorder.randomMatrix = function(p, n, m, sym) {
+reorder.random_matrix = function(p, n, m, sym) {
     if (! m)
 	m = n;
     if (n != m)
 	sym = false;
     else if (! sym)
 	sym = true;
-    var mat = science.zeroes(n, m), i, j, cnt;
+    var mat = reorder.zeroes(n, m), i, j, cnt;
 
     if (sym) {
 	for (i = 0; i < n; i++) {
@@ -60,4 +60,5 @@ reorder.randomMatrix = function(p, n, m, sym) {
 	}
     }
     return mat;
-}
+};
+

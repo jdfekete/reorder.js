@@ -48,7 +48,7 @@ suite.addBatch({
 	    assert.deepEqual(m2, mat);
 	},
 	"lesssimple": function() {
-	    var mat = reorder.randomMatrix(0.2, 10),
+	    var mat = reorder.random_matrix(0.2, 10),
 		graph = reorder.mat2graph(mat),
 		m2 = reorder.graph2mat(graph);
 	    assert.deepEqual(m2, mat);
@@ -56,7 +56,7 @@ suite.addBatch({
 	"hard": function() {
 	    for (var i = 10; i < 100; i += 20) {
 		for (var j = 10; j < 100; j += 20) {
-		    var mat = remove_zeroes(reorder.randomMatrix(0.2, i, j, false)),
+		    var mat = remove_zeroes(reorder.random_matrix(0.2, i, j, false)),
 			graph = reorder.mat2graph(mat, true),
 			m2 = reorder.graph2mat(graph);
 		    assert.deepEqual(m2, mat);

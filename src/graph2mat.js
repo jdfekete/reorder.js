@@ -23,7 +23,7 @@ reorder.graph2mat = function(graph, directed) {
 		cols--;
 	}
 	//console.log("Rows: "+rows+" Cols: "+cols);
-	mat = science.zeroes(rows, cols);
+	mat = reorder.zeroes(rows, cols);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
@@ -31,7 +31,7 @@ reorder.graph2mat = function(graph, directed) {
 	}
     }
     else {
-	mat = science.zeroes(n, n);
+	mat = reorder.zeroes(n, n);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];

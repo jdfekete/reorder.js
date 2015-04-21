@@ -20,7 +20,7 @@ reorder.sumlines = function(v) {
 reorder.sumcols = function(v) {
     var n = v.length,
 	o = v[0].length,
-	sumcol = science.zeroes(o),
+	sumcol = reorder.zeroes(o),
 	i, j, row;
 
     for (i = 0; i < n; i++) {

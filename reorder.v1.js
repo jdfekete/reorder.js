@@ -1,10 +1,33 @@
 (function(exports){
 reorder = {version: "0.0.4"}; // semver
 
+// Use as: [4,3,2].sort(reorder.cmp_number_asc);
+reorder.cmp_number_asc = function(a,b) { return a-b; };
+reorder.cmp_number = reorder.cmp_number_asc;
+
+// Use as: [4,3,2].sort(reorder.cmp_number_desc);
+reorder.cmp_number_desc = function(a,b) { return b-a; };
+
+// Use as: [[4,3],[2]].reduce(reorder.flaten);
+reorder.flatten = function(a,b) { return a.concat(b); };
+
+// Constructs a multi-dimensional array filled with Infinity.
+reorder.infinities = function(n) {
+    var i = -1,
+	a = [];
+    if (arguments.length === 1)
+	while (++i < n)
+	    a[i] = Infinity;
+    else
+	while (++i < n)
+	    a[i] = reorder.infinities.apply(
+		this, Array.prototype.slice.call(arguments, 1));
+    return a;
+};
 reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
 reorder.normalize = science.lin.normalize;
-
+reorder.zeroes = science.zeroes;
 reorder.displaymat = function(mat, rowperm, colperm) {
     var i, j, row, col, str;
     if (! rowperm) {
@@ -246,8 +269,8 @@ reorder.correlation = {
 	if (n === 0)
 	    return NaN;
 	mx = Array(n);
-	sx = science.zeroes(n);
-	sx2 = science.zeroes(n);
+	sx = reorder.zeroes(n);
+	sx2 = reorder.zeroes(n);
 	for (i = 0; i < n; i++) {
 	    mx[i] = science.stats.mean(matrix[i]);
 	}
@@ -269,97 +292,6 @@ reorder.correlation = {
 	}
 	return ret;
     }
-};
-
-reorder.heap = function(comp) {
-    var heap = [], index = {}, Heap = {};
-
-    Heap.length = function() { return heap.length; }
-    Heap.insert = function(o) {
-	var i = heap.length;
-	heap.push(null);
-	percolateUp(i, o);
-    };
-
-    Heap.isEmpty = function() { return heap.length == 0; };
-    Heap.peek = function() {
-	if (heap.length == 0)
-	    throw {error: "Empty heap"};
-	return heap[0];
-    };
-
-    Heap.pop = function() {
-	if (heap.length == 0)
-	    throw {error: "Empty heap"};
-	var top = heap[0];
-	if (top == null)
-	    return top;
-
-	var boto = heap[heap.length-1];
-	heap[0] = boto;
-	index[boto] = 0;
-
-	heap.pop();
-	if (heap.length > 1)
-	    percolateDown(0);
-
-	delete index[top];
-	return top;
-    };
-
-    function lChild(i) { return i*2 + 1; };
-    function rChild(i) { return i*2 + 2; };
-    function parent(i) { return Math.floor((i-1)/2); };
-    function swap(i, j) {
-	var io = heap[i], jo = heap[j];
-	heap[i] = jo;
-	index[jo] = i;
-	heap[j] = io;
-	index[io] = j;
-    };
-
-    function update(o) {
-	var i = percolateUp(index[o], o);
-	percolateDown(i);
-    };
-
-    function percolateDown(cur) {
-	while (true) {
-	    var left = lChild(cur), right = rChild(cur);
-	    var smallest;
-	    if ((left < heap.length) && (comp(heap[left], heap[cur]) < 0))
-		smallest = left;
-	    else
-		smallest = cur;
-
-	    if ((right < heap.length) && (comp(heap[right], heap[smallest])) < 0)
-		smallest = right;
-
-	    if (cur == smallest) 
-		return;
-	    swap(cur, smallest);
-	    cur = smallest;
-	}
-    };
-
-    function percolateUp(cur, o) {
-	var i = cur;
-
-	for (par = parent(i);
-	     (i > 0) && (comp(heap[par], o) > 0);
-	     par = parent(par)) {
-	    var p = heap[par];
-	    heap[i] = p;
-	    index[p] = i;
-	    i = par;
-	}
-	heap[i] = o;
-	index[o] = i;
-
-	return i;
-    };
-
-    return Heap;
 };
 reorder.bandwidth = function(graph, order) {
     if (! order)
@@ -397,14 +329,27 @@ reorder.graph = function(nodes, links, directed) {
 	components;
 
     graph.nodes = function(x) {
-      if (!arguments.length) return nodes;
-      nodes = x;
-      return graph;
+	if (!arguments.length) return nodes;
+	nodes = x;
+	return graph;
     };
+
+    graph.nodes_indices = function() {
+	return nodes.map(function(n) {
+	    return n.index;
+	});
+    };
+
     graph.links = function(x) {
-      if (!arguments.length) return links;
-      links = x;
-      return graph;
+	if (!arguments.length) return links;
+	links = x;
+	return graph;
+    };
+    graph.links_indices = function() {
+	return links.map(function(l) {
+	    return { source: l.source.index,
+		     target: l.target.index };
+	});
     };
     graph.linkDistance = function(x) {
 	if (!arguments.length) return linkDistance;
@@ -413,14 +358,15 @@ reorder.graph = function(nodes, links, directed) {
     };
 
     graph.directed = function(x) {
-      if (!arguments.length) return directed;
-      directed = x;
-      return graph;
+	if (!arguments.length) return directed;
+	directed = x;
+	return graph;
     };
 
     function init() {
 	var i, o, n = nodes.length, m = links.length;
 
+	components = undefined;
 	for (i = 0; i < n; ++i) {
 	    (o = nodes[i]).index = i;
 	    o.weight = 0;
@@ -462,10 +408,10 @@ reorder.graph = function(nodes, links, directed) {
         for (i = 0; i < links.length; ++i) {
 	    o = links[i];
 	    edges[o.source.index].push(o);
-	    if (directed)
-		inEdges[o.source.index].push(o);
 	    if (o.source.index != o.target.index)
 		edges[o.target.index].push(o);
+	    if (directed)
+		inEdges[o.source.index].push(o);
 	    if (directed)
 		outEdges[o.target.index].push(o);
 	}
@@ -601,7 +547,7 @@ reorder.graph = function(nodes, links, directed) {
 		}
 	    }
 	    if (ccomp.length) {
-		ccomp.sort(function(a,b){ return a-b; });
+		ccomp.sort(reorder.cmp_number);
 		comps.push(ccomp);
 	    }
 	}
@@ -616,6 +562,151 @@ reorder.graph = function(nodes, links, directed) {
 
     return graph;
 };
+reorder.graph_random_erdos_renyi = function(n, p, directed) {
+    if (p <= 0)
+	return reorder.graph_empty(n, directed);
+    else if (p >= 1)
+	return reorder.graph_complete(n, directed);
+
+    var nodes = graph_empty_nodes(n),
+	links = [],
+	v, w, i, lr, lp;
+
+    w = -1;
+    lp = Math.log(1.0 - p);
+
+    if (directed) {
+	for (v = 0; v < n; ) {
+	    lr = Math.log(1.0 - Math.random());
+	    w = w + 1 + Math.floor(lr/lp);
+	    if (v == w)
+		w = w+1;
+	    while (w >= n && v < n) {
+		w = w - n;
+		v = v + 1;
+		if (v == w)
+		    w = w+1;
+	    }
+	    if (v < n)
+		links.push({source: v, target: w});
+	}
+    }
+    else {
+	for(v = 1; v < n; ) {
+	    lr = Math.log(1.0 - Math.random());
+	    w = w + 1 + Math.floor(lr/lp);
+	    while (w >= v && v < n) {
+		w = w - v;
+		v = v + 1;
+	    }
+	    if (v < n)
+		links.push({source: v, target: w});
+	}
+    }
+    return reorder.graph(nodes, links, directed).init();
+};
+
+reorder.graph_random = reorder.graph_random_erdos_renyi;
+function graph_empty_nodes(n) {
+    var nodes = Array(n), i;
+    for (i = 0; i < n; i++) 
+	nodes[i] = {id: i};
+    return nodes;
+};
+
+reorder.graph_empty_nodes = graph_empty_nodes;
+
+reorder.graph_empty = function(n, directed) {
+    return graph(graph_empty_nodes(n), [], directed);
+};
+reorder.complete_graph = function(n, directed) {
+    var nodes = graph_empty_nodes(n),
+	links = [],
+	i, j;
+
+    if (directed) {
+	for (i = 0; i < n; i++) {
+	    for (j = 0; j < n; j++) {
+		if (i != j)
+		    links.push({source: i, target: j });
+	    }
+	}
+    }
+    else {
+	for (i = 0; i < (n-1); i++) {
+	    for (j = i+1; j < n; j++) 
+		links.push({source: i, target: j });
+	}
+    }
+    return reorder.graph(nodes, links, directed).init();
+};
+reorder.graph_connect = function(graph, comps) {
+    var i, j, links = graph.links();
+
+    if (! comps)
+	comps = graph.components();
+    
+    for (i = 0; i < (comps.length-1); i++) {
+	for (j = i+1; j < comps.length; j++) {
+	    links.push({source: comps[i][0], target: comps[j][0]});
+	}
+    }
+    graph.links(links);
+    return graph.init();
+};
+reorder.bfs = function(graph, v, fn) {
+    var q = new Queue(),
+	discovered = {};
+    q.push(v);
+    discovered[v] = true;
+    fn(v, undefined);
+    while (q.length) {
+	v = q.shift();
+	fn(v, v);
+	graph.edges(v).forEach(function(e) {
+	    var v2 = graph.other(e, v).index;
+	    if (! discovered[v2]) {
+		q.push(v2);
+		discovered[v2] = true;
+		fn(v, v2);
+	    }
+	});
+	fn(v, -1);
+    }
+};
+
+reorder.bfs_distances = function(graph, v) {
+    var dist = {};
+    dist[v] = 0;
+    reorder.bfs(graph, v, function(v, c) {
+	if (c >= 0 && v != c)
+	    dist[c] = dist[v]+1;
+    });
+    return dist;
+};
+
+reorder.all_pairs_distance_bfs = function(graph, comps) {
+    if (! comps)
+	comps = [ graph.nodes_indices() ];
+    var nodes = comps.reduce(reorder.flatten)
+	    .sort(reorder.cmp_number),
+	mat = Array(nodes.length),
+	i, j, dist;
+
+    for (i = 0; i < nodes.length; i++)
+	mat[i] = Array(nodes.length);
+
+    for (i = 0; i < nodes.length; i++) {
+	dist = reorder.bfs_distances(graph, i);
+	for (j in dist) {
+	    mat[i][j] = dist[j];
+	    mat[j][i] = dist[j];
+	}
+    }
+    return mat;
+}
+
+
 reorder.mat2graph = function(mat, directed) {
     var n = mat.length,
 	nodes = [],
@@ -665,7 +756,7 @@ reorder.graph2mat = function(graph, directed) {
 		cols--;
 	}
 	//console.log("Rows: "+rows+" Cols: "+cols);
-	mat = science.zeroes(rows, cols);
+	mat = reorder.zeroes(rows, cols);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
@@ -673,7 +764,7 @@ reorder.graph2mat = function(graph, directed) {
 	}
     }
     else {
-	mat = science.zeroes(n, n);
+	mat = reorder.zeroes(n, n);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
@@ -725,7 +816,7 @@ function count_crossings(graph, north, south) {
 		    return south_inv[e.source.index];
 		});
 	}
-	n.sort(function(a,b){ return a-b; });
+	n.sort(reorder.cmp_number);
 	southsequence = southsequence.concat(n);
     }
     
@@ -734,7 +825,7 @@ function count_crossings(graph, north, south) {
 	firstIndex <<= 1;
     treeSize = 2 * firstIndex - 1;
     firstIndex -= 1;
-    tree = science.zeroes(treeSize);
+    tree = reorder.zeroes(treeSize);
 
     crosscount = 0;
     for (i = 0; i < southsequence.length; i++) {
@@ -774,7 +865,7 @@ function median(neighbors) {
 	return neighbors[0];
     if (neighbors.length == 2)
 	return (neighbors[0]+neighbors[1])/2;
-    neighbors.sort(function(a,b){ return a-b; });
+    neighbors.sort(reorder.cmp_number);
     if (neighbors.length % 2)
 	return neighbors[(neighbors.length-1)/2];
     var rm = neighbors.length/2,
@@ -868,57 +959,118 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     //console.log('Best iter: '+best_iter);
     return [best_layer1, best_layer2, best_crossings];
 };
-reorder.dijkstra = function(graph) {
-    var g = graph, dijkstra = {};
+reorder.all_pairs_distance = function(graph, comps) {
+    var distances = [];
+    if (! comps)
+	comps = graph.components();
 
-    function allShortestPaths(from, queued) {
-	var preds = {}, edges, v, v2, e, d, D,
-	    queue = reorder.heap(function(i, j) {
-		return preds[i].weight - preds[j].weight;
-	    }),
-	    p = { edge: -1, vertex: from, weight: 0 }, p2;
-	if (! queued) 
-	    queued = {};
-	queued[from] = p;
-	queue.insert(from);
+    for (var i = 0; i < comps.length; i++) 
+	distances.push(reorder.all_pairs_distance1(graph, comps[i]));
+    return distances;
+};
 
-	while (! queue.isEmpty()) {
-	    p = queued[queue.pop()];
-	    v = p.vertex;
-//	    delete queued[v];
-	    edges = graph.edges(v);
-	    for (var i = 0; i < edges.length; i++) {
-		e = edges[i].index;
-		d = p.weight + graph.distance(e);
-		v2 = graph.other(e, v).index;
-		D = queued[v2];
-		if (! D) {
-		    p2 = {edge: e, vertex: v2, weight: d};
-		    queue.insert(v2);
-		    queued[v2] = p2;
-		}
-		else if (D.weight > d) {
-		    D.weight = d;
-		    D.edge = e;
-		    queue.update(D.vertex);
+function all_pairs_distance_floyd_warshall(graph, comp) {
+    var dist = reorder.infinities(comp.length, comp.length),
+	a0, edges,
+	i, j, k, inv;
+    // Floyd Warshall, 
+    // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
+    // O(n^3) unfortunately
+
+    inv = inverse_permutation(comp);
+
+    for (i = 0; i < comp.length; i++)
+	dist[i][i] = 0;
+    
+    for (i = 0; i < comp.length; i++) {
+	edges = {};
+	graph.edges(comp[i]).forEach(function(e) {
+	    if (e.source == e.target) return;
+	    var u = inv[e.source.index],
+		v = inv[e.target.index];
+	    dist[u][v] = e.value ? e.value : 1;
+	    dist[v][u] = e.value ? e.value : 1;
+	});
+    }
+
+    for (k=0; k<comp.length; k++) {
+	for (i=0; i<comp.length; i++)
+	    if (dist[i][k] != Infinity) {
+		for (j=0; j<comp.length; j++)
+		    if (dist[k][j] != Infinity
+			&& dist[i][j] > dist[i][k] + dist[k][j]) {
+			dist[i][j] = dist[i][k] + dist[k][j];
+			dist[j][i] = dist[i][j];
+		    }
+	    }
+    }
+    return dist;
+}
+
+reorder.all_pairs_distance1 = all_pairs_distance_floyd_warshall;
+
+function floyd_warshall_with_path(graph, comp) {
+    if (! comp)
+	comp = graph.components()[0];
+
+    var dist = reorder.infinities(comp.length, comp.length),
+	next = Array(comp.length),
+	directed = graph.directed(),
+	edges,
+	i, j, k, inv;
+    // Floyd Warshall, 
+    // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
+    // O(n^3) unfortunately
+
+    inv = inverse_permutation(comp);
+    
+    for (i = 0; i < comp.length; i++) {
+	dist[i][i] = 0;
+	next[i] = Array(comp.length);
+    }
+    
+    for (i = 0; i < comp.length; i++) {
+	edges = {};
+	graph.edges(comp[i]).forEach(function(e) {
+	    if (e.source == e.target) return;
+	    var u = inv[e.source.index],
+		v = inv[e.target.index];
+	    dist[u][v] = e.value ? e.value : 1;
+	    next[u][v] = v;
+	    if (! directed) {
+		dist[v][u] = e.value ? e.value : 1;
+		next[v][u] = u;
+	    }
+	});
+    }
+
+    for (k=0; k<comp.length; k++) {
+	for (i=0; i<comp.length; i++) {
+	    for (j=0; j<comp.length; j++) {
+		if (dist[i][j] > dist[i][k] + dist[k][j]) {
+		    dist[i][j] = dist[i][k] + dist[k][j];
+		    next[i][j] = next[i][k];
+		    if (! directed) {
+			dist[j][i] = dist[i][j];
+			next[j][i] = next[k][j];
+		    }
 		}
 	    }
 	}
-	return queued;
     }
+    return [dist, next];
+}
 
-    dijkstra.shortestPath = function(from, to) {
-	var map = allShortestPaths(from), path, v;
-	v = map[to];
-	path = [ v ];
-	while (v.edge != -1) {
-	    v = map[graph.other(v.edge, v.vertex).index];
-	    path.unshift(v);
-	}
-	return path;
-    };
+reorder.floyd_warshall_with_path = floyd_warshall_with_path;
 
-    return dijkstra;
+reorder.floyd_warshall_path = function(next, u, v) {
+    if (next[u][v] == undefined) return [];
+    var path = [u];
+    while (u != v) {
+	u = next[u][v];
+	path.push(u);
+    }
+    return path;
 };
 reorder.distmax = function (distMatrix) {
     var max = 0,
@@ -1016,14 +1168,14 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
-reorder.randomMatrix = function(p, n, m, sym) {
+reorder.random_matrix = function(p, n, m, sym) {
     if (! m)
 	m = n;
     if (n != m)
 	sym = false;
     else if (! sym)
 	sym = true;
-    var mat = science.zeroes(n, m), i, j, cnt;
+    var mat = reorder.zeroes(n, m), i, j, cnt;
 
     if (sym) {
 	for (i = 0; i < n; i++) {
@@ -1054,7 +1206,8 @@ reorder.randomMatrix = function(p, n, m, sym) {
 	}
     }
     return mat;
-}
+};
+
 reorder.permute = function(list, indexes) {
     var m = indexes.length;
     var copy = list.slice(0);
@@ -1951,7 +2104,7 @@ reorder.sumlines = function(v) {
 reorder.sumcols = function(v) {
     var n = v.length,
 	o = v[0].length,
-	sumcol = science.zeroes(o),
+	sumcol = reorder.zeroes(o),
 	i, j, row;
 
     for (i = 0; i < n; i++) {
@@ -2049,7 +2202,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 	min_deg = graph.degree(start),
 	i, n, edges, e,
 	visited = {},
-	queue = [],
+	queue = new Queue(),
 	order = [];
     
     for (i = 0; i < comp.length; i++) {
@@ -2061,7 +2214,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 		break;
 	}
     }
-    queue = [start]; //TODO replace with a proper queue
+    queue.push(start); //TODO replace with a proper queue
     while (queue.length != 0) {
 	n = queue.shift();
 	if (visited[n])
@@ -2075,7 +2228,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 		return graph.degree(a) - graph.degree(b);
 	    });
 
-	queue = queue.concat(e);
+	e.forEach(queue.push, queue);
     }
     return order;
 };

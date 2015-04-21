@@ -9,6 +9,7 @@ all: \
 
 reorder.v1.js: \
 	src/core.js \
+	src/utils.js \
 	src/aliases.js \
 	src/debug.js \
 	src/mean.js \
@@ -17,15 +18,19 @@ reorder.v1.js: \
 	src/range.js \
 	src/transpose.js \
 	src/correlation.js \
-	src/heap.js \
 	src/bandwidth.js \
 	src/permutation.js \
 	src/graph.js \
+	src/graph_random.js \
+	src/graph_empty.js \
+	src/graph_complete.js \
+	src/graph_connect.js \
+	src/bfs.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
 	src/count_crossings.js \
 	src/barycenter.js \
-	src/dijkstra.js \
+	src/all_pairs_distance.js \
 	src/dist.js \
 	src/random.js \
 	src/permute.js \

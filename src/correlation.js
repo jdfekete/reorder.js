@@ -22,8 +22,8 @@ reorder.correlation = {
 	if (n === 0)
 	    return NaN;
 	mx = Array(n);
-	sx = science.zeroes(n);
-	sx2 = science.zeroes(n);
+	sx = reorder.zeroes(n);
+	sx2 = reorder.zeroes(n);
 	for (i = 0; i < n; i++) {
 	    mx[i] = science.stats.mean(matrix[i]);
 	}

@@ -19,7 +19,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 	min_deg = graph.degree(start),
 	i, n, edges, e,
 	visited = {},
-	queue = [],
+	queue = new Queue(),
 	order = [];
     
     for (i = 0; i < comp.length; i++) {
@@ -31,7 +31,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 		break;
 	}
     }
-    queue = [start]; //TODO replace with a proper queue
+    queue.push(start); //TODO replace with a proper queue
     while (queue.length != 0) {
 	n = queue.shift();
 	if (visited[n])
@@ -45,7 +45,7 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 		return graph.degree(a) - graph.degree(b);
 	    });
 
-	queue = queue.concat(e);
+	e.forEach(queue.push, queue);
     }
     return order;
 };
