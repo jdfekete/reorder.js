@@ -40,7 +40,10 @@ function matrix(json) {
 
   var graph = reorder.graph()
 	  .nodes(json.nodes)
-	  .links(json.links).init();
+	  .links(json.links)
+	  .init();
+
+    var dist_adjacency;
 
   // Precompute the orders.
     var orders = {
@@ -59,6 +62,19 @@ function matrix(json) {
 	    });
 	    return nodes.map(function(n) { return n.leafOrder; });
 	},
+	leafOrderDist: function() {
+	    if (! dist_adjacency)
+		dist_adjacency = reorder.graph2distmat(graph);
+
+	    var leafOrder = reorder.leafOrder()
+   		    .distance(science.stats.distance.manhattan)(dist_adjacency);
+
+	    leafOrder.forEach(function(lo, i) {
+		nodes[i].leafOrderDist = lo;
+	    });
+	    return nodes.map(function(n) { return n.leafOrderDist; });
+	    
+	},
 	barycenter: function() {
 	    var barycenter = reorder.barycenter(graph);
 
@@ -73,7 +89,6 @@ function matrix(json) {
 	    rcm.forEach(function(lo, i) {
 		nodes[i].rcm = lo;
 	    });
-
 
 	    return nodes.map(function(n) { return n.rcm; });
 	}

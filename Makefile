@@ -31,6 +31,7 @@ reorder.v1.js: \
 	src/count_crossings.js \
 	src/barycenter.js \
 	src/all_pairs_distance.js \
+	src/graph2distmat.js \
 	src/dist.js \
 	src/random.js \
 	src/permute.js \

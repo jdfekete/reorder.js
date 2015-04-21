@@ -24,6 +24,14 @@ reorder.infinities = function(n) {
 		this, Array.prototype.slice.call(arguments, 1));
     return a;
 };
+
+reorder.array1d = function(n, v) {
+    var i = -1,
+	a = Array(n);
+    while (++i < n)
+	a[i] = v;
+    return a;
+};
 reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
 reorder.normalize = science.lin.normalize;
@@ -1071,6 +1079,64 @@ reorder.floyd_warshall_path = function(next, u, v) {
 	path.push(u);
     }
     return path;
+};
+// Converts a graph with weighted edges (weight in l.value)
+// into a distance matrix suitable for reordering with e.g.
+// Optimal Leaf Ordering.
+reorder.graph2distmat = function(graph, directed) {
+    // Transforms the weights into a distance so take the max
+    var max_link = graph.links()
+	    .reduce(function(a, b) {
+		if (b.value > a.value) 
+		    return b;
+		return a;
+	    }),
+	// we don't want a distance of 0 so we add a relative margin
+	max_value = max_link.value*1.05,
+	// Transform link values into a normalized distance
+	links = graph.links()
+	    .map(function(l) {
+		return {
+		    value: (max_value - l.value)/max_value,
+		    source: l.source.index,
+		    target: l.target.index
+		};
+	    }),
+	// use the origin node as id
+	nodes = graph.nodes()
+	    .map(function(n) { return {id: n}; }),
+	// Create the graph structure
+	graph2 = reorder.graph()
+	    .nodes(nodes)
+	    .links(links)
+	    .init(),
+	// compute the all_pairs distances for all the
+	// components
+	dists = reorder.all_pairs_distance(graph2),
+	// Compute the graph diameter as max distance
+	max_dist = dists.reduce(function(a, b) {
+	    return Matm.max(a, reorder.distmax(b));
+	}),
+	// Infinity will be set to 2*the max distance
+	inf = 2*max_dist,
+	n = graph.nodes().length,
+	dist = Array(n),
+	i, j, k, d, start = 0;
+
+    dist[0] = reorder.array1d(n, inf);
+    for (i = 1; i < n; i++)
+	dist[i] = dist[0].slice();
+    for (k = 0; k < dists.length; k++) {
+	d = dists[k];
+	for (i = 0; i < d.length; i++) {
+	    for (j = 0; j < dist.length; j++) {	    
+		dist[start+i][start+j] = d[i][j];
+		dist[start+j][start+i] = d[j][i];
+	    }
+	}
+	start += d.length;
+    }
+    return dist;
 };
 reorder.distmax = function (distMatrix) {
     var max = 0,

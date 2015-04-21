@@ -21,3 +21,11 @@ reorder.infinities = function(n) {
 		this, Array.prototype.slice.call(arguments, 1));
     return a;
 };
+
+reorder.array1d = function(n, v) {
+    var i = -1,
+	a = Array(n);
+    while (++i < n)
+	a[i] = v;
+    return a;
+};
