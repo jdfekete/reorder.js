@@ -38,42 +38,46 @@ function matrix(json) {
       return row.map(function(c) { return c.z; });
   });
 
-  //var leafOrder = d3.range(n);
-  var leafOrder = reorder.leafOrder()
-   	.distance(science.stats.distance.manhattan)(adjacency);
-    
-  leafOrder.forEach(function(lo, i) {
-      nodes[i].leafOrder = lo;
-  });
-
   var graph = reorder.graph()
 	  .nodes(json.nodes)
-	  .links(json.links).init(),
-      barycenter = reorder.barycenter(graph);
-
-  barycenter[0].forEach(function(lo, i) {
-      nodes[i].barycenter = lo;
-  });
-
-  var rcm = reorder.reverse_cuthill_mckee(graph);
-  rcm.forEach(function(lo, i) {
-      nodes[i].rcm = lo;
-  });
-
-
+	  .links(json.links).init();
 
   // Precompute the orders.
-  var orders = {
-    name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
-    count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
-    group: d3.range(n).sort(function(a, b) {
-	var x = nodes[b].group - nodes[a].group;
-	return (x != 0) ?  x : d3.ascending(nodes[a].name, nodes[b].name);
-    }),
-    leafOrder:  nodes.map(function(n) { return n.leafOrder; }),
-    barycenter:  nodes.map(function(n) { return n.barycenter; }),
-    rcm: nodes.map(function(n) { return n.rcm; }),
-  };
+    var orders = {
+	name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
+	count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
+	group: d3.range(n).sort(function(a, b) {
+	    var x = nodes[b].group - nodes[a].group;
+	    return (x != 0) ?  x : d3.ascending(nodes[a].name, nodes[b].name);
+	}),
+	leafOrder: function() {
+	    var leafOrder = reorder.leafOrder()
+   		    .distance(science.stats.distance.manhattan)(adjacency);
+
+	    leafOrder.forEach(function(lo, i) {
+		nodes[i].leafOrder = lo;
+	    });
+	    return nodes.map(function(n) { return n.leafOrder; });
+	},
+	barycenter: function() {
+	    var barycenter = reorder.barycenter(graph);
+
+	    barycenter[0].forEach(function(lo, i) {
+		nodes[i].barycenter = lo;
+	    });
+
+	    return nodes.map(function(n) { return n.barycenter; });
+	},
+	rcm: function() {
+	    var rcm = reorder.reverse_cuthill_mckee(graph);
+	    rcm.forEach(function(lo, i) {
+		nodes[i].rcm = lo;
+	    });
+
+
+	    return nodes.map(function(n) { return n.rcm; });
+	}
+    };
 
   // The default sort order.
   x.domain(orders.name);
@@ -156,6 +160,11 @@ function matrix(json) {
   }
 
   function order(value) {
+    var o = orders[value];
+    
+    if (typeof o === "function") {
+	orders[value] = o.call();
+    }
     x.domain(orders[value]);
 
     var t = svg.transition().duration(1500);
