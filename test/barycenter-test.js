@@ -16,6 +16,10 @@ function dotest(mat) {
     //perms[1], perms[0], perms[2]);
     //reorder.printmat(mat, perms[1], perms[0]);
     assert.isTrue(initial_crossings > perms[2]);
+    var perm2 = reorder.adjacent_exchange(graph,
+					  perms[0], perms[1], perms[2]);
+    assert.isTrue(perm2[2] >= perms[2]);
+    console.log('Improved by: %d', perm2[2]-perms[2]);
 }
 
 suite.addBatch({

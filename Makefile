@@ -29,6 +29,7 @@ reorder.v1.js: \
 	src/mat2graph.js \
 	src/graph2mat.js \
 	src/count_crossings.js \
+	src/adjacent_exchange.js \
 	src/barycenter.js \
 	src/all_pairs_distance.js \
 	src/graph2distmat.js \

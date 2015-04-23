@@ -6,6 +6,8 @@ Interaction:
 Reordering:
 	Improve the barycenter heuristic with swaps
 	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
+	Spectral ordering
+	Sloan ordering
 	Biclustering
 	Contingency tables methods:
 		PCA ordering
@@ -24,4 +26,3 @@ Reordering done:
 		Bioinformatics, 19(9), pp 1070-8, 2003
 		http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
 	Inverse Cuthill-McKee
-	

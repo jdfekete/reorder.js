@@ -1,5 +1,5 @@
 (function(exports){
-reorder = {version: "0.0.4"}; // semver
+reorder = {version: "0.0.5"}; // semver
 
 // Use as: [4,3,2].sort(reorder.cmp_number_asc);
 reorder.cmp_number_asc = function(a,b) { return a-b; };
@@ -854,6 +854,90 @@ function count_crossings(graph, north, south) {
     return crosscount;
 }
 reorder.count_crossings = count_crossings;
+// Accorging to
+// E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo. 1993. A
+// Technique for Drawing Directed Graphs. IEEE Trans. Softw. Eng. 19, 3
+// (March 1993), 214-230. DOI=10.1109/32.221135
+// http://dx.doi.org/10.1109/32.221135 
+// page 14: "[...] reduce obvious crossings after the vertices have
+// been sorted, transforming a given ordering to one that is locally
+// optimal with respect to transposition of adjacent vertices. It
+// typically provides an additional 20-50% reduction in edge crossings.
+
+function count_in_crossings(graph, v, w, inv) {
+    var v_edges = graph.inEdges(v),
+	w_edges = graph.inEdges(w),
+	iv, iw, p0, cross = 0;
+
+    for (iw = 0; iw < w_edges.length; iw++) {
+	p0 = inv[w_edges[iw].target.index];
+	for (iv = 0; iv < v_edges.length; iv++) {
+	    if (inv[v_edges[iv].target.index] > p0)
+		cross++;
+	}
+    }
+    return cross;
+}
+
+function count_out_crossings(graph, v, w, inv) {
+    var v_edges = graph.outEdges(v),
+	w_edges = graph.outEdges(w),
+	iv, iw, p0, cross = 0;
+
+    for (iw = 0; iw < w_edges.length; iw++) {
+	p0 = inv[w_edges[iw].target.index];
+	for (iv = 0; iv < v_edges.length; iv++) {
+	    if (inv[v_edges[iv].target.index] > p0)
+		cross++;
+	}
+    }
+    return cross;
+}
+
+function adjacent_exchange(graph, layer1, layer2, crossings) {
+    var i, v, w, c0, c1,
+	inv_layer1 = inverse_permutation(layer1),
+	inv_layer2 = inverse_permutation(layer2),
+	swapped = true;
+    
+    while (swapped) {
+	swapped = false;
+	for (i = 0; i < layer1.length-1; i++) {
+	    v = layer1[i];
+	    w = layer1[i+1];
+	    c0 = count_out_crossings(graph, v, w, inv_layer2);
+	    c1 = count_out_crossings(graph, w, v, inv_layer2);
+	    if (c1 < c0) {
+		layer1[i] = w;
+		layer1[i+1] = v;
+		c0 = inv_layer1[v];
+		inv_layer1[v] = inv_layer1[w];
+		inv_layer1[w] = c0;
+		swapped = true;
+		crossings -= c0-c1;
+	    }
+	}
+	for (i = 0; i < layer2.length-1; i++) {
+	    v = layer2[i];
+	    w = layer2[i+1];
+	    c0 = count_in_crossings(graph, v, w, inv_layer1);
+	    c1 = count_in_crossings(graph, w, v, inv_layer1);
+	    if (c1 < c0) {
+		layer2[i] = w;
+		layer2[i+1] = v;
+		c0 = inv_layer2[v];
+		inv_layer2[v] = inv_layer2[w];
+		inv_layer2[w] = c0;
+		swapped = true;
+		crossings -= c0-c1;
+	    }
+	}
+    }
+
+    return [layer1, layer2, crossings];
+};
+
+reorder.adjacent_exchange = adjacent_exchange;
 reorder.barycenter = function(graph, iter, comps) {
     var perms = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
@@ -935,7 +1019,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	 iter++, layer = (layer == layer1) ? layer2 : layer1) {
 	for (i = 0; i < layer.length; i++) {
 	    // Compute the median/barycenter for this node and set
-	    // its (real) value into node.mval
+	    // its (real) value into node.pos
 	    v = nodes[layer[i]];
 	    if (layer == layer1)
 		neighbors = graph.outEdges(v.index);
@@ -968,9 +1052,11 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	    best_layer1 = layer1;
 	    best_layer2 = layer2;
 	    best_iter = iter;
+	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}
     }
     //console.log('Best iter: '+best_iter);
+
     return [best_layer1, best_layer2, best_crossings];
 };
 reorder.all_pairs_distance = function(graph, comps) {

@@ -79,7 +79,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	 iter++, layer = (layer == layer1) ? layer2 : layer1) {
 	for (i = 0; i < layer.length; i++) {
 	    // Compute the median/barycenter for this node and set
-	    // its (real) value into node.mval
+	    // its (real) value into node.pos
 	    v = nodes[layer[i]];
 	    if (layer == layer1)
 		neighbors = graph.outEdges(v.index);
@@ -112,8 +112,10 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	    best_layer1 = layer1;
 	    best_layer2 = layer2;
 	    best_iter = iter;
+	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}
     }
     //console.log('Best iter: '+best_iter);
+
     return [best_layer1, best_layer2, best_crossings];
 };
