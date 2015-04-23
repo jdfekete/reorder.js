@@ -1,6 +1,8 @@
 # Reorder.js
 
-[Reorder.js](http://www.reorderjs.org/) is a JavaScript library for reordering matrices.
+[Reorder.js](https://github.com/jdfekete/reorder.js/) is a JavaScript library for reordering matrices.
+
+Want to learn more? [See the wiki.](https://github.com/jdfekete/reorder.js/wiki)
 
 ## Development
 
