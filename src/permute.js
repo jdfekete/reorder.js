@@ -1,8 +1,8 @@
-reorder.permute = function(list, indexes) {
-    var m = indexes.length;
+reorder.permute = function(list, perm) {
+    var m = perm.length;
     var copy = list.slice(0);
     while (m--)
-	copy[m] = list[indexes[m]];
+	copy[m] = list[perm[m]];
     return copy;
 };
 

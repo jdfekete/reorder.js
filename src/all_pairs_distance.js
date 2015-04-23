@@ -10,7 +10,7 @@ reorder.all_pairs_distance = function(graph, comps) {
 
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
-	a0, edges,
+	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -25,10 +25,12 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
 	edges = {};
 	graph.edges(comp[i]).forEach(function(e) {
 	    if (e.source == e.target) return;
+	    if (! (e.source.index in inv)
+		|| ! (e.target.index in inv))
+		return; // ignore edges outside of comp
 	    var u = inv[e.source.index],
 		v = inv[e.target.index];
-	    dist[u][v] = e.value ? e.value : 1;
-	    dist[v][u] = e.value ? e.value : 1;
+	    dist[v][u] = dist[u][v] = graph.distance(e.index);
 	});
     }
 
@@ -74,10 +76,10 @@ function floyd_warshall_with_path(graph, comp) {
 	    if (e.source == e.target) return;
 	    var u = inv[e.source.index],
 		v = inv[e.target.index];
-	    dist[u][v] = e.value ? e.value : 1;
+	    dist[u][v] = graph.distance(e);
 	    next[u][v] = v;
 	    if (! directed) {
-		dist[v][u] = e.value ? e.value : 1;
+		dist[v][u] = graph.distance(e);
 		next[v][u] = u;
 	    }
 	});

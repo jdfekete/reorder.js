@@ -3,7 +3,6 @@ reorder.graph = function(nodes, links, directed) {
         linkDistance = 1,
         edges,
 	inEdges, outEdges,
-        distances,
 	components;
 
     graph.nodes = function(x) {
@@ -54,17 +53,17 @@ reorder.graph = function(nodes, links, directed) {
 	    (o = links[i]).index = i;
 	    if (typeof o.source == "number") o.source = nodes[o.source];
 	    if (typeof o.target == "number") o.target = nodes[o.target];
+	    if (! ('value' in o)) o.value = 1;
 	    ++o.source.weight;
 	    ++o.target.weight;
 	}
 
-	distances = [];
 	if (typeof linkDistance === "function")
 	    for (i = 0; i < m; ++i)
-		distances[i] = +linkDistance.call(this, links[i], i);
+		links[i].distance = +linkDistance.call(this, links[i], i);
 	else
 	    for (i = 0; i < m; ++i)
-		distances[i] = linkDistance;
+		links[i].distance = linkDistance;
 
         edges = Array(nodes.length);
         for (i = 0; i < nodes.length; ++i) {
@@ -164,7 +163,7 @@ reorder.graph = function(nodes, links, directed) {
     };
 
     function distance(i) {
-	return distances[i];
+	return links[i].distance;
     }
     graph.distance = distance;
 
@@ -229,6 +228,7 @@ reorder.graph = function(nodes, links, directed) {
 		comps.push(ccomp);
 	    }
 	}
+	comps.sort(function(a,b) { return b.length - a.length; });
 	return comps;
     }
 

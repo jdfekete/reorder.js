@@ -86,10 +86,10 @@ var svg = d3.select("body").append("svg")
 
     d3.json("miserables.json", function(json) {
 	var mat = matrix(json);
-	mat.timeout = setTimeout(function() {
-	    mat.order("group");
-	    d3.select("#order").property("selectedIndex", 2).node().focus();
-	}, 5000);
+	// mat.timeout = setTimeout(function() {
+	//     mat.order("group");
+	//     d3.select("#order").property("selectedIndex", 2).node().focus();
+	// }, 5000);
 	
 	d3.select("#order").on("change", function() {
 	    clearTimeout(mat.timeout);

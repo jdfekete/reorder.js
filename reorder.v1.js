@@ -333,7 +333,6 @@ reorder.graph = function(nodes, links, directed) {
         linkDistance = 1,
         edges,
 	inEdges, outEdges,
-        distances,
 	components;
 
     graph.nodes = function(x) {
@@ -384,17 +383,17 @@ reorder.graph = function(nodes, links, directed) {
 	    (o = links[i]).index = i;
 	    if (typeof o.source == "number") o.source = nodes[o.source];
 	    if (typeof o.target == "number") o.target = nodes[o.target];
+	    if (! ('value' in o)) o.value = 1;
 	    ++o.source.weight;
 	    ++o.target.weight;
 	}
 
-	distances = [];
 	if (typeof linkDistance === "function")
 	    for (i = 0; i < m; ++i)
-		distances[i] = +linkDistance.call(this, links[i], i);
+		links[i].distance = +linkDistance.call(this, links[i], i);
 	else
 	    for (i = 0; i < m; ++i)
-		distances[i] = linkDistance;
+		links[i].distance = linkDistance;
 
         edges = Array(nodes.length);
         for (i = 0; i < nodes.length; ++i) {
@@ -494,7 +493,7 @@ reorder.graph = function(nodes, links, directed) {
     };
 
     function distance(i) {
-	return distances[i];
+	return links[i].distance;
     }
     graph.distance = distance;
 
@@ -559,6 +558,7 @@ reorder.graph = function(nodes, links, directed) {
 		comps.push(ccomp);
 	    }
 	}
+	comps.sort(function(a,b) { return b.length - a.length; });
 	return comps;
     }
 
@@ -719,6 +719,7 @@ reorder.mat2graph = function(mat, directed) {
     var n = mat.length,
 	nodes = [],
 	links = [],
+	max_value = Number.NEGATIVE_INFINITY,
 	i, j, v, m;
     
     for (i = 0; i < n; i++)
@@ -726,17 +727,22 @@ reorder.mat2graph = function(mat, directed) {
 
     for (i = 0; i < n; i++) {
 	v = mat[i];
-	m = directed ? v.length : i+1;
-	m = Math.min(m, v.length);
-	for (j = 0; j < m; j++) {
+	m = (directed) ? 0 : i;
+
+	for (j = m; j < v.length; j++) {
 	    if (j == nodes.length)
 		nodes.push({id: j});
 	    if (v[j] != 0) {
+		if (v[j] > max_value)
+		    max_value = v[j];
 		links.push({source: i, target: j, value: v[j]});
 	    }
 	}
     }
     return reorder.graph(nodes, links, directed)
+	.linkDistance(function(l, i) {
+	    return 1 + max_value - l.value;
+	})
 	.init();
 };
 reorder.graph2mat = function(graph, directed) {
@@ -979,7 +985,7 @@ reorder.all_pairs_distance = function(graph, comps) {
 
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
-	a0, edges,
+	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -994,10 +1000,12 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
 	edges = {};
 	graph.edges(comp[i]).forEach(function(e) {
 	    if (e.source == e.target) return;
+	    if (! (e.source.index in inv)
+		|| ! (e.target.index in inv))
+		return; // ignore edges outside of comp
 	    var u = inv[e.source.index],
 		v = inv[e.target.index];
-	    dist[u][v] = e.value ? e.value : 1;
-	    dist[v][u] = e.value ? e.value : 1;
+	    dist[v][u] = dist[u][v] = graph.distance(e.index);
 	});
     }
 
@@ -1043,10 +1051,10 @@ function floyd_warshall_with_path(graph, comp) {
 	    if (e.source == e.target) return;
 	    var u = inv[e.source.index],
 		v = inv[e.target.index];
-	    dist[u][v] = e.value ? e.value : 1;
+	    dist[u][v] = graph.distance(e);
 	    next[u][v] = v;
 	    if (! directed) {
-		dist[v][u] = e.value ? e.value : 1;
+		dist[v][u] = graph.distance(e);
 		next[v][u] = u;
 	    }
 	});
@@ -1083,60 +1091,39 @@ reorder.floyd_warshall_path = function(next, u, v) {
 // Converts a graph with weighted edges (weight in l.value)
 // into a distance matrix suitable for reordering with e.g.
 // Optimal Leaf Ordering.
-reorder.graph2distmat = function(graph, directed) {
-    // Transforms the weights into a distance so take the max
-    var max_link = graph.links()
-	    .reduce(function(a, b) {
-		if (b.value > a.value) 
-		    return b;
-		return a;
-	    }),
-	// we don't want a distance of 0 so we add a relative margin
-	max_value = max_link.value*1.05,
-	// Transform link values into a normalized distance
-	links = graph.links()
-	    .map(function(l) {
-		return {
-		    value: (max_value - l.value)/max_value,
-		    source: l.source.index,
-		    target: l.target.index
-		};
-	    }),
-	// use the origin node as id
-	nodes = graph.nodes()
-	    .map(function(n) { return {id: n}; }),
-	// Create the graph structure
-	graph2 = reorder.graph()
-	    .nodes(nodes)
-	    .links(links)
-	    .init(),
-	// compute the all_pairs distances for all the
-	// components
-	dists = reorder.all_pairs_distance(graph2),
-	// Compute the graph diameter as max distance
-	max_dist = dists.reduce(function(a, b) {
-	    return Matm.max(a, reorder.distmax(b));
-	}),
-	// Infinity will be set to 2*the max distance
-	inf = 2*max_dist,
-	n = graph.nodes().length,
-	dist = Array(n),
-	i, j, k, d, start = 0;
 
-    dist[0] = reorder.array1d(n, inf);
-    for (i = 1; i < n; i++)
-	dist[i] = dist[0].slice();
-    for (k = 0; k < dists.length; k++) {
-	d = dists[k];
-	for (i = 0; i < d.length; i++) {
-	    for (j = 0; j < dist.length; j++) {	    
-		dist[start+i][start+j] = d[i][j];
-		dist[start+j][start+i] = d[j][i];
-	    }
+function distmat2valuemat(distmat) {
+    var n = distmat.length,
+	valuemat = reorder.zeroes(n, n),
+	max_dist = reorder.distmax(distmat),
+	i, j;
+
+    for (i = 0; i < n; i++) {
+	for (j = i; j < n; j++) {	    
+	    valuemat[j][i] = valuemat[i][j] = 1+max_dist - distmat[i][j];
 	}
-	start += d.length;
     }
-    return dist;
+    return valuemat;
+}
+reorder.distmat2valuemat = distmat2valuemat;
+
+reorder.graph2valuemats = function(graph, comps) {
+    if (! comps)
+	comps = graph.components();
+
+    var	dists = reorder.all_pairs_distance(graph, comps);
+    return dists.map(distmat2valuemat);
+};
+
+reorder.valuemats_reorder = function(valuemats, leaforder, comps) {
+    var orders = valuemats.map(leaforder);
+
+    if (comps) {
+	orders = orders.map(function(d, i) {
+	    return reorder.permute(comps[i], d);
+	});
+    }
+    return orders.reduce(reorder.flatten);
 };
 reorder.distmax = function (distMatrix) {
     var max = 0,
@@ -1274,11 +1261,11 @@ reorder.random_matrix = function(p, n, m, sym) {
     return mat;
 };
 
-reorder.permute = function(list, indexes) {
-    var m = indexes.length;
+reorder.permute = function(list, perm) {
+    var m = perm.length;
     var copy = list.slice(0);
     while (m--)
-	copy[m] = list[indexes[m]];
+	copy[m] = list[perm[m]];
     return copy;
 };
 

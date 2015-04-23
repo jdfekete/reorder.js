@@ -45,6 +45,51 @@ function matrix(json) {
 
     var dist_adjacency;
 
+    var leafOrder = reorder.leafOrder()
+    	    .distance(science.stats.distance.manhattan);
+
+    function computeLeaforder() {
+	var order = leafOrder(adjacency);
+
+	order.forEach(function(lo, i) {
+	    nodes[i].leafOrder = lo;
+	});
+	return nodes.map(function(n) { return n.leafOrder; });
+    }
+
+    function computeLeaforderDist() {
+	if (! dist_adjacency)
+	    dist_adjacency = reorder.graph2valuemats(graph);
+
+	var order = reorder.valuemats_reorder(dist_adjacency,
+					      leafOrder);
+
+	order.forEach(function(lo, i) {
+	    nodes[i].leafOrderDist = lo;
+	});
+	return nodes.map(function(n) { return n.leafOrderDist; });
+	
+    }
+    
+    function computeBarycenter() {
+	var barycenter = reorder.barycenter(graph);
+
+	barycenter[0].forEach(function(lo, i) {
+	    nodes[i].barycenter = lo;
+	});
+
+	return nodes.map(function(n) { return n.barycenter; });
+    }
+
+    function computeRCM() {
+	var rcm = reorder.reverse_cuthill_mckee(graph);
+	rcm.forEach(function(lo, i) {
+	    nodes[i].rcm = lo;
+	});
+
+	return nodes.map(function(n) { return n.rcm; });
+    }
+
   // Precompute the orders.
     var orders = {
 	name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
@@ -53,45 +98,10 @@ function matrix(json) {
 	    var x = nodes[b].group - nodes[a].group;
 	    return (x != 0) ?  x : d3.ascending(nodes[a].name, nodes[b].name);
 	}),
-	leafOrder: function() {
-	    var leafOrder = reorder.leafOrder()
-   		    .distance(science.stats.distance.manhattan)(adjacency);
-
-	    leafOrder.forEach(function(lo, i) {
-		nodes[i].leafOrder = lo;
-	    });
-	    return nodes.map(function(n) { return n.leafOrder; });
-	},
-	leafOrderDist: function() {
-	    if (! dist_adjacency)
-		dist_adjacency = reorder.graph2distmat(graph);
-
-	    var leafOrder = reorder.leafOrder()
-   		    .distance(science.stats.distance.manhattan)(dist_adjacency);
-
-	    leafOrder.forEach(function(lo, i) {
-		nodes[i].leafOrderDist = lo;
-	    });
-	    return nodes.map(function(n) { return n.leafOrderDist; });
-	    
-	},
-	barycenter: function() {
-	    var barycenter = reorder.barycenter(graph);
-
-	    barycenter[0].forEach(function(lo, i) {
-		nodes[i].barycenter = lo;
-	    });
-
-	    return nodes.map(function(n) { return n.barycenter; });
-	},
-	rcm: function() {
-	    var rcm = reorder.reverse_cuthill_mckee(graph);
-	    rcm.forEach(function(lo, i) {
-		nodes[i].rcm = lo;
-	    });
-
-	    return nodes.map(function(n) { return n.rcm; });
-	}
+	leafOrder: computeLeaforder,
+	leafOrderDist: computeLeaforderDist,
+	barycenter: computeBarycenter,
+	rcm: computeRCM
     };
 
   // The default sort order.
@@ -174,38 +184,50 @@ function matrix(json) {
       d3.selectAll(".highlight").remove();
   }
 
-  function order(value) {
-    var o = orders[value];
-    
-    if (typeof o === "function") {
-	orders[value] = o.call();
+    var currentOrder = 'name';
+
+    function order(value) {
+	var o = orders[value];
+	currentOrder = value;
+	
+	if (typeof o === "function") {
+	    orders[value] = o.call();
+	}
+	x.domain(orders[value]);
+
+	var t = svg.transition().duration(1500);
+
+	t.selectAll(".row")
+            .delay(function(d, i) { return x(i) * 4; })
+            .attr("transform", function(d, i) { return "translate(0," + x(i) + ")"; })
+	    .selectAll(".cell")
+            .delay(function(d) { return x(d.x) * 4; })
+            .attr("x", function(d) { return x(d.x); });
+
+	t.selectAll(".column")
+            .delay(function(d, i) { return x(i) * 4; })
+            .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
     }
-    x.domain(orders[value]);
 
-    var t = svg.transition().duration(1500);
+    function distance(value) {
+	leafOrder.distance(science.stats.distance[value]);
 
-    t.selectAll(".row")
-        .delay(function(d, i) { return x(i) * 4; })
-        .attr("transform", function(d, i) { return "translate(0," + x(i) + ")"; })
-      .selectAll(".cell")
-        .delay(function(d) { return x(d.x) * 4; })
-        .attr("x", function(d) { return x(d.x); });
+	if (currentOrder == 'leafOrder') {
+	    orders.leafOrder = computeLeaforder();
+	    order("leafOrder");
+	    d3.select("#order").property("selectedIndex", 3);
+	}
+	else if (currentOrder == 'leafOrderDist') {
+	    orders.leafOrderDist = computeLeaforderDist();
+	    order("leafOrderDist");
+	    d3.select("#order").property("selectedIndex", 3);
+	}
 
-    t.selectAll(".column")
-        .delay(function(d, i) { return x(i) * 4; })
-        .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
-  }
-
-  function distance(value) {
-      var leafOrder = reorder.leafOrder().distance(science.stats.distance[value])(adjacency);
-
-	leafOrder.forEach(function(lo, i) {
-	    nodes[lo].leafOrder = i;
-	});
-	orders.leafOrder = d3.range(n).sort(function(a, b) {
-	    return nodes[b].leafOrder - nodes[a].leafOrder; });
-	order("leafOrder");
-	d3.select("#order").property("selectedIndex", 3);
+	// leafOrder.forEach(function(lo, i) {
+	// 	    nodes[lo].leafOrder = i;
+	// 	});
+	// 	orders.leafOrder = d3.range(n).sort(function(a, b) {
+	// 	    return nodes[b].leafOrder - nodes[a].leafOrder; });
     }
 
     matrix.order = order;
@@ -220,18 +242,18 @@ function matrix(json) {
 
 function loadJson(json) {
     var mat = matrix(json);
-    mat.timeout = setTimeout(function() {
-	mat.order("group");
-	d3.select("#order").property("selectedIndex", 2).node().focus();
-    }, 5000);
+//    mat.timeout = setTimeout(function() {
+//	mat.order("group");
+//	d3.select("#order").property("selectedIndex", 2).node().focus();
+//    }, 5000);
 
     d3.select("#order").on("change", function() {
-	clearTimeout(mat.timeout);
+//	clearTimeout(mat.timeout);
 	mat.order(this.value);
     });
 
     d3.select("#distance").on("change", function() {
-	clearTimeout(mat.timeout);
+//	clearTimeout(mat.timeout);
 	mat.distance(this.value);
     });
 }
