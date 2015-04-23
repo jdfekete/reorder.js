@@ -4,9 +4,8 @@ Interaction:
 	MatLink
 
 Reordering:
-	Dijkstra distance matrix
+	Improve the barycenter heuristic with swaps
 	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
-	Tables/bipartite networks
 	Biclustering
 	Contingency tables methods:
 		PCA ordering
@@ -15,6 +14,8 @@ Reordering:
 		 Elliptical
 
 Reordering done:
+	Tables/bipartite networks
+	Distance matrix for graphs
 	Barycenter method:
 		   http://www.informatica.si/PDF/29-3/13_Makinen-The%20Barycenter%20Heuristic....pdf
 	Optimal Leaf Ordering
@@ -23,3 +24,4 @@ Reordering done:
 		Bioinformatics, 19(9), pp 1070-8, 2003
 		http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
 	Inverse Cuthill-McKee
+	
