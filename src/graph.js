@@ -139,8 +139,6 @@ reorder.graph = function(nodes, links, directed) {
     graph.sinks = function() {
 	var sinks = [],
 	    i;
-	if (! directed)
-	    return reorder.range(nodes.length);
 
 	for (i = 0; i < nodes.length; i++) {
 	    if (outEdges(i).length == 0)
@@ -152,8 +150,6 @@ reorder.graph = function(nodes, links, directed) {
     graph.sources = function() {
 	var sources = [],
 	    i;
-	if (! directed)
-	    return reorder.range(nodes.length);
 
 	for (i = 0; i < nodes.length; i++) {
 	    if (inEdges(i).length == 0)

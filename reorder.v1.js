@@ -469,8 +469,6 @@ reorder.graph = function(nodes, links, directed) {
     graph.sinks = function() {
 	var sinks = [],
 	    i;
-	if (! directed)
-	    return reorder.range(nodes.length);
 
 	for (i = 0; i < nodes.length; i++) {
 	    if (outEdges(i).length == 0)
@@ -482,8 +480,6 @@ reorder.graph = function(nodes, links, directed) {
     graph.sources = function() {
 	var sources = [],
 	    i;
-	if (! directed)
-	    return reorder.range(nodes.length);
 
 	for (i = 0; i < nodes.length; i++) {
 	    if (inEdges(i).length == 0)
@@ -796,13 +792,14 @@ function count_crossings(graph, north, south) {
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
 
+    var comp = reorder.permutation(graph.nodes().length);
+
     if (north==undefined) {
-	var comp = reorder.permutation(graph.nodes().length);
 	north = comp.filter(function(n) {
-	    return graph.outEdges(n).length!=0;
+	    return graph.outDegree(n) != 0;
 	}),
 	south = comp.filter(function(n) {
-	    return graph.inEdges(n).length!=0;
+	    return graph.inDegree(n) != 0;
 	});
     }
 
@@ -853,6 +850,7 @@ function count_crossings(graph, north, south) {
     }
     return crosscount;
 }
+
 reorder.count_crossings = count_crossings;
 // Accorging to
 // E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo. 1993. A
@@ -885,36 +883,40 @@ function count_out_crossings(graph, v, w, inv) {
 	iv, iw, p0, cross = 0;
 
     for (iw = 0; iw < w_edges.length; iw++) {
-	p0 = inv[w_edges[iw].target.index];
+	p0 = inv[w_edges[iw].source.index];
 	for (iv = 0; iv < v_edges.length; iv++) {
-	    if (inv[v_edges[iv].target.index] > p0)
+	    if (inv[v_edges[iv].source.index] > p0)
 		cross++;
 	}
     }
     return cross;
 }
 
-function adjacent_exchange(graph, layer1, layer2, crossings) {
+function adjacent_exchange(graph, layer1, layer2) {
+    layer1 = layer1.slice();
+    layer2 = layer2.slice();
     var i, v, w, c0, c1,
 	inv_layer1 = inverse_permutation(layer1),
 	inv_layer2 = inverse_permutation(layer2),
-	swapped = true;
-    
+	swapped = true,
+	improved = 0;
+
     while (swapped) {
 	swapped = false;
 	for (i = 0; i < layer1.length-1; i++) {
 	    v = layer1[i];
 	    w = layer1[i+1];
+	    // should reduce the in crossing and the out crossing
+	    // otherwise what we gain horizontally is lost vertically
 	    c0 = count_out_crossings(graph, v, w, inv_layer2);
 	    c1 = count_out_crossings(graph, w, v, inv_layer2);
-	    if (c1 < c0) {
+	    if (c0 > c1) {
 		layer1[i] = w;
 		layer1[i+1] = v;
-		c0 = inv_layer1[v];
-		inv_layer1[v] = inv_layer1[w];
-		inv_layer1[w] = c0;
+		inv_layer1[w] = i;
+		inv_layer1[v] = i+1;
 		swapped = true;
-		crossings -= c0-c1;
+		improved += c0 - c1;
 	    }
 	}
 	for (i = 0; i < layer2.length-1; i++) {
@@ -922,19 +924,18 @@ function adjacent_exchange(graph, layer1, layer2, crossings) {
 	    w = layer2[i+1];
 	    c0 = count_in_crossings(graph, v, w, inv_layer1);
 	    c1 = count_in_crossings(graph, w, v, inv_layer1);
-	    if (c1 < c0) {
+	    if (c0 > c1) {
 		layer2[i] = w;
 		layer2[i+1] = v;
-		c0 = inv_layer2[v];
-		inv_layer2[v] = inv_layer2[w];
-		inv_layer2[w] = c0;
+		inv_layer2[w] = i;
+		inv_layer2[v] = i+1;
 		swapped = true;
-		crossings -= c0-c1;
+		improved += c0 - c1;
 	    }
 	}
     }
 
-    return [layer1, layer2, crossings];
+    return [layer1, layer2, improved];
 };
 
 reorder.adjacent_exchange = adjacent_exchange;
@@ -984,10 +985,10 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	i, v, neighbors;
 
     layer1 = comp.filter(function(n) {
-	return graph.outEdges(n).length!=0;
+	return graph.outDegree(n) != 0;
     });
     layer2 = comp.filter(function(n) {
-	return graph.inEdges(n).length!=0;
+	return graph.inDegree(n) != 0;
     });
     if (comp.length < 3) {
 	return [layer1, layer2,
@@ -999,19 +1000,12 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     else if ((max_iter%2)==1)
 	max_iter++; // want even number of iterations
 
-    layer1 = comp.filter(function(n) {
-	return graph.outEdges(n).length!=0;
-    });
-    layer2 = comp.filter(function(n) {
-	return graph.inEdges(n).length!=0;
-    });
-
     for (i = 0; i < layer2.length; i++)
 	nodes[layer2[i]].pos = i;
 
     best_crossings = count_crossings(graph, layer1, layer2);
-    best_layer1 = layer1;
-    best_layer2 = layer2;
+    best_layer1 = layer1.slice();
+    best_layer2 = layer2.slice();
     best_iter = 0;
 
     for (layer = layer1, iter = 0;
@@ -1049,8 +1043,8 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	crossings = count_crossings(graph, layer1, layer2);
 	if (crossings < best_crossings) {
 	    best_crossings = crossings;
-	    best_layer1 = layer1;
-	    best_layer2 = layer2;
+	    best_layer1 = layer1.slice();
+	    best_layer2 = layer2.slice();
 	    best_iter = iter;
 	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}

@@ -44,10 +44,10 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	i, v, neighbors;
 
     layer1 = comp.filter(function(n) {
-	return graph.outEdges(n).length!=0;
+	return graph.outDegree(n) != 0;
     });
     layer2 = comp.filter(function(n) {
-	return graph.inEdges(n).length!=0;
+	return graph.inDegree(n) != 0;
     });
     if (comp.length < 3) {
 	return [layer1, layer2,
@@ -59,19 +59,12 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     else if ((max_iter%2)==1)
 	max_iter++; // want even number of iterations
 
-    layer1 = comp.filter(function(n) {
-	return graph.outEdges(n).length!=0;
-    });
-    layer2 = comp.filter(function(n) {
-	return graph.inEdges(n).length!=0;
-    });
-
     for (i = 0; i < layer2.length; i++)
 	nodes[layer2[i]].pos = i;
 
     best_crossings = count_crossings(graph, layer1, layer2);
-    best_layer1 = layer1;
-    best_layer2 = layer2;
+    best_layer1 = layer1.slice();
+    best_layer2 = layer2.slice();
     best_iter = 0;
 
     for (layer = layer1, iter = 0;
@@ -109,8 +102,8 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	crossings = count_crossings(graph, layer1, layer2);
 	if (crossings < best_crossings) {
 	    best_crossings = crossings;
-	    best_layer1 = layer1;
-	    best_layer2 = layer2;
+	    best_layer1 = layer1.slice();
+	    best_layer2 = layer2.slice();
 	    best_iter = iter;
 	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}

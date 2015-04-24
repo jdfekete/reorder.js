@@ -6,13 +6,14 @@ function count_crossings(graph, north, south) {
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
 
+    var comp = reorder.permutation(graph.nodes().length);
+
     if (north==undefined) {
-	var comp = reorder.permutation(graph.nodes().length);
 	north = comp.filter(function(n) {
-	    return graph.outEdges(n).length!=0;
+	    return graph.outDegree(n) != 0;
 	}),
 	south = comp.filter(function(n) {
-	    return graph.inEdges(n).length!=0;
+	    return graph.inDegree(n) != 0;
 	});
     }
 
@@ -63,4 +64,5 @@ function count_crossings(graph, north, south) {
     }
     return crosscount;
 }
+
 reorder.count_crossings = count_crossings;

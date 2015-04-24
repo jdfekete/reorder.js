@@ -72,9 +72,12 @@ function matrix(json) {
     }
     
     function computeBarycenter() {
-	var barycenter = reorder.barycenter(graph);
+	var barycenter = reorder.barycenter(graph),
+	    improved = reorder.adjacent_exchange(graph,
+						 barycenter[0],
+						 barycenter[1]);
 
-	barycenter[0].forEach(function(lo, i) {
+	improved[0].forEach(function(lo, i) {
 	    nodes[i].barycenter = lo;
 	});
 
