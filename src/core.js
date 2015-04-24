@@ -1,2 +1,2 @@
-reorder = {version: "0.0.5"}; // semver
+reorder = {version: "0.0.6"}; // semver
 

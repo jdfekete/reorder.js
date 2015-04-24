@@ -4,7 +4,6 @@ Interaction:
 	MatLink
 
 Reordering:
-	Improve the barycenter heuristic with swaps
 	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
 	Spectral ordering
 	Sloan ordering
@@ -16,6 +15,7 @@ Reordering:
 		 Elliptical
 
 Reordering done:
+	Improved the barycenter heuristic with swaps
 	Tables/bipartite networks
 	Distance matrix for graphs
 	Barycenter method:
