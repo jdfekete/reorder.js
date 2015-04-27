@@ -15,6 +15,8 @@ dependencies:
 
 ## Thanks
 
+Thanks to Renaud Blanch for giving me his implementation of the 'Optimal Leaf Ordering' algorithm. He has improved it and the distribution is available as [ordering](https://bitbucket.org/rndblnch/ordering).
+
 I originally started this in order to add a reordering module to
 [D3.js](http://mbostock.github.com/d3/).
 
