@@ -1597,9 +1597,9 @@ reorder.leafOrder = function() {
 	    var w_max = order(w, i, Ks[k]);
 	    for (var m = 0; m < Ls.length; m++) {
 		var x_max = order(x, Ls[m], j);
-		var sim = w_max[0] + distanceMatrix[Ks[k]][Ls[m]] + x_max[0];
-		if (sim < max) {
-		    max = sim;
+		var dist = w_max[0] + distanceMatrix[Ks[k]][Ls[m]] + x_max[0];
+		if (dist < max) {
+		    max = dist;
 		    optimal_order = w_max[1].concat(x_max[1]);
 		}
 	    }
