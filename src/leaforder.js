@@ -70,26 +70,26 @@ reorder.leafOrder = function() {
 	if (Ls.length == 0)
 	    Ls = [j];
 
-	var max = Infinity, optimal_order = [];
+	var min = Infinity, optimal_order = [];
 
 	for (var k = 0; k < Ks.length; k++) {
-	    var w_max = order(w, i, Ks[k]);
+	    var w_min = order(w, i, Ks[k]);
 	    for (var m = 0; m < Ls.length; m++) {
-		var x_max = order(x, Ls[m], j);
-		var dist = w_max[0] + distanceMatrix[Ks[k]][Ls[m]] + x_max[0];
-		if (dist < max) {
-		    max = dist;
-		    optimal_order = w_max[1].concat(x_max[1]);
+		var x_min = order(x, Ls[m], j);
+		var dist = w_min[0] + distanceMatrix[Ks[k]][Ls[m]] + x_min[0];
+		if (dist < min) {
+		    min = dist;
+		    optimal_order = w_min[1].concat(x_min[1]);
 		}
 	    }
 	}
-	return [max, optimal_order];
+	return [min, optimal_order];
     }
 
     function orderFull(v) {
         leavesMap = {};
         orderMap = {};
-	var max = Infinity,
+	var min = Infinity,
 	    optimal_order = [],
 	    left = leaves(v.left),
 	    right = leaves(v.right);
@@ -100,8 +100,8 @@ reorder.leafOrder = function() {
 	for (var i = 0; i < left.length; i++) {
 	    for (var j = 0; j < right.length; j++) {
 		var so = order(v, left[i], right[j]);
-		if (so[0] < max) {
-		    max = so[0];
+		if (so[0] < min) {
+		    min = so[0];
 		    optimal_order = so[1];
 		}
 	    }
