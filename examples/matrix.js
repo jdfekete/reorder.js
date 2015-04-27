@@ -216,14 +216,14 @@ function matrix(json) {
 	leafOrder.distance(science.stats.distance[value]);
 
 	if (currentOrder == 'leafOrder') {
-	    orders.leafOrder = computeLeaforder();
+	    orders.leafOrder = computeLeaforder;
 	    order("leafOrder");
-	    d3.select("#order").property("selectedIndex", 3);
+	    //d3.select("#order").property("selectedIndex", 3);
 	}
 	else if (currentOrder == 'leafOrderDist') {
-	    orders.leafOrderDist = computeLeaforderDist();
+	    orders.leafOrderDist = computeLeaforderDist;
 	    order("leafOrderDist");
-	    d3.select("#order").property("selectedIndex", 3);
+	    //d3.select("#order").property("selectedIndex", 4);
 	}
 
 	// leafOrder.forEach(function(lo, i) {
