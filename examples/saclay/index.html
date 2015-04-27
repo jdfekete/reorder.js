@@ -95,23 +95,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json("aviz2.json", function(json) {
-	var mat = matrix(json);
-	mat.timeout = setTimeout(function() {
-	    mat.order("group");
-	    d3.select("#order").property("selectedIndex", 3).node().focus();
-	}, 5000);
-	
-	d3.select("#order").on("change", function() {
-	    clearTimeout(mat.timeout);
-	    mat.order(this.value);
-	});
-	
-	d3.select("#distance").on("change", function() {
-	    clearTimeout(mat.timeout);
-	    mat.distance(this.value);
-	});
-    });
+    d3.json("aviz2.json", loadJson);
 
 </script>
 
