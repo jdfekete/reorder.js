@@ -1,3 +1,5 @@
+Get consistent with names and concepts, in particular of 'order' and 'permutation'. Use 'order' when things are node/row orders, and 'perm' when they are permutations. It gets tricky at times.
+
 Interaction:
 	drag row/columns
 	zoom in/out
