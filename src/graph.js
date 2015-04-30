@@ -17,6 +17,13 @@ reorder.graph = function(nodes, links, directed) {
 	});
     };
 
+    graph.generate_nodes = function(n) {
+	nodes = [];
+	for (var i = 0; i < n; i++)
+	    nodes.push({id: i});
+	return graph;
+    };
+
     graph.links = function(x) {
 	if (!arguments.length) return links;
 	links = x;

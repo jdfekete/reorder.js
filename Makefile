@@ -41,6 +41,7 @@ reorder.v1.js: \
 	src/leaforder.js \
 	src/order.js \
 	src/covariance.js \
+	src/laplacian.js \
 	src/poweriteration.js \
 	src/fiedler.js \
 	src/sortorder.js \
