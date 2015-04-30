@@ -42,6 +42,7 @@ reorder.v1.js: \
 	src/order.js \
 	src/covariance.js \
 	src/poweriteration.js \
+	src/fiedler.js \
 	src/sortorder.js \
 	src/pca1d.js \
 	src/ca.js \
