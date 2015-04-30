@@ -40,8 +40,8 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     var nodes = graph.nodes(),
 	layer1, layer2, crossings, iter,
 	best_layer1, best_layer2, best_crossings, best_iter,
-	layer, 
-	i, v, neighbors;
+	layer, inv_layer = {},
+	i, v, neighbors, med;
 
     layer1 = comp.filter(function(n) {
 	return graph.outDegree(n) != 0;
@@ -59,8 +59,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     else if ((max_iter%2)==1)
 	max_iter++; // want even number of iterations
 
-    for (i = 0; i < layer2.length; i++)
-	nodes[layer2[i]].pos = i;
+    inv_layer = inverse_permutation(layer2);
 
     best_crossings = count_crossings(graph, layer1, layer2);
     best_layer1 = layer1.slice();
@@ -70,6 +69,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
     for (layer = layer1, iter = 0;
 	 iter < max_iter;
 	 iter++, layer = (layer == layer1) ? layer2 : layer1) {
+	med = {};
 	for (i = 0; i < layer.length; i++) {
 	    // Compute the median/barycenter for this node and set
 	    // its (real) value into node.pos
@@ -80,13 +80,13 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 		neighbors = graph.inEdges(v.index);
 	    neighbors = neighbors.map(function(e) {
 		    var n = e.source == v ? e.target : e.source;
-		    return nodes[n.index].pos;
+		    return inv_layer[n.index];
 	    });
-	    v.median = median(neighbors);
-	    //console.log('median['+i+']='+v.median);
+	    med[v.index] = +median(neighbors);
+	    //console.log('median['+i+']='+med[v.index]);
 	}
 	layer.sort(function(a, b) {
-	    var d = nodes[a].median - nodes[b].median;
+	    var d = med[a] - med[b];
 	    if (d == 0) {
 		// If both values are equal,
 		// place the odd degree vertex on the left of the even
@@ -98,7 +98,7 @@ reorder.barycenter1 = function(graph, comp, max_iter) {
 	    return 0;
 	});
 	for (i = 0; i < layer.length; i++)
-	    nodes[layer[i]].pos = i;
+	    inv_layer = inverse_permutation(layer);
 	crossings = count_crossings(graph, layer1, layer2);
 	if (crossings < best_crossings) {
 	    best_crossings = crossings;
