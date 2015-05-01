@@ -1,5 +1,5 @@
 (function(exports){
-reorder = {version: "0.0.6"}; // semver
+reorder = {version: "0.0.7"}; // semver
 
 // Use as: [4,3,2].sort(reorder.cmp_number_asc);
 reorder.cmp_number_asc = function(a,b) { return a-b; };
