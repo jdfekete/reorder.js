@@ -6,8 +6,6 @@ Interaction:
 	MatLink
 
 Reordering:
-	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
-	Spectral ordering
 	Sloan ordering
 	Biclustering
 	Contingency tables methods:
@@ -15,8 +13,11 @@ Reordering:
 		Correspondence analysis
 	Chun-Hou Chen methods: http://gap.stat.sinica.edu.tw/Papers/GAP_2002.pdf
 		 Elliptical
+	Koren multiscale ACE: http://dx.doi.org/10.1109/INFVIS.2002.1173159
+	      Is it a faster spectral order?
 
 Reordering done:
+	Spectral ordering
 	Improved the barycenter heuristic with swaps
 	Tables/bipartite networks
 	Distance matrix for graphs
