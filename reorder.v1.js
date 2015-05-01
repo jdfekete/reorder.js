@@ -56,17 +56,18 @@ reorder.displaymat = function(mat, rowperm, colperm) {
     }
 };
 
-reorder.printmat = function(m) {
+reorder.printmat = function(m, prec) {
     var i, j, row, line;
+    if (! prec) prec=4
     for (i = 0; i < m.length; i++) {
 	row = m[i];
 	line = "";
 	for (j = 0; j < row.length; j++) {
 	    if (line.length != 0)
 		line += ", ";
-	    line += row[j].toFixed(4);
+	    line += row[j].toFixed(prec);
 	}
-	console.log(i.toPrecision(3)+": "+line);
+	console.log(i+": "+line);
     }
 };
 
@@ -1308,6 +1309,20 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
+reorder.random_array = function(n, min, max) {
+    var ret = Array(n);
+    if (arguments.length == 1) {
+	while(n) ret[--n] = Math.random();
+    }
+    else if (arguments.length == 2) {
+	while(n) ret[--n] = Math.random()*min;
+    }
+    else {
+	while(n) ret[--n] = min + Math.random()*(max-min);
+    }
+    return ret;
+};
+
 reorder.random_matrix = function(p, n, m, sym) {
     if (! m)
 	m = n;
@@ -2170,7 +2185,7 @@ reorder.laplacian = function(graph, comp) {
 function normalize(v) {
     var norm = science.lin.length(v),
 	i = v.length;
-    if (norm == 0) return v;
+    if (norm == 0 || Math.abs(norm - 1) < 1e-7) return v;
     while (i-- > 0)
 	v[i] /= norm;
     return v;
@@ -2178,7 +2193,7 @@ function normalize(v) {
 
 reorder.poweriteration = function(v, eps, init) {
     if (! eps) 
-	eps = 0.0001;
+	eps = 1e-9;
 	
     var n = v.length,
 	b,
@@ -2186,72 +2201,78 @@ reorder.poweriteration = function(v, eps, init) {
 	j,
 	tmp = Array(n),
 	norm,
-	s = 10;
+	s = 100,
+	e;
 
     reorder.assert(n == v[0].length, "poweriteration needs a square matrix");
     if (! init) {
-	b = Array(n);
-	for (i = 0; i < n; i++)
-	    b[i] = Math.random();
+	b = reorder.random_array(n);
     }
-    else 
+    else
 	b = init.slice(); // copy
-    b = normalize(b);
+    normalize(b);
     while (s-- > 0) {
 	for(i=0; i<n; i++) {
             tmp[i] = 0;
             for (j=0; j<n; j++) tmp[i] += v[i][j] * b[j];
 	}
-	tmp = normalize(tmp);
-//	if (science.lin.dot(tmp, b) > (1 - eps))
-//	    break;
+	normalize(tmp);
+	if (science.lin.dot(tmp, b) > (1.0 - eps))
+	    break;
 	var t = tmp; tmp = b; b = t; // swap b/tmp
     }
     return tmp;
 };
 
-reorder.poweriteration_n = function(v, p, init, eps) {
+reorder.poweriteration_n = function(v, p, init, eps, start) {
     if (! eps) 
-	eps = 0.0001;
+	eps = 1e-9;
 	
     var n = v.length,
-	b = Array(p), bk,
+	b = Array(p), 
 	i, j, k, l,
-	tmp,
-	s = 10;
+	bk, dot, row,
+	tmp = Array(n),
+	s = 100;
 
     reorder.assert(n == v[0].length, "poweriteration needs a square matrix");
     if (! init) {
 	for (i = 0; i < p; i++) {
-	    tmp = b[i] = Array(n);
-	    for (j = 0; j < n; j++)
-		tmp[j] = Math.random();
+	    row = b[i] = reorder.random_array(n);
+	    normalize(row);
 	}
     }
     else {
-	for (i = 0; i < p; i++)
+	for (i = 0; i < p; i++) {
 	    b[i] = init[i].slice(); // copy
-    }
-    for (k = 0; k < p; j++) {
-	bk = b[k] = normalize(b[k]);
-	// Orthogonalize vector
-	for (l = 0; l < k; l++) {
-	    tmp = b[l];
-	    var dot = science.dot(bk, tmp);
-	    for (i = 0; i < n; i++)
-		bk[i] -= dot*tmp[i];
+	    normalize(b[i]);
 	}
+    }
+    if (! start)
+	start = 0;
+	
+    for (k = start; k < p; k++) {
+	bk = b[k];
 	while (s-- > 0) {
+	    // Orthogonalize vector
+	    for (l = 0; l < k; l++) {
+		row = b[l];
+		dot = science.lin.dot(bk, row);
+		for (i = 0; i < n; i++)
+		    bk[i] -= dot*row[i];
+	    }
+	    
 	    for(i=0; i<n; i++) {
 		tmp[i] = 0;
 		for (j=0; j<n; j++) 
 		    tmp[i] += v[i][j] * bk[j];
 	    }
-	    tmp = normalize(tmp);
-	    //	if (science.lin.dot(tmp, b) > (1 - eps))
-	    //	    break;
+	    normalize(tmp);
+	    if (science.lin.dot(tmp, bk) > (1 - eps))
+	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}
+	//console.log('eig[%d]=%j',k, bk);
     }
     return b;
 };
@@ -2264,6 +2285,7 @@ reorder.poweriteration_n = function(v, p, init, eps) {
 // Transform the matrix B to reverse the order of the eigenvectors.
 // B' = g . (I - B) where g is the Gershgorin bound, an upper bound
 // for (the absolute value of) the largest eigenvalue of a matrix.
+// Also, the smallest eigenvector is 1^n 
 
 function gershgorin_bound(B) {
     var i, j, max = 0, n = B.length, 
@@ -2277,10 +2299,11 @@ function gershgorin_bound(B) {
 	if (t > max)
 	    max = t;
     }
+    //console.log('gershgorin_bound=%d', max);
     return max;
 }
 
-reorder.fiedler_vector = function(B, init, eps) {
+reorder.fiedler_vector = function(B, eps) {
     var g = gershgorin_bound(B),
 	n = B.length,
 	// Copy B
@@ -2290,13 +2313,13 @@ reorder.fiedler_vector = function(B, init, eps) {
 	row = Bhat[i];
 	for (j = 0; j < n; j++) {
 	    if (i == j)
-		row[j] = 1 - row[j];
+		row[j] = g - row[j];
 	    else
 		row[j] = - row[j];
-	    row[j] *= g;
 	}
     }
-    var eig = reorder.power_iterator_n(Bhat, 2, init, eps);
+    var init = [ reorder.array1d(n, 1), reorder.random_array(n) ],
+	eig = reorder.poweriteration_n(Bhat, 2, init, eps, 1);
     return eig[1];
 };
 reorder.sortorder = function(v) {
@@ -2377,9 +2400,6 @@ reorder.sumcols = function(v) {
 }
 
 reorder.ca = function(v, eps) {
-    if (arguments.length < 2) 
-	eps = 0.0001;
-
     var n = v.length,
 	o = v[0].length,
 	sumline = reorder.sumlines(v),
@@ -2430,7 +2450,7 @@ reorder.ca = function(v, eps) {
 	    cov[i][j] = cov[j][i] = reorder.covariance(v2[i], v2[j]);
 	    
     //console.log("Variance-Covariance");
-    //reorder.printmat(cov);
+    //reorder.printmat(cov,8);
 
     var eigenvector1 = reorder.poweriteration(cov, eps),
 	eigenvalue1 = 0;

@@ -18,6 +18,24 @@ function inDeltaArray(actual, expected, delta) {
 }
 
 function inDeltaNumber(actual, expected, delta) {
-    var d = Math.abs(actual-expcted);
+    var d = Math.abs(actual-expected);
     return d < delta;
 }
+
+
+assert.inDeltaArray = inDeltaArray;
+
+
+function inDeltaAbs(actual, expected, delta) {
+    var d = Math.abs(Math.abs(actual)-Math.abs(expected));
+    return d < delta;
+}
+
+assert.inDeltaArrayAbs = function(actual, expected, delta, message) {
+  var n = expected.length, i = -1;
+  if (actual.length !== n) return false;
+  while (++i < n)
+      if (!inDeltaAbs(actual[i], expected[i], delta)) 
+	  assert.fail(actual, expected, message || "expected {actual} to be in within *" + delta + "* of {expected}", null, assert.inDeltaArrayAbs);
+  return true;
+};

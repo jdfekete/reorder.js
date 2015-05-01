@@ -22,6 +22,20 @@ reorder.randomPermutation = function(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
+reorder.random_array = function(n, min, max) {
+    var ret = Array(n);
+    if (arguments.length == 1) {
+	while(n) ret[--n] = Math.random();
+    }
+    else if (arguments.length == 2) {
+	while(n) ret[--n] = Math.random()*min;
+    }
+    else {
+	while(n) ret[--n] = min + Math.random()*(max-min);
+    }
+    return ret;
+};
+
 reorder.random_matrix = function(p, n, m, sym) {
     if (! m)
 	m = n;

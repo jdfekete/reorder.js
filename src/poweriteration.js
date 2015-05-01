@@ -1,7 +1,7 @@
 function normalize(v) {
     var norm = science.lin.length(v),
 	i = v.length;
-    if (norm == 0) return v;
+    if (norm == 0 || Math.abs(norm - 1) < 1e-7) return v;
     while (i-- > 0)
 	v[i] /= norm;
     return v;
@@ -9,7 +9,7 @@ function normalize(v) {
 
 reorder.poweriteration = function(v, eps, init) {
     if (! eps) 
-	eps = 0.0001;
+	eps = 1e-9;
 	
     var n = v.length,
 	b,
@@ -17,72 +17,78 @@ reorder.poweriteration = function(v, eps, init) {
 	j,
 	tmp = Array(n),
 	norm,
-	s = 10;
+	s = 100,
+	e;
 
     reorder.assert(n == v[0].length, "poweriteration needs a square matrix");
     if (! init) {
-	b = Array(n);
-	for (i = 0; i < n; i++)
-	    b[i] = Math.random();
+	b = reorder.random_array(n);
     }
-    else 
+    else
 	b = init.slice(); // copy
-    b = normalize(b);
+    normalize(b);
     while (s-- > 0) {
 	for(i=0; i<n; i++) {
             tmp[i] = 0;
             for (j=0; j<n; j++) tmp[i] += v[i][j] * b[j];
 	}
-	tmp = normalize(tmp);
-//	if (science.lin.dot(tmp, b) > (1 - eps))
-//	    break;
+	normalize(tmp);
+	if (science.lin.dot(tmp, b) > (1.0 - eps))
+	    break;
 	var t = tmp; tmp = b; b = t; // swap b/tmp
     }
     return tmp;
 };
 
-reorder.poweriteration_n = function(v, p, init, eps) {
+reorder.poweriteration_n = function(v, p, init, eps, start) {
     if (! eps) 
-	eps = 0.0001;
+	eps = 1e-9;
 	
     var n = v.length,
-	b = Array(p), bk,
+	b = Array(p), 
 	i, j, k, l,
-	tmp,
-	s = 10;
+	bk, dot, row,
+	tmp = Array(n),
+	s = 100;
 
     reorder.assert(n == v[0].length, "poweriteration needs a square matrix");
     if (! init) {
 	for (i = 0; i < p; i++) {
-	    tmp = b[i] = Array(n);
-	    for (j = 0; j < n; j++)
-		tmp[j] = Math.random();
+	    row = b[i] = reorder.random_array(n);
+	    normalize(row);
 	}
     }
     else {
-	for (i = 0; i < p; i++)
+	for (i = 0; i < p; i++) {
 	    b[i] = init[i].slice(); // copy
-    }
-    for (k = 0; k < p; j++) {
-	bk = b[k] = normalize(b[k]);
-	// Orthogonalize vector
-	for (l = 0; l < k; l++) {
-	    tmp = b[l];
-	    var dot = science.dot(bk, tmp);
-	    for (i = 0; i < n; i++)
-		bk[i] -= dot*tmp[i];
+	    normalize(b[i]);
 	}
+    }
+    if (! start)
+	start = 0;
+	
+    for (k = start; k < p; k++) {
+	bk = b[k];
 	while (s-- > 0) {
+	    // Orthogonalize vector
+	    for (l = 0; l < k; l++) {
+		row = b[l];
+		dot = science.lin.dot(bk, row);
+		for (i = 0; i < n; i++)
+		    bk[i] -= dot*row[i];
+	    }
+	    
 	    for(i=0; i<n; i++) {
 		tmp[i] = 0;
 		for (j=0; j<n; j++) 
 		    tmp[i] += v[i][j] * bk[j];
 	    }
-	    tmp = normalize(tmp);
-	    //	if (science.lin.dot(tmp, b) > (1 - eps))
-	    //	    break;
+	    normalize(tmp);
+	    if (science.lin.dot(tmp, bk) > (1 - eps))
+	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}
+	//console.log('eig[%d]=%j',k, bk);
     }
     return b;
 };

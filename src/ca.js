@@ -32,9 +32,6 @@ reorder.sumcols = function(v) {
 }
 
 reorder.ca = function(v, eps) {
-    if (arguments.length < 2) 
-	eps = 0.0001;
-
     var n = v.length,
 	o = v[0].length,
 	sumline = reorder.sumlines(v),
@@ -85,7 +82,7 @@ reorder.ca = function(v, eps) {
 	    cov[i][j] = cov[j][i] = reorder.covariance(v2[i], v2[j]);
 	    
     //console.log("Variance-Covariance");
-    //reorder.printmat(cov);
+    //reorder.printmat(cov,8);
 
     var eigenvector1 = reorder.poweriteration(cov, eps),
 	eigenvalue1 = 0;

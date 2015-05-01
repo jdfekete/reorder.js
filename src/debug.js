@@ -18,17 +18,18 @@ reorder.displaymat = function(mat, rowperm, colperm) {
     }
 };
 
-reorder.printmat = function(m) {
+reorder.printmat = function(m, prec) {
     var i, j, row, line;
+    if (! prec) prec=4
     for (i = 0; i < m.length; i++) {
 	row = m[i];
 	line = "";
 	for (j = 0; j < row.length; j++) {
 	    if (line.length != 0)
 		line += ", ";
-	    line += row[j].toFixed(4);
+	    line += row[j].toFixed(prec);
 	}
-	console.log(i.toPrecision(3)+": "+line);
+	console.log(i+": "+line);
     }
 };
 

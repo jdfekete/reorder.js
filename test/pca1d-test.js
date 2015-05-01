@@ -7,25 +7,6 @@ var vows = require("vows"),
 
 var suite = vows.describe("reorder.pca1d");
 
-assert.inDeltaArray = function(actual, expected, delta, message) {
-  if (!inDeltaArray(actual, expected, delta)) {
-    assert.fail(actual, expected, message || "expected {actual} to be in within *" + delta + "* of {expected}", null, assert.inDelta);
-  }
-};
-
-function inDeltaArray(actual, expected, delta) {
-  var n = expected.length, i = -1;
-  if (actual.length !== n) return false;
-  while (++i < n) if (!inDeltaNumber(actual[i], expected[i], delta)) return false;
-  return true;
-}
-
-function inDeltaNumber(actual, expected, delta) {
-    var d = Math.abs(actual-expected);
-    //console.log("d="+d+": "+((d < delta) ? "pass" : "fail"));
-    return d < delta;
-}
-
 suite.addBatch({
     "pca1d": {
 	"simple": function() {

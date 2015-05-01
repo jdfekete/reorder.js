@@ -7,6 +7,7 @@
 // Transform the matrix B to reverse the order of the eigenvectors.
 // B' = g . (I - B) where g is the Gershgorin bound, an upper bound
 // for (the absolute value of) the largest eigenvalue of a matrix.
+// Also, the smallest eigenvector is 1^n 
 
 function gershgorin_bound(B) {
     var i, j, max = 0, n = B.length, 
@@ -20,10 +21,11 @@ function gershgorin_bound(B) {
 	if (t > max)
 	    max = t;
     }
+    //console.log('gershgorin_bound=%d', max);
     return max;
 }
 
-reorder.fiedler_vector = function(B, init, eps) {
+reorder.fiedler_vector = function(B, eps) {
     var g = gershgorin_bound(B),
 	n = B.length,
 	// Copy B
@@ -33,12 +35,12 @@ reorder.fiedler_vector = function(B, init, eps) {
 	row = Bhat[i];
 	for (j = 0; j < n; j++) {
 	    if (i == j)
-		row[j] = 1 - row[j];
+		row[j] = g - row[j];
 	    else
 		row[j] = - row[j];
-	    row[j] *= g;
 	}
     }
-    var eig = reorder.power_iterator_n(Bhat, 2, init, eps);
+    var init = [ reorder.array1d(n, 1), reorder.random_array(n) ],
+	eig = reorder.poweriteration_n(Bhat, 2, init, eps, 1);
     return eig[1];
 };
