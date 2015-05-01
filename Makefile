@@ -37,6 +37,7 @@ reorder.v1.js: \
 	src/random.js \
 	src/permute.js \
 	src/stablepermute.js \
+	src/sortorder.js \
 	src/hcluster.js \
 	src/leaforder.js \
 	src/order.js \
@@ -44,7 +45,7 @@ reorder.v1.js: \
 	src/laplacian.js \
 	src/poweriteration.js \
 	src/fiedler.js \
-	src/sortorder.js \
+	src/spectral_order.js \
 	src/pca1d.js \
 	src/ca.js \
 	src/cuthill_mckee.js

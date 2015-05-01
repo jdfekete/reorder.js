@@ -25,7 +25,7 @@ function gershgorin_bound(B) {
     return max;
 }
 
-reorder.fiedler_vector = function(B, eps) {
+function fiedler_vector(B, eps) {
     var g = gershgorin_bound(B),
 	n = B.length,
 	// Copy B
@@ -43,4 +43,6 @@ reorder.fiedler_vector = function(B, eps) {
     var init = [ reorder.array1d(n, 1), reorder.random_array(n) ],
 	eig = reorder.poweriteration_n(Bhat, 2, init, eps, 1);
     return eig[1];
-};
+}
+
+reorder.fiedler_vector = fiedler_vector;

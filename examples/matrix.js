@@ -93,6 +93,16 @@ function matrix(json) {
 	return nodes.map(function(n) { return n.rcm; });
     }
 
+    function computeSpectral() {
+	var spectral = reorder.spectral_order(graph);
+
+	spectral.forEach(function(lo, i) {
+	    nodes[i].spectral = lo;
+	});
+
+	return nodes.map(function(n) { return n.spectral; });
+    }
+
   // Precompute the orders.
     var orders = {
 	name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].name, nodes[b].name); }),
@@ -104,7 +114,8 @@ function matrix(json) {
 	leafOrder: computeLeaforder,
 	leafOrderDist: computeLeaforderDist,
 	barycenter: computeBarycenter,
-	rcm: computeRCM
+	rcm: computeRCM,
+	spectral: computeSpectral
     };
 
   // The default sort order.

@@ -1384,6 +1384,10 @@ reorder.stablepermute = function(list, indexes) {
 	p.reverse();
     return p;
 };
+reorder.sortorder = function(v) {
+    return reorder.range(0, v.length).sort(
+	function(a,b) { return v[a] - v[b]; });
+};
 if (typeof science == "undefined") {
     science = {version: "1.9.1"}; // semver [jdf] should be defined
     science.stats = {};
@@ -2303,7 +2307,7 @@ function gershgorin_bound(B) {
     return max;
 }
 
-reorder.fiedler_vector = function(B, eps) {
+function fiedler_vector(B, eps) {
     var g = gershgorin_bound(B),
 	n = B.length,
 	// Copy B
@@ -2321,11 +2325,24 @@ reorder.fiedler_vector = function(B, eps) {
     var init = [ reorder.array1d(n, 1), reorder.random_array(n) ],
 	eig = reorder.poweriteration_n(Bhat, 2, init, eps, 1);
     return eig[1];
+}
+
+reorder.fiedler_vector = fiedler_vector;
+
+function spectral_order(graph, comps) {
+    var i, vec, comp, perm, order = [];
+    if (! comps)
+	comps = graph.components();
+
+    for (i = 0; i < comps.length; i++) {
+	comp = comps[i];
+	vec = reorder.fiedler_vector(reorder.laplacian(graph, comp));
+	perm = reorder.sortorder(vec);
+	order = order.concat(reorder.permute(comp, perm));
+    }
+    return order;
 };
-reorder.sortorder = function(v) {
-    return reorder.range(0, v.length).sort(
-	function(a,b) { return v[a] - v[b]; });
-};
+reorder.spectral_order = spectral_order;
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
 reorder.center = function(v) {
