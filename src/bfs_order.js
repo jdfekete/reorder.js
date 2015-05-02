@@ -1,4 +1,5 @@
 
+/*jshint loopfunc:true */
 bfs_order = function(graph, comps) {
     if (! comps)
 	comps = graph.components();

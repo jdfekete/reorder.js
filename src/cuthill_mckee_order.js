@@ -1,7 +1,8 @@
 
+/*jshint loopfunc:true */
 reorder.cuthill_mckee = function(graph, comp) {
-    if (comp.length < 2)
-	return [0, 1];
+    if (comp.length < 3)
+	return comp;
 
     var nodes = graph.nodes(),
 	start = comp[0], 
@@ -22,12 +23,12 @@ reorder.cuthill_mckee = function(graph, comp) {
 	}
     }
     queue.push(start);
-    while (queue.length != 0) {
+    while (queue.length !== 0) {
 	n = queue.shift();
 	if (visited[n])
 	    continue;
 	visited[n] = true;
-	perm.push(inv[n]); // push the index in comp
+	perm.push(n);
 	e = graph.edges(n)
 	    .map(function(edge) { return graph.other(edge, n).index; })
 	    .filter(function(n) { return !visited[n] && (n in inv); })
@@ -53,8 +54,7 @@ reorder.cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.permute(comp,
-			    reorder.cuthill_mckee(graph, comp)));
+	    reorder.cuthill_mckee(graph, comp));
     }
     return order;
 };
@@ -67,8 +67,7 @@ reorder.reverse_cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.permute(comp,
-			    reorder.reverse_cuthill_mckee(graph, comp)));
+	    reorder.reverse_cuthill_mckee(graph, comp));
     }
     return order;
 };

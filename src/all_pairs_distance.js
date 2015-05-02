@@ -10,7 +10,6 @@ reorder.all_pairs_distance = function(graph, comps) {
 
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
-	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -21,17 +20,16 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
     for (i = 0; i < comp.length; i++)
 	dist[i][i] = 0;
     
+    var build_dist = function(e) {
+	if (e.source == e.target) return;
+	if (! (e.source.index in inv) || ! (e.target.index in inv))
+	    return; // ignore edges outside of comp
+	var u = inv[e.source.index],
+	    v = inv[e.target.index];
+	dist[v][u] = dist[u][v] = graph.distance(e.index);
+    };
     for (i = 0; i < comp.length; i++) {
-	edges = {};
-	graph.edges(comp[i]).forEach(function(e) {
-	    if (e.source == e.target) return;
-	    if (! (e.source.index in inv)
-		|| ! (e.target.index in inv))
-		return; // ignore edges outside of comp
-	    var u = inv[e.source.index],
-		v = inv[e.target.index];
-	    dist[v][u] = dist[u][v] = graph.distance(e.index);
-	});
+	graph.edges(comp[i]).forEach(build_dist);
     }
 
     for (k=0; k<comp.length; k++) {
@@ -57,7 +55,6 @@ function floyd_warshall_with_path(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
 	next = Array(comp.length),
 	directed = graph.directed(),
-	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -70,19 +67,20 @@ function floyd_warshall_with_path(graph, comp) {
 	next[i] = Array(comp.length);
     }
     
+    var build_dist = function(e) {
+	if (e.source == e.target) return;
+	var u = inv[e.source.index],
+	    v = inv[e.target.index];
+	dist[u][v] = graph.distance(e);
+	next[u][v] = v;
+	if (! directed) {
+	    dist[v][u] = graph.distance(e);
+	    next[v][u] = u;
+	}
+    };
+    
     for (i = 0; i < comp.length; i++) {
-	edges = {};
-	graph.edges(comp[i]).forEach(function(e) {
-	    if (e.source == e.target) return;
-	    var u = inv[e.source.index],
-		v = inv[e.target.index];
-	    dist[u][v] = graph.distance(e);
-	    next[u][v] = v;
-	    if (! directed) {
-		dist[v][u] = graph.distance(e);
-		next[v][u] = u;
-	    }
-	});
+	graph.edges(comp[i]).forEach(build_dist);
     }
 
     for (k=0; k<comp.length; k++) {
@@ -105,7 +103,7 @@ function floyd_warshall_with_path(graph, comp) {
 reorder.floyd_warshall_with_path = floyd_warshall_with_path;
 
 reorder.floyd_warshall_path = function(next, u, v) {
-    if (next[u][v] == undefined) return [];
+    if (next[u][v] === undefined) return [];
     var path = [u];
     while (u != v) {
 	u = next[u][v];

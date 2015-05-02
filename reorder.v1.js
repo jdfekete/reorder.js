@@ -58,12 +58,12 @@ reorder.displaymat = function(mat, rowperm, colperm) {
 
 reorder.printmat = function(m, prec) {
     var i, j, row, line;
-    if (! prec) prec=4
+    if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
 	row = m[i];
 	line = "";
 	for (j = 0; j < row.length; j++) {
-	    if (line.length != 0)
+	    if (line.length !== 0)
 		line += ", ";
 	    line += row[j].toFixed(prec);
 	}
@@ -79,7 +79,7 @@ reorder.assert = function(v, msg) {
 };
 
 reorder.printhcluster = function(cluster,indent) {
-    if (cluster.left == null) 
+    if (cluster.left === null) 
 	return  Array(indent+1).join(' ')+"id: "+cluster.id;
 
     return Array(indent+1).join(' ')
@@ -196,7 +196,7 @@ reorder.distance = {
 		n++;
 	    }
 	}
-	if (n == 0) return 0;
+	if (n === 0) return 0;
 	return s / n;
     },
     braycurtis: function(a, b) {
@@ -213,7 +213,7 @@ reorder.distance = {
 		s1 += Math.abs(ai + bi);
 	    }
 	}
-	if (s1 == 0) return 0;
+	if (s1 === 0) return 0;
 	return s0 / s1;
     }
 };
@@ -436,38 +436,38 @@ reorder.graph = function(nodes, links, directed) {
 
     graph.init = init;
 
-    function edges(node) { 
+    graph.edges = function(node) { 
 	if (typeof node != "number") {
 	    node = node.index;
 	    console.log('received node %d', node);
 	}
 	return edges[node]; 
     };
-    graph.edges = edges;
+
     graph.degree = function(node) { 
 	if (typeof node != "number")
 	    node = node.index;
 	return edges[node].length; 
     };
 
-    function inEdges(node) {
+    graph.inEdges = function (node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return inEdges[node];
-    }
-    graph.inEdges = inEdges;
+    };
+
     graph.inDegree = function(node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return inEdges[node].length; 
     };
 
-    function outEdges(node) { 
+    graph.outEdges = function(node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return outEdges[node];
-    }
-    graph.outEdges = outEdges;
+    };
+
     graph.outDegree = function(node) { 
 	if (typeof node != "number")
 	    node = node.index;
@@ -479,7 +479,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (outEdges(i).length == 0)
+	    if (graph.outEdges(i).length == 0)
 		sinks.push(i);
 	}
 	return sinks;
@@ -490,7 +490,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (inEdges(i).length == 0)
+	    if (graph.inEdges(i).length == 0)
 		sources.push(i);
 	}
 	return sources;
@@ -668,21 +668,23 @@ reorder.graph_connect = function(graph, comps) {
 };
 reorder.bfs = function(graph, v, fn) {
     var q = new Queue(),
-	discovered = {};
+	discovered = {}, i, e, v2, edges;
     q.push(v);
     discovered[v] = true;
     fn(v, undefined);
     while (q.length) {
 	v = q.shift();
 	fn(v, v);
-	graph.edges(v).forEach(function(e) {
-	    var v2 = graph.other(e, v).index;
+	edges =	graph.edges(v);
+	for (i = 0; i < edges.length; i++) {
+	    e = edges[i];
+	    v2 = graph.other(e, v).index;
 	    if (! discovered[v2]) {
 		q.push(v2);
 		discovered[v2] = true;
 		fn(v, v2);
 	    }
-	});
+	}
 	fn(v, -1);
     }
 };
@@ -719,6 +721,7 @@ reorder.all_pairs_distance_bfs = function(graph, comps) {
 };
 
 
+/*jshint loopfunc:true */
 bfs_order = function(graph, comps) {
     if (! comps)
 	comps = graph.components();
@@ -810,6 +813,7 @@ reorder.graph2mat = function(graph, directed) {
 // Wilhelm Barth, Petra Mutzel, Michael Jünger: 
 // Simple and Efficient Bilayer Cross Counting.
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
+/*jshint loopfunc:true */
 function count_crossings(graph, north, south) {
     var i, j, n,
 	firstIndex, treeSize, tree, index, weightSum,
@@ -817,13 +821,9 @@ function count_crossings(graph, north, south) {
 
     var comp = reorder.permutation(graph.nodes().length);
 
-    if (north==undefined) {
-	north = comp.filter(function(n) {
-	    return graph.outDegree(n) != 0;
-	}),
-	south = comp.filter(function(n) {
-	    return graph.inDegree(n) != 0;
-	});
+    if (north===undefined) {
+	north = comp.filter(function(n) { return graph.outDegree(n) !== 0; });
+	south = comp.filter(function(n) { return graph.inDegree(n) !== 0; });
     }
 
     // Choose the smaller axis
@@ -959,33 +959,33 @@ function adjacent_exchange(graph, layer1, layer2) {
     }
 
     return [layer1, layer2, improved];
-};
+}
 
 reorder.adjacent_exchange = adjacent_exchange;
 reorder.barycenter_order = function(graph, comps, max_iter) {
-    var perms = [[], [], 0];
+    var orders = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
 	comps = graph.components();
     }
     for (var i = 0; i < comps.length; i++) {
-	var p = reorder.barycenter(graph, comps[i], max_iter);
-	perms = [ perms[0].concat(p[0]),
-		  perms[1].concat(p[1]),
-		  perms[2]+p[2] ];
+	var o = reorder.barycenter(graph, comps[i], max_iter);
+	orders = [ orders[0].concat(o[0]),
+		   orders[1].concat(o[1]),
+		   orders[2]+o[2] ];
     }
-    return perms;
+    return orders;
 };
 
 // Take the list of neighbor indexes and return the median according to 
 // P. Eades and N. Wormald, Edge crossings in drawings of bipartite graphs.
 // Algorithmica, vol. 11 (1994) 379–403.
 function median(neighbors) {
-    if (neighbors.length == 0)
+    if (neighbors.length === 0)
 	return -1; // should not happen
-    if (neighbors.length == 1)
+    if (neighbors.length === 1)
 	return neighbors[0];
-    if (neighbors.length == 2)
+    if (neighbors.length === 2)
 	return (neighbors[0]+neighbors[1])/2;
     neighbors.sort(reorder.cmp_number);
     if (neighbors.length % 2)
@@ -1008,10 +1008,10 @@ reorder.barycenter = function(graph, comp, max_iter) {
 	i, v, neighbors, med;
 
     layer1 = comp.filter(function(n) {
-	return graph.outDegree(n) != 0;
+	return graph.outDegree(n) !== 0;
     });
     layer2 = comp.filter(function(n) {
-	return graph.inDegree(n) != 0;
+	return graph.inDegree(n) !== 0;
     });
     if (comp.length < 3) {
 	return [layer1, layer2,
@@ -1028,7 +1028,23 @@ reorder.barycenter = function(graph, comp, max_iter) {
     best_crossings = count_crossings(graph, layer1, layer2);
     best_layer1 = layer1.slice();
     best_layer2 = layer2.slice();
-    best_iter = 0;
+    best_iter = 0;    
+    var inv_neighbor = function(e) {
+	  var n = e.source == v ? e.target : e.source;
+	  return inv_layer[n.index];
+        },
+	barycenter_sort = function(a, b) {
+	    var d = med[a] - med[b];
+	    if (d === 0) {
+		// If both values are equal,
+		// place the odd degree vertex on the left of the even
+		// degree vertex
+		d = (graph.edges(b).length%2) - (graph.edges(a).length%2);
+	    }
+	    if (d < 0) return -1;
+	    else if (d > 0) return 1;
+	    return 0;
+	};
 
     for (layer = layer1, iter = 0;
 	 iter < max_iter;
@@ -1042,25 +1058,11 @@ reorder.barycenter = function(graph, comp, max_iter) {
 		neighbors = graph.outEdges(v.index);
 	    else
 		neighbors = graph.inEdges(v.index);
-	    neighbors = neighbors.map(function(e) {
-		    var n = e.source == v ? e.target : e.source;
-		    return inv_layer[n.index];
-	    });
+	    neighbors = neighbors.map(inv_neighbor);
 	    med[v.index] = +median(neighbors);
 	    //console.log('median['+i+']='+med[v.index]);
 	}
-	layer.sort(function(a, b) {
-	    var d = med[a] - med[b];
-	    if (d == 0) {
-		// If both values are equal,
-		// place the odd degree vertex on the left of the even
-		// degree vertex
-		d = (graph.edges(b).length%2) - (graph.edges(a).length%2);
-	    }
-	    if (d < 0) return -1;
-	    else if (d > 0) return 1;
-	    return 0;
-	});
+	layer.sort(barycenter_sort);
 	for (i = 0; i < layer.length; i++)
 	    inv_layer = inverse_permutation(layer);
 	crossings = count_crossings(graph, layer1, layer2);
@@ -1088,7 +1090,6 @@ reorder.all_pairs_distance = function(graph, comps) {
 
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
-	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -1099,17 +1100,16 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
     for (i = 0; i < comp.length; i++)
 	dist[i][i] = 0;
     
+    var build_dist = function(e) {
+	if (e.source == e.target) return;
+	if (! (e.source.index in inv) || ! (e.target.index in inv))
+	    return; // ignore edges outside of comp
+	var u = inv[e.source.index],
+	    v = inv[e.target.index];
+	dist[v][u] = dist[u][v] = graph.distance(e.index);
+    };
     for (i = 0; i < comp.length; i++) {
-	edges = {};
-	graph.edges(comp[i]).forEach(function(e) {
-	    if (e.source == e.target) return;
-	    if (! (e.source.index in inv)
-		|| ! (e.target.index in inv))
-		return; // ignore edges outside of comp
-	    var u = inv[e.source.index],
-		v = inv[e.target.index];
-	    dist[v][u] = dist[u][v] = graph.distance(e.index);
-	});
+	graph.edges(comp[i]).forEach(build_dist);
     }
 
     for (k=0; k<comp.length; k++) {
@@ -1135,7 +1135,6 @@ function floyd_warshall_with_path(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
 	next = Array(comp.length),
 	directed = graph.directed(),
-	edges,
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -1148,19 +1147,20 @@ function floyd_warshall_with_path(graph, comp) {
 	next[i] = Array(comp.length);
     }
     
+    var build_dist = function(e) {
+	if (e.source == e.target) return;
+	var u = inv[e.source.index],
+	    v = inv[e.target.index];
+	dist[u][v] = graph.distance(e);
+	next[u][v] = v;
+	if (! directed) {
+	    dist[v][u] = graph.distance(e);
+	    next[v][u] = u;
+	}
+    };
+    
     for (i = 0; i < comp.length; i++) {
-	edges = {};
-	graph.edges(comp[i]).forEach(function(e) {
-	    if (e.source == e.target) return;
-	    var u = inv[e.source.index],
-		v = inv[e.target.index];
-	    dist[u][v] = graph.distance(e);
-	    next[u][v] = v;
-	    if (! directed) {
-		dist[v][u] = graph.distance(e);
-		next[v][u] = u;
-	    }
-	});
+	graph.edges(comp[i]).forEach(build_dist);
     }
 
     for (k=0; k<comp.length; k++) {
@@ -1183,7 +1183,7 @@ function floyd_warshall_with_path(graph, comp) {
 reorder.floyd_warshall_with_path = floyd_warshall_with_path;
 
 reorder.floyd_warshall_path = function(next, u, v) {
-    if (next[u][v] == undefined) return [];
+    if (next[u][v] === undefined) return [];
     var path = [u];
     while (u != v) {
 	u = next[u][v];
@@ -1280,7 +1280,7 @@ reorder.dist = function() {
 	    }
 	}
 	return distMatrix;
-    };
+    }
 
     dist.distance = function(x) {
 	if (!arguments.length) return distance;
@@ -1399,7 +1399,7 @@ reorder.stablepermute = function(list, indexes) {
 	p.reverse();
     return p;
 };
-reorder.sortorder = function(v) {
+reorder.sort_order = function(v) {
     return reorder.range(0, v.length).sort(
 	function(a,b) { return v[a] - v[b]; });
 };
@@ -2174,7 +2174,7 @@ reorder.variancecovariance = function(v) {
 	    cov[i][j] = cov[j][i] = reorder.covariancetranspose(v, i, j);
     }
     return cov;
-}
+};
 reorder.laplacian = function(graph, comp) {
     var n = comp.length,
 	lap = reorder.zeroes(n, n),
@@ -2351,7 +2351,7 @@ function spectral_order(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	vec = reorder.fiedler_vector(reorder.laplacian(graph, comp));
-	perm = reorder.sortorder(vec);
+	perm = reorder.sort_order(vec);
 	order = order.concat(reorder.permute(comp, perm));
     }
     return order;
@@ -2359,7 +2359,7 @@ function spectral_order(graph, comps) {
 reorder.spectral_order = spectral_order;
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
-reorder.center = function(v) {
+function center(v) {
     var n = v.length;
 
     if (n == 0) return null;
@@ -2382,20 +2382,17 @@ reorder.center = function(v) {
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 reorder.pca1d = function(v, eps) {
-    if (arguments.length < 2) 
-	eps = 0.0001;
-
     var n = v.length;
 
     if (v.length == 0) return null;
 
-    v = reorder.center(v);
+    v = center(v);
     var cov = reorder.variancecovariance(v);
     return reorder.poweriteration(cov, eps);
 };
 
 reorder.pca_order = function(v, eps) {
-    return reorder.sortorder(pca1d(v, eps));
+    return reorder.sort_order(pca1d(v, eps));
 }
 //Corresponence Analysis
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
@@ -2428,7 +2425,7 @@ reorder.sumcols = function(v) {
 	    sumcol[j] += row[j];
     }
     return sumcol;
-}
+};
 
 reorder.ca = function(v, eps) {
     var n = v.length,
@@ -2438,13 +2435,10 @@ reorder.ca = function(v, eps) {
 	s = reorder.sum(sumcol),
 	i, j, row;
 
-    //reorder.printmat(v);
-    //console.log("lines: "+sumline);
-    //console.log("cols: "+sumcol);
-    //console.log("sum: "+s);
-    // switch to frequency
     for (i = 0; i < n; i++) {
-	v[i] = v[i].map(function(a) { return a / s; });
+	row = v[i];
+	for (j = 0; j < row.length; j++) 
+	    row[j] /= s;
     }
     sumline = reorder.sumlines(v);
     sumcol = reorder.sumcols(v);
@@ -2494,9 +2488,10 @@ reorder.ca = function(v, eps) {
 };
 
 
+/*jshint loopfunc:true */
 reorder.cuthill_mckee = function(graph, comp) {
-    if (comp.length < 2)
-	return [0, 1];
+    if (comp.length < 3)
+	return comp;
 
     var nodes = graph.nodes(),
 	start = comp[0], 
@@ -2517,12 +2512,12 @@ reorder.cuthill_mckee = function(graph, comp) {
 	}
     }
     queue.push(start);
-    while (queue.length != 0) {
+    while (queue.length !== 0) {
 	n = queue.shift();
 	if (visited[n])
 	    continue;
 	visited[n] = true;
-	perm.push(inv[n]); // push the index in comp
+	perm.push(n);
 	e = graph.edges(n)
 	    .map(function(edge) { return graph.other(edge, n).index; })
 	    .filter(function(n) { return !visited[n] && (n in inv); })
@@ -2548,8 +2543,7 @@ reorder.cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.permute(comp,
-			    reorder.cuthill_mckee(graph, comp)));
+	    reorder.cuthill_mckee(graph, comp));
     }
     return order;
 };
@@ -2562,8 +2556,7 @@ reorder.reverse_cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.permute(comp,
-			    reorder.reverse_cuthill_mckee(graph, comp)));
+	    reorder.reverse_cuthill_mckee(graph, comp));
     }
     return order;
 };

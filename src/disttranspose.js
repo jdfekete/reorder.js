@@ -21,7 +21,7 @@ reorder.disttranspose = function() {
 	    }
 	}
 	return distMatrix;
-    };
+    }
 
     dist.distance = function(x) {
 	if (!arguments.length) return distance;

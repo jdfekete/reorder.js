@@ -38,7 +38,7 @@ reorder.v1.js: \
 	src/random.js \
 	src/permute.js \
 	src/stablepermute.js \
-	src/sortorder.js \
+	src/sort_order.js \
 	src/hcluster.js \
 	src/optimal_leaf_order.js \
 	src/order.js \
@@ -65,6 +65,10 @@ test: all
 	@echo '})(this);' >> $@
 	@chmod a-w $@
 
+jshint:
+	node_modules/jshint/bin/jshint src/*.js
+
+
 install: package.json
 	mkdir -p node_modules
 	npm install
@@ -73,6 +77,7 @@ package.json: src/package.js
 	@rm -f $@
 	node src/package.js > $@
 	@chmod a-w $@
+
 
 clean:
 	rm -rf reorder*.js package.json node_modules

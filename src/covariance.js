@@ -23,4 +23,4 @@ reorder.variancecovariance = function(v) {
 	    cov[i][j] = cov[j][i] = reorder.covariancetranspose(v, i, j);
     }
     return cov;
-}
+};

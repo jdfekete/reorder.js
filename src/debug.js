@@ -20,12 +20,12 @@ reorder.displaymat = function(mat, rowperm, colperm) {
 
 reorder.printmat = function(m, prec) {
     var i, j, row, line;
-    if (! prec) prec=4
+    if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
 	row = m[i];
 	line = "";
 	for (j = 0; j < row.length; j++) {
-	    if (line.length != 0)
+	    if (line.length !== 0)
 		line += ", ";
 	    line += row[j].toFixed(prec);
 	}
@@ -41,7 +41,7 @@ reorder.assert = function(v, msg) {
 };
 
 reorder.printhcluster = function(cluster,indent) {
-    if (cluster.left == null) 
+    if (cluster.left === null) 
 	return  Array(indent+1).join(' ')+"id: "+cluster.id;
 
     return Array(indent+1).join(' ')

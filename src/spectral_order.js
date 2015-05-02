@@ -7,7 +7,7 @@ function spectral_order(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	vec = reorder.fiedler_vector(reorder.laplacian(graph, comp));
-	perm = reorder.sortorder(vec);
+	perm = reorder.sort_order(vec);
 	order = order.concat(reorder.permute(comp, perm));
     }
     return order;

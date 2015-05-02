@@ -1,6 +1,7 @@
 // Wilhelm Barth, Petra Mutzel, Michael Jünger: 
 // Simple and Efficient Bilayer Cross Counting.
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
+/*jshint loopfunc:true */
 function count_crossings(graph, north, south) {
     var i, j, n,
 	firstIndex, treeSize, tree, index, weightSum,
@@ -8,13 +9,9 @@ function count_crossings(graph, north, south) {
 
     var comp = reorder.permutation(graph.nodes().length);
 
-    if (north==undefined) {
-	north = comp.filter(function(n) {
-	    return graph.outDegree(n) != 0;
-	}),
-	south = comp.filter(function(n) {
-	    return graph.inDegree(n) != 0;
-	});
+    if (north===undefined) {
+	north = comp.filter(function(n) { return graph.outDegree(n) !== 0; });
+	south = comp.filter(function(n) { return graph.inDegree(n) !== 0; });
     }
 
     // Choose the smaller axis

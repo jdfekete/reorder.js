@@ -1,6 +1,6 @@
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
-reorder.center = function(v) {
+function center(v) {
     var n = v.length;
 
     if (n == 0) return null;
@@ -23,18 +23,15 @@ reorder.center = function(v) {
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 reorder.pca1d = function(v, eps) {
-    if (arguments.length < 2) 
-	eps = 0.0001;
-
     var n = v.length;
 
     if (v.length == 0) return null;
 
-    v = reorder.center(v);
+    v = center(v);
     var cov = reorder.variancecovariance(v);
     return reorder.poweriteration(cov, eps);
 };
 
 reorder.pca_order = function(v, eps) {
-    return reorder.sortorder(pca1d(v, eps));
+    return reorder.sort_order(pca1d(v, eps));
 }

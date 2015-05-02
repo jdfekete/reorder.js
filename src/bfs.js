@@ -1,20 +1,22 @@
 reorder.bfs = function(graph, v, fn) {
     var q = new Queue(),
-	discovered = {};
+	discovered = {}, i, e, v2, edges;
     q.push(v);
     discovered[v] = true;
     fn(v, undefined);
     while (q.length) {
 	v = q.shift();
 	fn(v, v);
-	graph.edges(v).forEach(function(e) {
-	    var v2 = graph.other(e, v).index;
+	edges =	graph.edges(v);
+	for (i = 0; i < edges.length; i++) {
+	    e = edges[i];
+	    v2 = graph.other(e, v).index;
 	    if (! discovered[v2]) {
 		q.push(v2);
 		discovered[v2] = true;
 		fn(v, v2);
 	    }
-	});
+	}
 	fn(v, -1);
     }
 };

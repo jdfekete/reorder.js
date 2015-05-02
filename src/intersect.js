@@ -1,6 +1,6 @@
 function intersect_sorted_ints(array1, array2) 
 {
-  var ai = bi= 0;
+  var ai = 0, bi= 0;
   var result = [];
 
   while( ai < a.length && bi < b.length ){

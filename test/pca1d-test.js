@@ -28,7 +28,7 @@ suite.addBatch({
 			   [0.67833, 0.734755],
 			   0.001);
 
-	    assert.deepEqual(reorder.sortorder(pca), [0, 1]);
+	    assert.deepEqual(reorder.sort_order(pca), [0, 1]);
 	},
 	"lesssimple": function() {
 	    var data = [
@@ -57,7 +57,7 @@ suite.addBatch({
 		pca = reorder.pca1d(data, 0.0001);
 	    
 	    assert.inDeltaArray(pca, [0.642, 0.195, 0.197, 0.715], 0.001);
-	    assert.deepEqual(reorder.sortorder(pca), [1, 2, 0, 3]);
+	    assert.deepEqual(reorder.sort_order(pca), [1, 2, 0, 3]);
 	}
     }
 });

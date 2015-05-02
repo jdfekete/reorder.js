@@ -25,7 +25,7 @@ science.stats.hcluster = function() {
         id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
-      if (distMatrix == null) {
+      if (distMatrix === null) {
 	  distMatrix = [];
 	  i = -1; while (++i < n) {
 	      dMin[i] = 0;
@@ -107,7 +107,6 @@ science.stats.hcluster = function() {
       }
       distMatrix[c1][c1] = Infinity;
 
-      // infinity ­out old row c2 and column c2
       for (i = 0; i < n; i++)
         distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
 

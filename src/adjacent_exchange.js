@@ -82,6 +82,6 @@ function adjacent_exchange(graph, layer1, layer2) {
     }
 
     return [layer1, layer2, improved];
-};
+}
 
 reorder.adjacent_exchange = adjacent_exchange;

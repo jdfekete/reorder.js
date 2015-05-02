@@ -2,7 +2,7 @@ reorder.mean = science.stats.mean;
 
 reorder.meantranspose = function(v, j) {
     var n = v.length;
-    if (n == 0) return NaN;
+    if (n === 0) return NaN;
     var o = v[0].length,
 	m = 0,
 	i = -1,
@@ -15,7 +15,7 @@ reorder.meantranspose = function(v, j) {
 
 reorder.meancolumns = function(v) {
     var n = v.length;
-    if (n == 0) return NaN;
+    if (n === 0) return NaN;
     var o = v[0].length,
 	m = v[0].slice(0),
 	i = 0,

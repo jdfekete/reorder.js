@@ -3,7 +3,7 @@ function graph_empty_nodes(n) {
     for (i = 0; i < n; i++) 
 	nodes[i] = {id: i};
     return nodes;
-};
+}
 
 reorder.graph_empty_nodes = graph_empty_nodes;
 

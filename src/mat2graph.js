@@ -15,7 +15,7 @@ reorder.mat2graph = function(mat, directed) {
 	for (j = m; j < v.length; j++) {
 	    if (j == nodes.length)
 		nodes.push({id: j});
-	    if (v[j] != 0) {
+	    if (v[j] !== 0) {
 		if (v[j] > max_value)
 		    max_value = v[j];
 		links.push({source: i, target: j, value: v[j]});

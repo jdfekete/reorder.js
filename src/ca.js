@@ -29,7 +29,7 @@ reorder.sumcols = function(v) {
 	    sumcol[j] += row[j];
     }
     return sumcol;
-}
+};
 
 reorder.ca = function(v, eps) {
     var n = v.length,
@@ -39,13 +39,10 @@ reorder.ca = function(v, eps) {
 	s = reorder.sum(sumcol),
 	i, j, row;
 
-    //reorder.printmat(v);
-    //console.log("lines: "+sumline);
-    //console.log("cols: "+sumcol);
-    //console.log("sum: "+s);
-    // switch to frequency
     for (i = 0; i < n; i++) {
-	v[i] = v[i].map(function(a) { return a / s; });
+	row = v[i];
+	for (j = 0; j < row.length; j++) 
+	    row[j] /= s;
     }
     sumline = reorder.sumlines(v);
     sumcol = reorder.sumcols(v);

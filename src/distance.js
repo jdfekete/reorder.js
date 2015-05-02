@@ -68,7 +68,7 @@ reorder.distance = {
 		n++;
 	    }
 	}
-	if (n == 0) return 0;
+	if (n === 0) return 0;
 	return s / n;
     },
     braycurtis: function(a, b) {
@@ -85,7 +85,7 @@ reorder.distance = {
 		s1 += Math.abs(ai + bi);
 	    }
 	}
-	if (s1 == 0) return 0;
+	if (s1 === 0) return 0;
 	return s0 / s1;
     }
 };

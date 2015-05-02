@@ -105,38 +105,38 @@ reorder.graph = function(nodes, links, directed) {
 
     graph.init = init;
 
-    function edges(node) { 
+    graph.edges = function(node) { 
 	if (typeof node != "number") {
 	    node = node.index;
 	    console.log('received node %d', node);
 	}
 	return edges[node]; 
     };
-    graph.edges = edges;
+
     graph.degree = function(node) { 
 	if (typeof node != "number")
 	    node = node.index;
 	return edges[node].length; 
     };
 
-    function inEdges(node) {
+    graph.inEdges = function (node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return inEdges[node];
-    }
-    graph.inEdges = inEdges;
+    };
+
     graph.inDegree = function(node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return inEdges[node].length; 
     };
 
-    function outEdges(node) { 
+    graph.outEdges = function(node) {
 	if (typeof node != "number")
 	    node = node.index;
 	return outEdges[node];
-    }
-    graph.outEdges = outEdges;
+    };
+
     graph.outDegree = function(node) { 
 	if (typeof node != "number")
 	    node = node.index;
@@ -148,7 +148,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (outEdges(i).length == 0)
+	    if (graph.outEdges(i).length === 0)
 		sinks.push(i);
 	}
 	return sinks;
@@ -159,7 +159,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (inEdges(i).length == 0)
+	    if (graph.inEdges(i).length === 0)
 		sources.push(i);
 	}
 	return sources;
@@ -202,7 +202,7 @@ reorder.graph = function(nodes, links, directed) {
 	    nodes[i].comp = 0;
 
 	for (j = 0; j < n; j++) {
-	    if (nodes[j].comp != 0)
+	    if (nodes[j].comp !== 0)
 		continue;
 	    comp = comp+1; // next connected component
 	    nodes[j].comp = comp;
@@ -219,7 +219,7 @@ reorder.graph = function(nodes, links, directed) {
 			o = e.target;
 		    if (o.index == v) // loop
 			continue;
-		    if (o.comp == 0) {
+		    if (o.comp === 0) {
 			o.comp = comp;
 			ccomp.push(o.index);
 			stack.push(o.index);

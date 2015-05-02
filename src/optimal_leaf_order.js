@@ -22,19 +22,19 @@ reorder.optimal_leaf_order = function() {
         orderMap = {};
 
     function isLeaf(n) {
-	return n.depth == 0;
+	return n.depth === 0;
     }
 
     function leaves(n) {
-	if (n == null) return [];
+	if (n === null) return [];
 	if (n.id in leavesMap)
 	    return leavesMap[n.id];
 	return (leavesMap[n.id] = _leaves(n));
     }
 
     function _leaves(n) {
-	if (n == null) return [];
-	if (n.depth == 0) return [n.id];
+	if (n === null) return [];
+	if (n.depth === 0) return [n.id];
 	return leaves(n.left).concat(leaves(n.right));
     }
 
@@ -46,28 +46,28 @@ reorder.optimal_leaf_order = function() {
     }
     
     function _order(v, i, j) {
-	if (v.depth == 0) //isLeaf(v))
+	if (v.depth === 0) //isLeaf(v))
 	    return [0, [v.id]];
 	var l = v.left, r = v.right;
 	var L = leaves(l), R = leaves(r);
 	
 	var w, x;
-	if (L.indexOf(i) != -1 && R.indexOf(j) != -1) {
+	if (L.indexOf(i) !== -1 && R.indexOf(j) !== -1) {
 	    w = l; x = r;	    
 	}
-	else if (R.indexOf(i) != -1 && L.indexOf(j) != -1) {
+	else if (R.indexOf(i) !== -1 && L.indexOf(j) !== -1) {
 	    w = r; x = l;
 	}
 	else 
 	    throw {error: "Node is not common ancestor of "+i+", "+j};
 	var Wl = leaves(w.left), Wr = leaves(w.right);
 	var Ks = Wr.indexOf(i) != -1 ? Wl : Wr;
-	if (Ks.length == 0) 
+	if (Ks.length === 0) 
 	    Ks = [i];
 
 	var Xl = leaves(x.left), Xr = leaves(x.right);
 	var Ls = Xr.indexOf(j) != -1 ? Xl : Xr;
-	if (Ls.length == 0)
+	if (Ls.length === 0)
 	    Ls = [j];
 
 	var min = Infinity, optimal_order = [];
@@ -112,7 +112,7 @@ reorder.optimal_leaf_order = function() {
     optimal_leaf_order.order = orderFull;
 
     function optimal_leaf_order(matrix) {
-	if (distanceMatrix == null)
+	if (distanceMatrix === null)
 	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
 	var hcluster = science.stats.hcluster()
 		.linkage(linkage)

@@ -11,13 +11,13 @@ reorder.graph2mat = function(graph, directed) {
 	    cols = n;
 	
 	for (i = n-1; i >= 0; i--) {
-	    if (graph.inEdges(i).length != 0)
+	    if (graph.inEdges(i).length !== 0)
 		break;
 	    else
 		rows--;
 	}
 	for (i = n-1; i >= 0; i--) {
-	    if (graph.outEdges(i).length != 0)
+	    if (graph.outEdges(i).length !== 0)
 		break;
 	    else
 		cols--;
