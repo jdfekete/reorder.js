@@ -45,7 +45,7 @@ function matrix(json) {
 
     var dist_adjacency;
 
-    var leafOrder = reorder.leafOrder()
+    var leafOrder = reorder.optimal_leaf_order()
     	    .distance(science.stats.distance.manhattan);
 
     function computeLeaforder() {

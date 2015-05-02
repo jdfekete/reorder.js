@@ -26,11 +26,12 @@ reorder.v1.js: \
 	src/graph_complete.js \
 	src/graph_connect.js \
 	src/bfs.js \
+	src/bfs_order.js \
 	src/mat2graph.js \
 	src/graph2mat.js \
 	src/count_crossings.js \
 	src/adjacent_exchange.js \
-	src/barycenter.js \
+	src/barycenter_order.js \
 	src/all_pairs_distance.js \
 	src/graph2distmat.js \
 	src/dist.js \
@@ -39,16 +40,16 @@ reorder.v1.js: \
 	src/stablepermute.js \
 	src/sortorder.js \
 	src/hcluster.js \
-	src/leaforder.js \
+	src/optimal_leaf_order.js \
 	src/order.js \
 	src/covariance.js \
 	src/laplacian.js \
 	src/poweriteration.js \
 	src/fiedler.js \
 	src/spectral_order.js \
-	src/pca1d.js \
+	src/pca_order.js \
 	src/ca.js \
-	src/cuthill_mckee.js
+	src/cuthill_mckee_order.js
 
 test: all
 	@npm test

@@ -35,6 +35,6 @@ reorder.pca1d = function(v, eps) {
     return reorder.poweriteration(cov, eps);
 };
 
-reorder.pca1dorder = function(v, eps) {
+reorder.pca_order = function(v, eps) {
     return reorder.sortorder(pca1d(v, eps));
 }

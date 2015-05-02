@@ -320,8 +320,8 @@ reorder.bandwidth = function(graph, order) {
 reorder.permutation = reorder.range;
 
 
-function inverse_permutation(perm) {
-    var inv = {};
+function inverse_permutation(perm, dense) {
+    var inv = dense ? Array(perm.length) : {};
     for (var i = 0; i < perm.length; i++) {
 	inv[perm[i]] = i;
     }
@@ -716,9 +716,24 @@ reorder.all_pairs_distance_bfs = function(graph, comps) {
 	}
     }
     return mat;
-}
+};
 
 
+bfs_order = function(graph, comps) {
+    if (! comps)
+	comps = graph.components();
+
+    var i, comp, order = [];
+
+    for (i = 0; i < comps.length; i++) {
+	comp = comps[i];
+	reorder.bfs(graph, comp[0], function(v, c) {
+	    if (c >= 0 && v != c)
+		order.push(v);
+	});
+    }
+    return order;
+};
 reorder.mat2graph = function(mat, directed) {
     var n = mat.length,
 	nodes = [],
@@ -947,14 +962,14 @@ function adjacent_exchange(graph, layer1, layer2) {
 };
 
 reorder.adjacent_exchange = adjacent_exchange;
-reorder.barycenter = function(graph, iter, comps) {
+reorder.barycenter_order = function(graph, comps, max_iter) {
     var perms = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
 	comps = graph.components();
     }
     for (var i = 0; i < comps.length; i++) {
-	var p = reorder.barycenter1(graph, comps[i], iter);
+	var p = reorder.barycenter(graph, comps[i], max_iter);
 	perms = [ perms[0].concat(p[0]),
 		  perms[1].concat(p[1]),
 		  perms[2]+p[2] ];
@@ -985,7 +1000,7 @@ function median(neighbors) {
 	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
 }
 
-reorder.barycenter1 = function(graph, comp, max_iter) {
+reorder.barycenter = function(graph, comp, max_iter) {
     var nodes = graph.nodes(),
 	layer1, layer2, crossings, iter,
 	best_layer1, best_layer2, best_crossings, best_iter,
@@ -1560,7 +1575,7 @@ function calculateCentroid(c1Size, c1Centroid, c2Size, c2Centroid) {
  * http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
  */
 
-reorder.leafOrder = function() {
+reorder.optimal_leaf_order = function() {
     var distanceMatrix = null,
         distance = reorder.distance.euclidean,
 	linkage = "complete",
@@ -1656,53 +1671,52 @@ reorder.leafOrder = function() {
 	distanceMatrix = null;
 	return optimal_order;
     }
+    optimal_leaf_order.order = orderFull;
 
-    function leafOrder(vector) {
+    function optimal_leaf_order(matrix) {
 	if (distanceMatrix == null)
-	    distanceMatrix = (reorder.dist().distance(distance))(vector);
+	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
 	var hcluster = science.stats.hcluster()
 		.linkage(linkage)
 		.distanceMatrix(distanceMatrix);
-	return orderFull(hcluster(vector));
+	return orderFull(hcluster(matrix));
     }
 
-    leafOrder.debug = function(x) {
+    optimal_leaf_order.debug = function(x) {
 	if (!arguments.length) return debug;
 	debug = x;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.distance = function(x) {
+    optimal_leaf_order.distance = function(x) {
 	if (!arguments.length) return distance;
 	distance = x;
 	distanceMatrix = null;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.linkage = function(x) {
+    optimal_leaf_order.linkage = function(x) {
 	if (!arguments.length) return linkage;
 	linkage = x;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.distanceMatrix = function(x) {
+    optimal_leaf_order.distance_matrix = function(x) {
 	if (!arguments.length) return distanceMatrix;
 	// copy
 	distanceMatrix = x.map(function(y) { return y.slice(0); });
-	return leafOrder;
+	return optimal_leaf_order;
     };
+    optimal_leaf_order.distanceMatrix = optimal_leaf_order.distance_matrix; // compatibility
 
-    leafOrder.orderFull = orderFull;
-
-
-    return leafOrder;
+    return optimal_leaf_order;
 };
 
 
 
 reorder.order = function() {
     var distance = reorder.distance.euclidean,
-        ordering = reorder.leafOrder,
+        ordering = reorder.optimal_leaf_order,
         linkage = "complete",
         distanceMatrix,
         vector,
@@ -1713,7 +1727,7 @@ reorder.order = function() {
 
     function _reset() {
         distance = reorder.distance.euclidean;
-        ordering = reorder.leafOrder;
+        ordering = reorder.optimal_leaf_order;
         linkage = "complete";
         distanceMatrix = null;
         vector = null;
@@ -2380,7 +2394,7 @@ reorder.pca1d = function(v, eps) {
     return reorder.poweriteration(cov, eps);
 };
 
-reorder.pca1dorder = function(v, eps) {
+reorder.pca_order = function(v, eps) {
     return reorder.sortorder(pca1d(v, eps));
 }
 //Corresponence Analysis
@@ -2479,21 +2493,10 @@ reorder.ca = function(v, eps) {
     return eigenvector1;
 };
 
-reorder.cuthill_mckee = function(graph, comps) {
-    var i, order = [];
-    if (! comps) {
-	comps = graph.components();
-    }
-    for (i = 0; i < comps.length; i++) {
-	order = order.concat(reorder.cuthill_mckee1(graph, comps[i]));
-    }
-    return order;
-};
 
-
-reorder.cuthill_mckee1 = function(graph, comp) {
+reorder.cuthill_mckee = function(graph, comp) {
     if (comp.length < 2)
-	return comp;
+	return [0, 1];
 
     var nodes = graph.nodes(),
 	start = comp[0], 
@@ -2501,10 +2504,11 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 	i, n, edges, e,
 	visited = {},
 	queue = new Queue(),
-	order = [];
-    
+	inv = inverse_permutation(comp),
+	perm = [];
+
     for (i = 0; i < comp.length; i++) {
-	n = nodes[comp[i]].index;
+	n = comp[i];
 	if (graph.degree(n) < min_deg) {
 	    min_deg = graph.degree(n);
 	    start = n;
@@ -2512,26 +2516,57 @@ reorder.cuthill_mckee1 = function(graph, comp) {
 		break;
 	}
     }
-    queue.push(start); //TODO replace with a proper queue
+    queue.push(start);
     while (queue.length != 0) {
 	n = queue.shift();
 	if (visited[n])
 	    continue;
 	visited[n] = true;
-	order.push(n);
+	perm.push(inv[n]); // push the index in comp
 	e = graph.edges(n)
 	    .map(function(edge) { return graph.other(edge, n).index; })
-	    .filter(function(n) { return !visited[n]; })
+	    .filter(function(n) { return !visited[n] && (n in inv); })
 	    .sort(function(a, b) { // ascending by degree
 		return graph.degree(a) - graph.degree(b);
 	    });
 
 	e.forEach(queue.push, queue);
     }
+    return perm;
+};
+
+reorder.reverse_cuthill_mckee = function(graph, comp) {
+    return reorder.cuthill_mckee(graph, comp).reverse();
+    //return inverse_permutation(reorder.cuthill_mckee(graph, comp), true);
+};
+
+
+reorder.cuthill_mckee_order = function(graph, comps) {
+    var i, comp, order = [];
+    if (! comps) {
+	comps = graph.components();
+    }
+    for (i = 0; i < comps.length; i++) {
+	comp = comps[i];
+	order = order.concat(
+	    reorder.permute(comp,
+			    reorder.cuthill_mckee(graph, comp)));
+    }
     return order;
 };
 
-reorder.reverse_cuthill_mckee = function(graph, comps) {
-    return reorder.cuthill_mckee(graph, comps).reverse();
+reorder.reverse_cuthill_mckee_order = function(graph, comps) {
+    var i, comp, order = [];
+    if (! comps) {
+	comps = graph.components();
+    }
+    for (i = 0; i < comps.length; i++) {
+	comp = comps[i];
+	order = order.concat(
+	    reorder.permute(comp,
+			    reorder.reverse_cuthill_mckee(graph, comp)));
+    }
+    return order;
 };
+
 })(this);

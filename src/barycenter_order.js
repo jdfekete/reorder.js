@@ -1,11 +1,11 @@
-reorder.barycenter = function(graph, iter, comps) {
+reorder.barycenter_order = function(graph, comps, max_iter) {
     var perms = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
 	comps = graph.components();
     }
     for (var i = 0; i < comps.length; i++) {
-	var p = reorder.barycenter1(graph, comps[i], iter);
+	var p = reorder.barycenter(graph, comps[i], max_iter);
 	perms = [ perms[0].concat(p[0]),
 		  perms[1].concat(p[1]),
 		  perms[2]+p[2] ];
@@ -36,7 +36,7 @@ function median(neighbors) {
 	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
 }
 
-reorder.barycenter1 = function(graph, comp, max_iter) {
+reorder.barycenter = function(graph, comp, max_iter) {
     var nodes = graph.nodes(),
 	layer1, layer2, crossings, iter,
 	best_layer1, best_layer2, best_crossings, best_iter,

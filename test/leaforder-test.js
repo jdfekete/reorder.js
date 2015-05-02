@@ -5,7 +5,7 @@ require("../reorder.v1");
 var vows = require("vows"),
     assert = require("assert");
 
-var suite = vows.describe("reorder.leafOrder");
+var suite = vows.describe("reorder.optimal_leaf_order");
 
 function eucl(a, b) {
     var x = b - a;
@@ -49,10 +49,10 @@ suite.addBatch({
 	"simple": function() {
 	    var data = [2, 1, 4, 3],
 		expect = [1, 2, 3, 4];
-	    var x = reorder.leafOrder().distance(eucl)(data);
+	    var x = reorder.optimal_leaf_order().distance(eucl)(data);
 	    assert.deepEqual(reorder.stablepermute(data, x), expect);
 	    
-	    x = reorder.leafOrder()(expect);
+	    x = reorder.optimal_leaf_order()(expect);
 	    assert.deepEqual(reorder.stablepermute(expect, x), expect);
 	},
 	"lesssimple": function() {
@@ -63,7 +63,7 @@ suite.addBatch({
 		prev = next;
 	    }
 	    var randata = reorder.randomPermute(data.slice(0));
-	    var x = reorder.leafOrder().distance(eucl)(randata);
+	    var x = reorder.optimal_leaf_order().distance(eucl)(randata);
 	    assert.deepEqual(reorder.stablepermute(randata.slice(0), x), data);
 	},
 	"evenharder": function() {
@@ -76,7 +76,7 @@ suite.addBatch({
 		    row.push(Math.random());
 		}
 	    }
-	    var order = reorder.leafOrder(),
+	    var order = reorder.optimal_leaf_order(),
 		perm = order(array);
 	    // Check determinism
 	    for (i = 0; i < 3; i++) {
@@ -93,7 +93,8 @@ suite.addBatch({
 		    .linkage("complete")
 		    .distanceMatrix(dm)(array);
 
-	    perm = reorder.leafOrder().distanceMatrix(dm)(array);
+	    perm = reorder.optimal_leaf_order()
+		.distanceMatrix(dm)(array);
 	    var a2 = reorder.permute(array, perm),
 		d2 = reorder.dist()(a2);
 	    dm=reorder.permute(dm, perm);

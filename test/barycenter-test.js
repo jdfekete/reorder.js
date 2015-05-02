@@ -11,7 +11,7 @@ function dotest(mat) {
     var graph = reorder.mat2graph(mat, true);
     //reorder.displaymat(mat);
     var initial_crossings = reorder.count_crossings(graph);
-    var perms = reorder.barycenter(graph);
+    var perms = reorder.barycenter_order(graph);
     // console.log('VOrder: %j, HOrder: %j, Crossings: %d',
     // 		perms[1], perms[0], perms[2]);
     // reorder.displaymat(mat, perms[1], perms[0]);

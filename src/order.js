@@ -1,7 +1,7 @@
 
 reorder.order = function() {
     var distance = reorder.distance.euclidean,
-        ordering = reorder.leafOrder,
+        ordering = reorder.optimal_leaf_order,
         linkage = "complete",
         distanceMatrix,
         vector,
@@ -12,7 +12,7 @@ reorder.order = function() {
 
     function _reset() {
         distance = reorder.distance.euclidean;
-        ordering = reorder.leafOrder;
+        ordering = reorder.optimal_leaf_order;
         linkage = "complete";
         distanceMatrix = null;
         vector = null;

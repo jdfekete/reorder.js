@@ -48,6 +48,5 @@ reorder.all_pairs_distance_bfs = function(graph, comps) {
 	}
     }
     return mat;
-}
-
+};
 

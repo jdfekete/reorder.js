@@ -13,7 +13,7 @@
  * http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
  */
 
-reorder.leafOrder = function() {
+reorder.optimal_leaf_order = function() {
     var distanceMatrix = null,
         distance = reorder.distance.euclidean,
 	linkage = "complete",
@@ -109,46 +109,45 @@ reorder.leafOrder = function() {
 	distanceMatrix = null;
 	return optimal_order;
     }
+    optimal_leaf_order.order = orderFull;
 
-    function leafOrder(vector) {
+    function optimal_leaf_order(matrix) {
 	if (distanceMatrix == null)
-	    distanceMatrix = (reorder.dist().distance(distance))(vector);
+	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
 	var hcluster = science.stats.hcluster()
 		.linkage(linkage)
 		.distanceMatrix(distanceMatrix);
-	return orderFull(hcluster(vector));
+	return orderFull(hcluster(matrix));
     }
 
-    leafOrder.debug = function(x) {
+    optimal_leaf_order.debug = function(x) {
 	if (!arguments.length) return debug;
 	debug = x;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.distance = function(x) {
+    optimal_leaf_order.distance = function(x) {
 	if (!arguments.length) return distance;
 	distance = x;
 	distanceMatrix = null;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.linkage = function(x) {
+    optimal_leaf_order.linkage = function(x) {
 	if (!arguments.length) return linkage;
 	linkage = x;
-	return leafOrder;
+	return optimal_leaf_order;
     };
 
-    leafOrder.distanceMatrix = function(x) {
+    optimal_leaf_order.distance_matrix = function(x) {
 	if (!arguments.length) return distanceMatrix;
 	// copy
 	distanceMatrix = x.map(function(y) { return y.slice(0); });
-	return leafOrder;
+	return optimal_leaf_order;
     };
+    optimal_leaf_order.distanceMatrix = optimal_leaf_order.distance_matrix; // compatibility
 
-    leafOrder.orderFull = orderFull;
-
-
-    return leafOrder;
+    return optimal_leaf_order;
 };
 
 
