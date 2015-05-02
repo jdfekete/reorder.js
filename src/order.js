@@ -70,14 +70,14 @@ reorder.order = function() {
             l;
 
         vector = vector.slice(i0, j0); // always make a copy
-        if (i == 0 && j == vector.length)
+        if (i === 0 && j === vector.length)
             return _order_except();
 
         if (debug)
             console.log("i0="+i0+" j0="+j0);
 
-        if (distanceMatrix != null) {
-            if (j0 != vector.length)
+        if (distanceMatrix !== null) {
+            if (j0 !== vector.length)
                 reorder.dist_remove(distanceMatrix, j0, vector.length);
             if (i0 > 0)
                 reorder.dist_remove(distanceMatrix, 0, i0);
@@ -99,7 +99,7 @@ reorder.order = function() {
                 distanceMatrix[k][0] += max;
             max += max;
             // also fix the exception list
-            if (i0 != 0) {
+            if (i0 !== 0) {
                 for (k = 0; k < except.length; k++)
                     except[k] -= i0;
             }
@@ -121,14 +121,14 @@ reorder.order = function() {
 
         perm = _order_except();
         if (i0 < i) {
-            if (perm[0] != 0)
+            if (perm[0] !== 0)
                 perm.reverse();
             if (j0 > j) {
-                reorder.assert(perm[0] == 0 && perm[perm.length-1]==perm.length-1,
+                reorder.assert(perm[0] === 0 && perm[perm.length-1]==perm.length-1,
                        "Invalid constrained permutation endpoints");
             }
             else {
-                reorder.assert(perm[0] == 0,
+                reorder.assert(perm[0] === 0,
                        "Invalid constrained permutation start");
             }
         }
@@ -138,7 +138,7 @@ reorder.order = function() {
             reorder.assert(perm[perm.length-1] == perm.length-1,
                            "Invalid constrained permutation end");
         }
-        if (i0 != 0) {
+        if (i0 !== 0) {
             perm = reorder
                 .permutation(i0)
                 .concat(perm.map(function(v) { return v + i0; }));
@@ -157,7 +157,7 @@ reorder.order = function() {
             high,
             pos;
 
-        if (except.length == 0)
+        if (except.length === 0)
             return _order_equiv();
 
         // TODO: postpone the calculation to avoid computing the except items
@@ -173,7 +173,7 @@ reorder.order = function() {
             vector.splice(low+1, high-low-2);
             if (debug)
                 console.log("Except["+low+", "+high+"]");
-            if (distanceMatrix[low][low+1] != 0) {
+            if (distanceMatrix[low][low+1] !== 0) {
                 // boundaries are equal, they will survive
                 distanceMatrix[low][low+1] = distanceMatrix[low+1][low] = -1;
             }
@@ -239,9 +239,9 @@ reorder.order = function() {
             }
             // top down to keep the indices
             for (l = row.length; --l >  k; ) {
-                if (row[l] == 0) {
+                if (row[l] === 0) {
                     j = distanceMatrix[l].indexOf(-1);
-                    if (j != -1) {
+                    if (j !== -1) {
                         // move the constraint to the representative
                         // of the equiv. class "k"
                         fix_except[k] = [l,j]; // keep track for later fix
@@ -256,7 +256,7 @@ reorder.order = function() {
                 else if (row[l] < 0)
                     has_1 = true;
             }
-            if (e.length != 0) {
+            if (e.length !== 0) {
                 e.unshift(k);
                 equiv.push(e);
             }
@@ -369,7 +369,7 @@ reorder.order = function() {
     };
 
     function _compute_dist() {
-        if (distanceMatrix == null)
+        if (distanceMatrix === null)
             distanceMatrix = (reorder.dist().distance(distance))(vector);
         return distanceMatrix;
     }
@@ -419,7 +419,7 @@ reorder.order = function() {
             if (l > i)
                 perm[k] += j-i-2;
         }
-        if (pos != 0 && perm[pos-1] == (j-1))
+        if (pos !== 0 && perm[pos-1] === (j-1))
             rev = true;
         if (rev) {
             perm.reverse();

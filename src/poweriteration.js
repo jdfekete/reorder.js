@@ -1,7 +1,7 @@
 function normalize(v) {
     var norm = science.lin.length(v),
 	i = v.length;
-    if (norm == 0 || Math.abs(norm - 1) < 1e-7) return v;
+    if (norm === 0 || Math.abs(norm - 1) < 1e-7) return v;
     while (i-- > 0)
 	v[i] /= norm;
     return v;

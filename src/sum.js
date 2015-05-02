@@ -4,4 +4,4 @@ reorder.sum = function(v) {
     while(i-- > 1)
 	s += v[i];
     return s;
-}
+};

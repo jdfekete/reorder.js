@@ -3,7 +3,7 @@
 function center(v) {
     var n = v.length;
 
-    if (n == 0) return null;
+    if (n === 0) return null;
     
     var mean = reorder.meancolumns(v),
 	o = mean.length,
@@ -18,14 +18,14 @@ function center(v) {
 	v1[i] = row;
     }
     return v1;
-};
+}
 
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 reorder.pca1d = function(v, eps) {
     var n = v.length;
 
-    if (v.length == 0) return null;
+    if (v.length === 0) return null;
 
     v = center(v);
     var cov = reorder.variancecovariance(v);
@@ -34,4 +34,4 @@ reorder.pca1d = function(v, eps) {
 
 reorder.pca_order = function(v, eps) {
     return reorder.sort_order(pca1d(v, eps));
-}
+};

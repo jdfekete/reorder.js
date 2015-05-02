@@ -54,7 +54,7 @@ reorder.random_matrix = function(p, n, m, sym) {
 		    cnt++;
 		}
 	    }
-	    if (cnt == 0) {
+	    if (cnt === 0) {
 		j = Math.floor(Math.random()*n/2);
 		mat[i][j] = mat[j][i] = 1;
 	    }
@@ -69,7 +69,7 @@ reorder.random_matrix = function(p, n, m, sym) {
 		    cnt++;
 		}
 	    }
-	    if (cnt == 0)
+	    if (cnt === 0)
 		mat[i][Math.floor(Math.random()*m)] = 1;
 	}
     }
