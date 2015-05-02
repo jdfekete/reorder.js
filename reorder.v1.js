@@ -1,5 +1,5 @@
 (function(exports){
-reorder = {version: "0.0.7"}; // semver
+reorder = {version: "0.1.0"}; // semver
 
 // Use as: [4,3,2].sort(reorder.cmp_number_asc);
 reorder.cmp_number_asc = function(a,b) { return a-b; };
@@ -2537,7 +2537,6 @@ reorder.cuthill_mckee = function(graph, comp) {
 
 reorder.reverse_cuthill_mckee = function(graph, comp) {
     return reorder.cuthill_mckee(graph, comp).reverse();
-    //return inverse_permutation(reorder.cuthill_mckee(graph, comp), true);
 };
 
 
