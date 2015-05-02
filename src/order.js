@@ -3,7 +3,7 @@ reorder.order = function() {
     var distance = reorder.distance.euclidean,
         ordering = reorder.optimal_leaf_order,
         linkage = "complete",
-        distanceMatrix,
+        distanceMatrix = null,
         vector,
         except = [],
         debug = 0,
@@ -70,7 +70,7 @@ reorder.order = function() {
             l;
 
         vector = vector.slice(i0, j0); // always make a copy
-        if (i === 0 && j === vector.length)
+        if (i === 0 && j == vector.length)
             return _order_except();
 
         if (debug)
@@ -133,7 +133,7 @@ reorder.order = function() {
             }
         }
         else if (j0 > j) {
-            if (perm[perm.length-1] != (perm.length-1))
+            if (perm[perm.length-1] !== (perm.length-1))
                 perm = perm.reverse();
             reorder.assert(perm[perm.length-1] == perm.length-1,
                            "Invalid constrained permutation end");
@@ -233,7 +233,7 @@ reorder.order = function() {
             row = distanceMatrix[k];
             e = [];
             j = row.indexOf(-1);
-            if (j != -1) {
+            if (j !== -1) {
                 fix_except[k] = [k,j]; // keep track for later fix
                 has_1 = true;
             }

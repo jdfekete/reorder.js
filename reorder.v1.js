@@ -91,7 +91,7 @@ reorder.mean = science.stats.mean;
 
 reorder.meantranspose = function(v, j) {
     var n = v.length;
-    if (n == 0) return NaN;
+    if (n === 0) return NaN;
     var o = v[0].length,
 	m = 0,
 	i = -1,
@@ -104,7 +104,7 @@ reorder.meantranspose = function(v, j) {
 
 reorder.meancolumns = function(v) {
     var n = v.length;
-    if (n == 0) return NaN;
+    if (n === 0) return NaN;
     var o = v[0].length,
 	m = v[0].slice(0),
 	i = 0,
@@ -125,7 +125,7 @@ reorder.sum = function(v) {
     while(i-- > 1)
 	s += v[i];
     return s;
-}
+};
 function isNum(a, b) {
     return !(isNaN(a) || isNaN(b) || a==Infinity || b == Infinity);
 }
@@ -479,7 +479,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (graph.outEdges(i).length == 0)
+	    if (graph.outEdges(i).length === 0)
 		sinks.push(i);
 	}
 	return sinks;
@@ -490,7 +490,7 @@ reorder.graph = function(nodes, links, directed) {
 	    i;
 
 	for (i = 0; i < nodes.length; i++) {
-	    if (graph.inEdges(i).length == 0)
+	    if (graph.inEdges(i).length === 0)
 		sources.push(i);
 	}
 	return sources;
@@ -533,7 +533,7 @@ reorder.graph = function(nodes, links, directed) {
 	    nodes[i].comp = 0;
 
 	for (j = 0; j < n; j++) {
-	    if (nodes[j].comp != 0)
+	    if (nodes[j].comp !== 0)
 		continue;
 	    comp = comp+1; // next connected component
 	    nodes[j].comp = comp;
@@ -550,7 +550,7 @@ reorder.graph = function(nodes, links, directed) {
 			o = e.target;
 		    if (o.index == v) // loop
 			continue;
-		    if (o.comp == 0) {
+		    if (o.comp === 0) {
 			o.comp = comp;
 			ccomp.push(o.index);
 			stack.push(o.index);
@@ -624,7 +624,7 @@ function graph_empty_nodes(n) {
     for (i = 0; i < n; i++) 
 	nodes[i] = {id: i};
     return nodes;
-};
+}
 
 reorder.graph_empty_nodes = graph_empty_nodes;
 
@@ -754,7 +754,7 @@ reorder.mat2graph = function(mat, directed) {
 	for (j = m; j < v.length; j++) {
 	    if (j == nodes.length)
 		nodes.push({id: j});
-	    if (v[j] != 0) {
+	    if (v[j] !== 0) {
 		if (v[j] > max_value)
 		    max_value = v[j];
 		links.push({source: i, target: j, value: v[j]});
@@ -780,13 +780,13 @@ reorder.graph2mat = function(graph, directed) {
 	    cols = n;
 	
 	for (i = n-1; i >= 0; i--) {
-	    if (graph.inEdges(i).length != 0)
+	    if (graph.inEdges(i).length !== 0)
 		break;
 	    else
 		rows--;
 	}
 	for (i = n-1; i >= 0; i--) {
-	    if (graph.outEdges(i).length != 0)
+	    if (graph.outEdges(i).length !== 0)
 		break;
 	    else
 		cols--;
@@ -1356,7 +1356,7 @@ reorder.random_matrix = function(p, n, m, sym) {
 		    cnt++;
 		}
 	    }
-	    if (cnt == 0) {
+	    if (cnt === 0) {
 		j = Math.floor(Math.random()*n/2);
 		mat[i][j] = mat[j][i] = 1;
 	    }
@@ -1371,7 +1371,7 @@ reorder.random_matrix = function(p, n, m, sym) {
 		    cnt++;
 		}
 	    }
-	    if (cnt == 0)
+	    if (cnt === 0)
 		mat[i][Math.floor(Math.random()*m)] = 1;
 	}
     }
@@ -1430,7 +1430,7 @@ science.stats.hcluster = function() {
         id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
-      if (distMatrix == null) {
+      if (distMatrix === null) {
 	  distMatrix = [];
 	  i = -1; while (++i < n) {
 	      dMin[i] = 0;
@@ -1512,7 +1512,6 @@ science.stats.hcluster = function() {
       }
       distMatrix[c1][c1] = Infinity;
 
-      // infinity ­out old row c2 and column c2
       for (i = 0; i < n; i++)
         distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
 
@@ -1584,19 +1583,19 @@ reorder.optimal_leaf_order = function() {
         orderMap = {};
 
     function isLeaf(n) {
-	return n.depth == 0;
+	return n.depth === 0;
     }
 
     function leaves(n) {
-	if (n == null) return [];
+	if (n === null) return [];
 	if (n.id in leavesMap)
 	    return leavesMap[n.id];
 	return (leavesMap[n.id] = _leaves(n));
     }
 
     function _leaves(n) {
-	if (n == null) return [];
-	if (n.depth == 0) return [n.id];
+	if (n === null) return [];
+	if (n.depth === 0) return [n.id];
 	return leaves(n.left).concat(leaves(n.right));
     }
 
@@ -1608,28 +1607,28 @@ reorder.optimal_leaf_order = function() {
     }
     
     function _order(v, i, j) {
-	if (v.depth == 0) //isLeaf(v))
+	if (v.depth === 0) //isLeaf(v))
 	    return [0, [v.id]];
 	var l = v.left, r = v.right;
 	var L = leaves(l), R = leaves(r);
 	
 	var w, x;
-	if (L.indexOf(i) != -1 && R.indexOf(j) != -1) {
+	if (L.indexOf(i) !== -1 && R.indexOf(j) !== -1) {
 	    w = l; x = r;	    
 	}
-	else if (R.indexOf(i) != -1 && L.indexOf(j) != -1) {
+	else if (R.indexOf(i) !== -1 && L.indexOf(j) !== -1) {
 	    w = r; x = l;
 	}
 	else 
 	    throw {error: "Node is not common ancestor of "+i+", "+j};
 	var Wl = leaves(w.left), Wr = leaves(w.right);
 	var Ks = Wr.indexOf(i) != -1 ? Wl : Wr;
-	if (Ks.length == 0) 
+	if (Ks.length === 0) 
 	    Ks = [i];
 
 	var Xl = leaves(x.left), Xr = leaves(x.right);
 	var Ls = Xr.indexOf(j) != -1 ? Xl : Xr;
-	if (Ls.length == 0)
+	if (Ls.length === 0)
 	    Ls = [j];
 
 	var min = Infinity, optimal_order = [];
@@ -1674,7 +1673,7 @@ reorder.optimal_leaf_order = function() {
     optimal_leaf_order.order = orderFull;
 
     function optimal_leaf_order(matrix) {
-	if (distanceMatrix == null)
+	if (distanceMatrix === null)
 	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
 	var hcluster = science.stats.hcluster()
 		.linkage(linkage)
@@ -1718,7 +1717,7 @@ reorder.order = function() {
     var distance = reorder.distance.euclidean,
         ordering = reorder.optimal_leaf_order,
         linkage = "complete",
-        distanceMatrix,
+        distanceMatrix = null,
         vector,
         except = [],
         debug = 0,
@@ -1785,14 +1784,14 @@ reorder.order = function() {
             l;
 
         vector = vector.slice(i0, j0); // always make a copy
-        if (i == 0 && j == vector.length)
+        if (i === 0 && j == vector.length)
             return _order_except();
 
         if (debug)
             console.log("i0="+i0+" j0="+j0);
 
-        if (distanceMatrix != null) {
-            if (j0 != vector.length)
+        if (distanceMatrix !== null) {
+            if (j0 !== vector.length)
                 reorder.dist_remove(distanceMatrix, j0, vector.length);
             if (i0 > 0)
                 reorder.dist_remove(distanceMatrix, 0, i0);
@@ -1814,7 +1813,7 @@ reorder.order = function() {
                 distanceMatrix[k][0] += max;
             max += max;
             // also fix the exception list
-            if (i0 != 0) {
+            if (i0 !== 0) {
                 for (k = 0; k < except.length; k++)
                     except[k] -= i0;
             }
@@ -1836,24 +1835,24 @@ reorder.order = function() {
 
         perm = _order_except();
         if (i0 < i) {
-            if (perm[0] != 0)
+            if (perm[0] !== 0)
                 perm.reverse();
             if (j0 > j) {
-                reorder.assert(perm[0] == 0 && perm[perm.length-1]==perm.length-1,
+                reorder.assert(perm[0] === 0 && perm[perm.length-1]==perm.length-1,
                        "Invalid constrained permutation endpoints");
             }
             else {
-                reorder.assert(perm[0] == 0,
+                reorder.assert(perm[0] === 0,
                        "Invalid constrained permutation start");
             }
         }
         else if (j0 > j) {
-            if (perm[perm.length-1] != (perm.length-1))
+            if (perm[perm.length-1] !== (perm.length-1))
                 perm = perm.reverse();
             reorder.assert(perm[perm.length-1] == perm.length-1,
                            "Invalid constrained permutation end");
         }
-        if (i0 != 0) {
+        if (i0 !== 0) {
             perm = reorder
                 .permutation(i0)
                 .concat(perm.map(function(v) { return v + i0; }));
@@ -1872,7 +1871,7 @@ reorder.order = function() {
             high,
             pos;
 
-        if (except.length == 0)
+        if (except.length === 0)
             return _order_equiv();
 
         // TODO: postpone the calculation to avoid computing the except items
@@ -1888,7 +1887,7 @@ reorder.order = function() {
             vector.splice(low+1, high-low-2);
             if (debug)
                 console.log("Except["+low+", "+high+"]");
-            if (distanceMatrix[low][low+1] != 0) {
+            if (distanceMatrix[low][low+1] !== 0) {
                 // boundaries are equal, they will survive
                 distanceMatrix[low][low+1] = distanceMatrix[low+1][low] = -1;
             }
@@ -1948,15 +1947,15 @@ reorder.order = function() {
             row = distanceMatrix[k];
             e = [];
             j = row.indexOf(-1);
-            if (j != -1) {
+            if (j !== -1) {
                 fix_except[k] = [k,j]; // keep track for later fix
                 has_1 = true;
             }
             // top down to keep the indices
             for (l = row.length; --l >  k; ) {
-                if (row[l] == 0) {
+                if (row[l] === 0) {
                     j = distanceMatrix[l].indexOf(-1);
-                    if (j != -1) {
+                    if (j !== -1) {
                         // move the constraint to the representative
                         // of the equiv. class "k"
                         fix_except[k] = [l,j]; // keep track for later fix
@@ -1971,7 +1970,7 @@ reorder.order = function() {
                 else if (row[l] < 0)
                     has_1 = true;
             }
-            if (e.length != 0) {
+            if (e.length !== 0) {
                 e.unshift(k);
                 equiv.push(e);
             }
@@ -2084,7 +2083,7 @@ reorder.order = function() {
     };
 
     function _compute_dist() {
-        if (distanceMatrix == null)
+        if (distanceMatrix === null)
             distanceMatrix = (reorder.dist().distance(distance))(vector);
         return distanceMatrix;
     }
@@ -2134,7 +2133,7 @@ reorder.order = function() {
             if (l > i)
                 perm[k] += j-i-2;
         }
-        if (pos != 0 && perm[pos-1] == (j-1))
+        if (pos !== 0 && perm[pos-1] === (j-1))
             rev = true;
         if (rev) {
             perm.reverse();
@@ -2203,7 +2202,7 @@ reorder.laplacian = function(graph, comp) {
 function normalize(v) {
     var norm = science.lin.length(v),
 	i = v.length;
-    if (norm == 0 || Math.abs(norm - 1) < 1e-7) return v;
+    if (norm === 0 || Math.abs(norm - 1) < 1e-7) return v;
     while (i-- > 0)
 	v[i] /= norm;
     return v;
@@ -2342,7 +2341,6 @@ function fiedler_vector(B, eps) {
 }
 
 reorder.fiedler_vector = fiedler_vector;
-
 function spectral_order(graph, comps) {
     var i, vec, comp, perm, order = [];
     if (! comps)
@@ -2355,14 +2353,15 @@ function spectral_order(graph, comps) {
 	order = order.concat(reorder.permute(comp, perm));
     }
     return order;
-};
+}
+
 reorder.spectral_order = spectral_order;
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
 function center(v) {
     var n = v.length;
 
-    if (n == 0) return null;
+    if (n === 0) return null;
     
     var mean = reorder.meancolumns(v),
 	o = mean.length,
@@ -2377,14 +2376,14 @@ function center(v) {
 	v1[i] = row;
     }
     return v1;
-};
+}
 
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 reorder.pca1d = function(v, eps) {
     var n = v.length;
 
-    if (v.length == 0) return null;
+    if (v.length === 0) return null;
 
     v = center(v);
     var cov = reorder.variancecovariance(v);
@@ -2393,7 +2392,7 @@ reorder.pca1d = function(v, eps) {
 
 reorder.pca_order = function(v, eps) {
     return reorder.sort_order(pca1d(v, eps));
-}
+};
 //Corresponence Analysis
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
 
