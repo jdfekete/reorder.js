@@ -1,7 +1,6 @@
 require("science");
 Queue = require('tiny-queue');
 require("../reorder.v1");
-require("../reorder.v1");
 
 var vows = require("vows"),
     assert = require("assert");

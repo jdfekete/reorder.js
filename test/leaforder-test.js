@@ -62,9 +62,9 @@ suite.addBatch({
 		data.push(next);
 		prev = next;
 	    }
-	    var randata = reorder.randomPermute(data.slice(0));
+	    var randata = reorder.randomPermute(data.slice());
 	    var x = reorder.optimal_leaf_order().distance(eucl)(randata);
-	    assert.deepEqual(reorder.stablepermute(randata.slice(0), x), data);
+	    assert.deepEqual(reorder.stablepermute(randata.slice(), x), data);
 	},
 	"evenharder": function() {
 	    var rows = 30, cols = 20, array = [], i, j, row;
