@@ -38,6 +38,14 @@ function count_out_crossings(graph, v, w, inv) {
     return cross;
 }
 
+/**
+ * Optimize two layers by swapping adjacent nodes when
+ * it reduces the number of crossings.
+ * @param {Graph} graph - the graph these two layers belong to
+ * @param {list} layer1 - the ordered list of nodes in layer 1
+ * @param {list} layer2 - the ordered list of nodes in layer 2
+ * @returns {list} a tuple containing the new layer1, layer2, and crossings count
+ */
 function adjacent_exchange(graph, layer1, layer2) {
     layer1 = layer1.slice();
     layer2 = layer2.slice();

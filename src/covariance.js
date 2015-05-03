@@ -1,4 +1,4 @@
-reorder.covariance = science.lin.dot;
+reorder.covariance = reorder.dot;
 
 reorder.covariancetranspose = function(v, a, b) {
     var n = v.length,

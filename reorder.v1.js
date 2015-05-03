@@ -915,6 +915,14 @@ function count_out_crossings(graph, v, w, inv) {
     return cross;
 }
 
+/**
+ * Optimize two layers by swapping adjacent nodes when
+ * it reduces the number of crossings.
+ * @param {Graph} graph - the graph these two layers belong to
+ * @param {list} layer1 - the ordered list of nodes in layer 1
+ * @param {list} layer2 - the ordered list of nodes in layer 2
+ * @returns {list} a tuple containing the new layer1, layer2, and crossings count
+ */
 function adjacent_exchange(graph, layer1, layer2) {
     layer1 = layer1.slice();
     layer2 = layer2.slice();
@@ -1078,16 +1086,33 @@ reorder.barycenter = function(graph, comp, max_iter) {
 
     return [best_layer1, best_layer2, best_crossings];
 };
+/**
+ * Returns a list of distance matrices, computed for the specified
+ * connected components of a graph, or all the components if none is
+ * specified.
+ * @param {Graph} graph - the graph
+ * @param {Array} comps [optional] the specified connected component list
+ * @returns {Array} a list of distance matrices, in the order of the
+ * nodes in the list of connected components.
+ */
 reorder.all_pairs_distance = function(graph, comps) {
     var distances = [];
     if (! comps)
 	comps = graph.components();
 
     for (var i = 0; i < comps.length; i++) 
-	distances.push(reorder.all_pairs_distance1(graph, comps[i]));
+	distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
     return distances;
 };
 
+/**
+ * Returns a distance matrix, computed for the specified
+ * connected component of a graph.
+ * @param {Graph} graph - the graph
+ * @param {Array} comp - the connected component as a list of nodes
+ * @returns {Matrix} a distance matrix, in the order of the
+ * nodes in the list of connected components.
+ */
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
 	i, j, k, inv;
@@ -1126,8 +1151,19 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
     return dist;
 }
 
-reorder.all_pairs_distance1 = all_pairs_distance_floyd_warshall;
+reorder.all_pairs_distance_floyd_warshall = all_pairs_distance_floyd_warshall;
 
+/**
+ * Returns a distance matrix, computed for the specified
+ * connected component of a graph, and the information to compute the
+ * shortest paths.
+ * @param {Graph} graph - the graph
+ * @param {Array} comp - the connected component as a list of nodes
+ * @returns {list} a distance matrix, in the order of the
+ * nodes in the list of connected components, and a table used to
+ * reconstruct the shortest paths with the {@link
+ * floyd_warshall_path} function.
+ */
 function floyd_warshall_with_path(graph, comp) {
     if (! comp)
 	comp = graph.components()[0];
@@ -1182,7 +1218,15 @@ function floyd_warshall_with_path(graph, comp) {
 
 reorder.floyd_warshall_with_path = floyd_warshall_with_path;
 
-reorder.floyd_warshall_path = function(next, u, v) {
+/**
+ * Returns the shortest path from node u to node v, from the table
+ * returned by {@link floyd_warshall_with_path}.
+ * @param {Array} next - the next information 
+ * @param {Integer} u - the starting node
+ * @param {Integer} v - the ending node
+ * @return {list} a list of nodes in the shortest path from u to v
+ */
+function floyd_warshall_path(next, u, v) {
     if (next[u][v] === undefined) return [];
     var path = [u];
     while (u != v) {
@@ -1190,7 +1234,9 @@ reorder.floyd_warshall_path = function(next, u, v) {
 	path.push(u);
     }
     return path;
-};
+}
+
+reorder.floyd_warshall_path = floyd_warshall_path;
 // Converts a graph with weighted edges (weight in l.value)
 // into a distance matrix suitable for reordering with e.g.
 // Optimal Leaf Ordering.
@@ -2175,7 +2221,7 @@ reorder.order = function() {
 
     return order;
 };
-reorder.covariance = science.lin.dot;
+reorder.covariance = reorder.dot;
 
 reorder.covariancetranspose = function(v, a, b) {
     var n = v.length,
@@ -2261,7 +2307,7 @@ reorder.poweriteration = function(v, eps, init) {
             for (j=0; j<n; j++) tmp[i] += v[i][j] * b[j];
 	}
 	normalize(tmp);
-	if (science.lin.dot(tmp, b) > (1.0 - eps))
+	if (reorder.dot(tmp, b) > (1.0 - eps))
 	    break;
 	var t = tmp; tmp = b; b = t; // swap b/tmp
     }
@@ -2301,7 +2347,7 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 	    // Orthogonalize vector
 	    for (l = 0; l < k; l++) {
 		row = b[l];
-		dot = science.lin.dot(bk, row);
+		dot = reorder.dot(bk, row);
 		for (i = 0; i < n; i++)
 		    bk[i] -= dot*row[i];
 	    }
@@ -2312,7 +2358,7 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 		    tmp[i] += v[i][j] * bk[j];
 	    }
 	    normalize(tmp);
-	    if (science.lin.dot(tmp, bk) > (1 - eps))
+	    if (reorder.dot(tmp, bk) > (1 - eps))
 	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}

@@ -33,7 +33,7 @@ reorder.poweriteration = function(v, eps, init) {
             for (j=0; j<n; j++) tmp[i] += v[i][j] * b[j];
 	}
 	normalize(tmp);
-	if (science.lin.dot(tmp, b) > (1.0 - eps))
+	if (reorder.dot(tmp, b) > (1.0 - eps))
 	    break;
 	var t = tmp; tmp = b; b = t; // swap b/tmp
     }
@@ -73,7 +73,7 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 	    // Orthogonalize vector
 	    for (l = 0; l < k; l++) {
 		row = b[l];
-		dot = science.lin.dot(bk, row);
+		dot = reorder.dot(bk, row);
 		for (i = 0; i < n; i++)
 		    bk[i] -= dot*row[i];
 	    }
@@ -84,7 +84,7 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 		    tmp[i] += v[i][j] * bk[j];
 	    }
 	    normalize(tmp);
-	    if (science.lin.dot(tmp, bk) > (1 - eps))
+	    if (reorder.dot(tmp, bk) > (1 - eps))
 	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}

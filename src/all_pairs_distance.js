@@ -1,13 +1,30 @@
+/**
+ * Returns a list of distance matrices, computed for the specified
+ * connected components of a graph, or all the components if none is
+ * specified.
+ * @param {Graph} graph - the graph
+ * @param {Array} comps [optional] the specified connected component list
+ * @returns {Array} a list of distance matrices, in the order of the
+ * nodes in the list of connected components.
+ */
 reorder.all_pairs_distance = function(graph, comps) {
     var distances = [];
     if (! comps)
 	comps = graph.components();
 
     for (var i = 0; i < comps.length; i++) 
-	distances.push(reorder.all_pairs_distance1(graph, comps[i]));
+	distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
     return distances;
 };
 
+/**
+ * Returns a distance matrix, computed for the specified
+ * connected component of a graph.
+ * @param {Graph} graph - the graph
+ * @param {Array} comp - the connected component as a list of nodes
+ * @returns {Matrix} a distance matrix, in the order of the
+ * nodes in the list of connected components.
+ */
 function all_pairs_distance_floyd_warshall(graph, comp) {
     var dist = reorder.infinities(comp.length, comp.length),
 	i, j, k, inv;
@@ -46,8 +63,19 @@ function all_pairs_distance_floyd_warshall(graph, comp) {
     return dist;
 }
 
-reorder.all_pairs_distance1 = all_pairs_distance_floyd_warshall;
+reorder.all_pairs_distance_floyd_warshall = all_pairs_distance_floyd_warshall;
 
+/**
+ * Returns a distance matrix, computed for the specified
+ * connected component of a graph, and the information to compute the
+ * shortest paths.
+ * @param {Graph} graph - the graph
+ * @param {Array} comp - the connected component as a list of nodes
+ * @returns {list} a distance matrix, in the order of the
+ * nodes in the list of connected components, and a table used to
+ * reconstruct the shortest paths with the {@link
+ * floyd_warshall_path} function.
+ */
 function floyd_warshall_with_path(graph, comp) {
     if (! comp)
 	comp = graph.components()[0];
@@ -102,7 +130,15 @@ function floyd_warshall_with_path(graph, comp) {
 
 reorder.floyd_warshall_with_path = floyd_warshall_with_path;
 
-reorder.floyd_warshall_path = function(next, u, v) {
+/**
+ * Returns the shortest path from node u to node v, from the table
+ * returned by {@link floyd_warshall_with_path}.
+ * @param {Array} next - the next information 
+ * @param {Integer} u - the starting node
+ * @param {Integer} v - the ending node
+ * @return {list} a list of nodes in the shortest path from u to v
+ */
+function floyd_warshall_path(next, u, v) {
     if (next[u][v] === undefined) return [];
     var path = [u];
     while (u != v) {
@@ -110,4 +146,6 @@ reorder.floyd_warshall_path = function(next, u, v) {
 	path.push(u);
     }
     return path;
-};
+}
+
+reorder.floyd_warshall_path = floyd_warshall_path;
