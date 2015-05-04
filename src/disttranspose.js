@@ -1,7 +1,7 @@
 reorder.disttranspose = function() {
     var distance = reorder.distance.euclidean;
 
-    function disttranspose(vectors) {
+    function dist(vectors) {
 	var n = vectors.length,
             distMatrix = [];
 

@@ -15,15 +15,24 @@ line {
     <script src="../../lib/science.v1.js"></script>
     <script src="../../lib/tiny-queue.js"></script>
     <script src="../../reorder.v1.js"></script>
+    <script src="../table.js"></script>
   </head>
   <body>
-    <button type="button" onclick="order(reorder.randomPermutation(n), reorder.randomPermutation(m))">Permute Randomly</button>
+    <button type="button" onclick="random_permute()">Random Permute</button>
+    <button type="button" onclick="optimal_leaf_order_permute()">Optimal Leaf Order Permute</button>
+    <button type="button" onclick="initial_order_permute()">Initial Order</button>
     <div id='heatmap'></div>
 <script>
 
 var margin = {top: 80, right: 0, bottom: 10, left: 80},
     width = 720 - margin.left - margin.right,
     height = 720 - margin.top - margin.bottom;
+
+    svg = d3.select("#heatmap").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	    .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
 	      [0, 1, 1, 0, 0, 1, 0, 1],
@@ -35,101 +44,31 @@ var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
 	      [0, 1, 0, 0, 0, 1, 0, 1]],
     row_labels = ['1', '2', '3', '4', '5', '6', '7', '8'],
     col_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+
       
-var colorLow = 'white', colorHigh = 'orange';
-var max_value = d3.max(matrix.map(function(row) { return d3.max(row); })),
-      color = d3.scale.linear()
-       .range([colorLow, colorHigh])
-       .domain([0, max_value]);
+table({matrix: matrix, row_labels: row_labels, col_labels: col_labels});
 
-var gridSize = Math.min(width / matrix.length, height / matrix[0].length),
-      n = matrix.length,
-      m = matrix[0].length,
-      row_perm = reorder.permutation(n),
-      col_perm = reorder.permutation(m),
-      h = gridSize,
-      th = h*n,
-      w = gridSize,
-      tw = w*m;
+function random_permute() {
+      table.order(reorder.randomPermutation(matrix.length),
+		  reorder.randomPermutation(matrix[0].length));
+}
 
-function x(i) { return w*col_perm[i]; }
-function y(i) { return h*row_perm[i]; }
+function optimal_leaf_order_permute() {
+  var transpose = reorder.transpose(matrix),
+      dist_rows = reorder.dist()(matrix),
+      dist_cols = reorder.dist()(transpose),
+      order = reorder.optimal_leaf_order(),
+      row_perm = order.distanceMatrix(dist_rows)(matrix),
+      col_perm = order.distanceMatrix(dist_cols)(transpose);
+      
+      table.order(row_perm, col_perm);
+}
 
-var svg = d3.select("#heatmap").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var row = svg
-      .selectAll(".row")
-      .data(matrix, function(d, i) { return 'row'+i; })
-      .enter().append("g")
-        .attr("id", function(d, i) { return "row"+i; })
-        .attr("class", "row")
-        .attr("transform", function(d, i) {
-	    return "translate(0,"+y(i)+")";
-	});
-
-var cell = row.selectAll(".cell")
-	  .data(function(d) { return d; })
-      .enter().append("rect")
-        .attr("class", "cell")
-        .attr("x", function(d, i) { return x(i); })
-        .attr("width", w)
-        .attr("height", h)
-        .style("fill", function(d) { return color(d); });
-
-  row.append("line")
-      .attr("x2", tw);
-
-  row.append("text")
-      .attr("x", -6)
-      .attr("y", h / 2)
-      .attr("dy", ".32em")
-      .attr("text-anchor", "end")
-      .text(function(d, i) { return row_labels[i]; });
-
-var col = svg.selectAll(".col")
-      .data(matrix[0])
-      .enter().append("g")
-      .attr("id", function(d, i) { return "col"+i; })
-      .attr("class", "col")
-      .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
-
-  col.append("line")
-      .attr("x1", -th);
-
-  col.append("text")
-      .attr("x", 6)
-      .attr("y", w / 2)
-      .attr("dy", ".32em")
-      .attr("text-anchor", "start")
-      .text(function(d, i) { return col_labels[i]; });
-
-  svg.append("rect")
-      .attr("width", tw)
-      .attr("height", th)
-      .style("fill", "none")
-      .style("stroke", "black");
-
-    function order(rows, cols) {
-	row_perm = rows;
-	col_perm = cols;
-	var t = svg.transition().duration(1500);
-
-	t.selectAll(".row")
-	    //.delay(function(d, i) { return y(i) * 4; })
-            .attr("transform", function(d, i) { return "translate(0," + y(i) + ")"; })
-	    .selectAll(".cell")
-	    //.delay(function(d, i) { return x(i) * 4; })
-            .attr("x", function(d, i) { return x(i); });
-
-	t.selectAll(".col")
-	    //.delay(function(d, i) { return x(i) * 4; })
-            .attr("transform", function(d, i) { return "translate(" + x(i) + ")rotate(-90)"; });
-    }
-
+function initial_order_permute() {
+      table.order(reorder.permutation(matrix.length),
+		  reorder.permutation(matrix[0].length));
+}
+      
     </script>
   </body>
 </html>
