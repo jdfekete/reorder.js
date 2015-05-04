@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Heatmap Canvas</title>
+   <meta charset="utf-8"/>
+    <script src="../../lib/d3.v3.js"></script>
+    <script src="../../lib/science.v1.js"></script>
+    <script src="../../lib/tiny-queue.js"></script>
+    <script src="../../reorder.v1.js"></script>
+  <script type="application/javascript">
+var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
+	      [0, 1, 1, 0, 0, 1, 0, 1],
+	      [0, 1, 1, 0, 1, 0, 0, 0],
+	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [1, 0, 1, 0, 1, 0, 0, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1],
+//	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1]],
+    row_labels = ['1', '2', '3', '4', '5', '6', '7', '8'],
+    col_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+      n = matrix.length,
+      m = matrix[0].length;
+
+
+     var margin = {top: 80, right: 0, bottom: 10, left: 80},
+         width = 720 - margin.left - margin.right,
+         height = 720 - margin.top - margin.bottom;
+
+     var color = ["rgb(255,255,255)","rgb(200,100,100)"],
+	  row_perm = reorder.permutation(n),
+	  col_perm = reorder.permutation(m);
+
+    function draw() {
+      var canvas = document.getElementById("canvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d"), 
+	  n = matrix.length,
+	  m = matrix[0].length,
+	  r, c, v,
+	  gridSize = Math.min(width / matrix.length, height / matrix[0].length),
+	  h = gridSize,
+	  th = h*n,
+	  w = gridSize,
+	  tw = w*m,
+	  max_value = 1;
+	  
+	  ctx.translate(margin.left, margin.top);
+	  for (r = 0; r < n; r++) {
+	      for (c = 0; c < m; c++) {
+		  v = matrix[r][c] * (color.length-1) / max_value;
+		  ctx.fillStyle = color[Math.floor(v)];
+		  ctx.fillRect(c*w, r*h, w, h);
+	      }
+	  }
+	  ctx.strokeStyle = 'black';
+	  ctx.fillStyle = 'black';
+	  ctx.strokeRect(0, 0, tw, th);
+	  ctx.font = '10px sans-serif';
+	  ctx.beginPath(0, 0);
+	  for (r = 0; r < n; r++) {
+	      ctx.moveTo(0, r*h);
+	      ctx.lineTo(tw, r*h);
+	      ctx.stroke();
+	      v = ctx.measureText(row_labels[r]);
+	      ctx.fillText(row_labels[r], -6-v.width, r*h+h/2);
+	  }
+	  ctx.save();
+	  ctx.rotate(-Math.PI/2);
+	  for (c = 0; c < m; c++) {
+	      ctx.moveTo(0, c*w);
+	      ctx.lineTo(-th, c*w);
+	      ctx.stroke();
+	      v = ctx.measureText(col_labels[r]);
+	      ctx.fillText(col_labels[c], 6+v.width, c*w+w/2);
+	  }
+      }
+    }
+  </script>
+ </head>
+ <body onload="draw();">
+   <canvas id="canvas" width="720" height="720"></canvas>
+ </body>
+</html>
