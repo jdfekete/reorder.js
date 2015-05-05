@@ -26,7 +26,21 @@ var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
          width = 720 - margin.left - margin.right,
          height = 720 - margin.top - margin.bottom;
 
-     var color = ["rgb(255,255,255)","rgb(200,100,100)"],
+function rgb(r, g, b) {
+      return "rgb("+Math.floor(r)+","+Math.floor(g)+","+Math.floor(b)+")";
+}
+
+function interpolate_colors(n, r1, g1, b1, r2, g2, b2) {
+      var ret = [];
+      for (i = 0; i < (n-1); i++) {
+	  ret.push(rgb((r1*(n-i-1)+r2*i)/(n-1),
+		       (g1*(n-i-1)+g2*i)/(n-1),
+		       (b1*(n-i-1)+b2*i)/(n-1)));
+      }
+      return ret;
+}
+
+     var color = interpolate_colors(16, 255,255,255, 255,165,0),
 	  row_perm = reorder.permutation(n),
 	  col_perm = reorder.permutation(m);
 

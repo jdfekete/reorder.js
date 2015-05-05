@@ -1,32 +1,3 @@
-reorder.distmax = function (distMatrix) {
-    var max = 0,
-	n=distMatrix.length,
-	i, j, row;
-
-    for (i = 0; i < n; i++) {
-	row = distMatrix[i];
-	for (j = i+1; j < n; j++)
-	    if (row[j] > max)
-		max = row[j];
-    }
-    return max;
-};
-
-reorder.distmin = function(distMatrix) {
-    var min = Infinity,
-	n=distMatrix.length,
-	i, j, row;
-
-    for (i = 0; i < n; i++) {
-	row = distMatrix[i];
-	for (j = i+1; j < n; j++)
-	    if (row[j] < min)
-		min = row[j];
-    }
-    return min;
-};
-
-
 reorder.dist = function() {
     var distance = reorder.distance.euclidean;
 
@@ -60,6 +31,35 @@ reorder.dist = function() {
 
     return dist;
 };
+
+reorder.distmax = function (distMatrix) {
+    var max = 0,
+	n=distMatrix.length,
+	i, j, row;
+
+    for (i = 0; i < n; i++) {
+	row = distMatrix[i];
+	for (j = i+1; j < n; j++)
+	    if (row[j] > max)
+		max = row[j];
+    }
+    return max;
+};
+
+reorder.distmin = function(distMatrix) {
+    var min = Infinity,
+	n=distMatrix.length,
+	i, j, row;
+
+    for (i = 0; i < n; i++) {
+	row = distMatrix[i];
+	for (j = i+1; j < n; j++)
+	    if (row[j] < min)
+		min = row[j];
+    }
+    return min;
+};
+
 
 reorder.dist_remove = function(dist, n, m) {
     if (arguments.length < 3)
