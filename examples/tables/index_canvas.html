@@ -50,20 +50,27 @@ function interpolate_colors(n, r1, g1, b1, r2, g2, b2) {
         var ctx = canvas.getContext("2d"), 
 	  n = matrix.length,
 	  m = matrix[0].length,
-	  r, c, v,
-	  gridSize = Math.min(width / matrix.length, height / matrix[0].length),
+	  r, c, v, i, j;
+	  gridSize = Math.min(width / n, height / m),
 	  h = gridSize,
 	  th = h*n,
 	  w = gridSize,
 	  tw = w*m,
 	  max_value = 1;
 	  
+	  ctx.save();
+	  ctx.clearStyle = 'white';
+	  ctx.clearRect(0, 0,
+			width+margin.left+margin.right,
+			height+margin.top+margin.bottom);
 	  ctx.translate(margin.left, margin.top);
-	  for (r = 0; r < n; r++) {
-	      for (c = 0; c < m; c++) {
+	  for (i = 0; i < n; i++) {
+	      r = row_perm[i];
+	      for (j = 0; j < m; j++) {
+		  c = col_perm[j];
 		  v = matrix[r][c] * (color.length-1) / max_value;
 		  ctx.fillStyle = color[Math.floor(v)];
-		  ctx.fillRect(c*w, r*h, w, h);
+		  ctx.fillRect(j*w, i*h, w, h);
 	      }
 	  }
 	  ctx.strokeStyle = 'black';
@@ -71,27 +78,59 @@ function interpolate_colors(n, r1, g1, b1, r2, g2, b2) {
 	  ctx.strokeRect(0, 0, tw, th);
 	  ctx.font = '10px sans-serif';
 	  ctx.beginPath(0, 0);
-	  for (r = 0; r < n; r++) {
-	      ctx.moveTo(0, r*h);
-	      ctx.lineTo(tw, r*h);
+	  for (i = 0; i < n; i++) {
+	      r = row_perm[i];
+	      ctx.moveTo(0, i*h);
+	      ctx.lineTo(tw, i*h);
 	      ctx.stroke();
 	      v = ctx.measureText(row_labels[r]);
-	      ctx.fillText(row_labels[r], -6-v.width, r*h+h/2);
+	      ctx.fillText(row_labels[r], -6-v.width, i*h+h/2);
 	  }
-	  ctx.save();
 	  ctx.rotate(-Math.PI/2);
-	  for (c = 0; c < m; c++) {
-	      ctx.moveTo(0, c*w);
-	      ctx.lineTo(-th, c*w);
+	  for (j = 0; j < m; j++) {
+	      c = col_perm[j];
+	      ctx.moveTo(0, j*w);
+	      ctx.lineTo(-th, j*w);
 	      ctx.stroke();
 	      v = ctx.measureText(col_labels[r]);
-	      ctx.fillText(col_labels[c], 6+v.width, c*w+w/2);
+	      ctx.fillText(col_labels[c], 6+v.width, j*w+w/2);
 	  }
+	  ctx.restore();
       }
     }
+
+    function order(rows, cols) {
+	row_perm = rows;
+	col_perm = cols;
+	draw();
+    }
+
+    function random_permute() {
+      order(reorder.randomPermutation(matrix.length),
+	    reorder.randomPermutation(matrix[0].length));
+    }
+
+    function optimal_leaf_order_permute() {
+	var transpose = reorder.transpose(matrix),
+	dist_rows = reorder.dist()(matrix),
+	dist_cols = reorder.dist()(transpose),
+	olorder = reorder.optimal_leaf_order(),
+	row_perm = olorder.distanceMatrix(dist_rows)(matrix),
+	col_perm = olorder.distanceMatrix(dist_cols)(transpose);
+	
+	order(row_perm, col_perm);
+    }
+
+   function initial_order_permute() {
+       order(reorder.permutation(matrix.length),
+	     reorder.permutation(matrix[0].length));
+   }
   </script>
  </head>
  <body onload="draw();">
+    <button type="button" onclick="random_permute()">Random Permute</button>
+    <button type="button" onclick="optimal_leaf_order_permute()">Optimal Leaf Order Permute</button>
+    <button type="button" onclick="initial_order_permute()">Initial Order</button>
    <canvas id="canvas" width="720" height="720"></canvas>
  </body>
 </html>
