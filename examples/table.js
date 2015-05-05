@@ -124,7 +124,10 @@ function table(json) {
 
     function order(rows, cols) {
 	row_perm = rows;
+	row_inv = reorder.inverse_permutation(row_perm);
 	col_perm = cols;
+	col_inv = reorder.inverse_permutation(col_perm);
+	
 	var t = svg.transition().duration(1500);
 
 	t.selectAll(".row")
