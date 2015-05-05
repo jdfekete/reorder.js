@@ -31,6 +31,7 @@ function table(json) {
 	col_labels = json.col_labels,
 	row_perm = json.row_permutation,
 	col_perm = json.col_permutation,
+	row_inv, col_inv,
 	n = matrix.length,
 	m = matrix[0].length,
 	i;
@@ -48,9 +49,11 @@ function table(json) {
 
     if (! row_perm)
 	row_perm = reorder.permutation(n);
+    row_inv = reorder.inverse_permutation(row_perm);
 
     if (! col_perm)
 	col_perm = reorder.permutation(m);
+    col_inv = reorder.inverse_permutation(col_perm);
 
     var colorLow = 'white', colorHigh = 'orange';
     var max_value = d3.max(matrix.map(function(row) { return d3.max(row); })),
@@ -64,8 +67,8 @@ function table(json) {
 	w = gridSize,
 	tw = w*m;
 
-    var x = function(i) { return w*col_perm[i]; },
-	y = function(i) { return h*row_perm[i]; };
+    var x = function(i) { return w*col_inv[i]; },
+	y = function(i) { return h*row_inv[i]; };
 
     var row = svg
 	    .selectAll(".row")
