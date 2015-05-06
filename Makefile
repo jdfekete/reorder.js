@@ -49,7 +49,8 @@ reorder.v1.js: \
 	src/spectral_order.js \
 	src/pca_order.js \
 	src/ca.js \
-	src/cuthill_mckee_order.js
+	src/cuthill_mckee_order.js \
+	src/condition.js
 
 test: all
 	@npm test

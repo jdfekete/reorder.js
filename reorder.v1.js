@@ -39,10 +39,10 @@ reorder.zeroes = science.zeroes;
 reorder.displaymat = function(mat, rowperm, colperm) {
     var i, j, row, col, str;
     if (! rowperm) {
-	rowperm = reorder.range(mat.length);
+	rowperm = reorder.permutation(mat.length);
     }
     if (! colperm) {
-	colperm = reorder.range(mat[0].length);
+	colperm = reorder.permutation(mat[0].length);
     }
     console.log('Matrix:');
     for (i = 0; i < mat.length; i++) {
@@ -1346,39 +1346,6 @@ reorder.dist_remove = function(dist, n, m) {
 	dist[i].splice(n, m-n);
     return dist;
 };
-reorder.disttranspose = function() {
-    var distance = reorder.distance.euclidean;
-
-    function dist(vectors) {
-	var n = vectors.length,
-            distMatrix = [];
-
-	for (var i = 0; i < n; i++) {
-	    var d = [];
-	    distMatrix[i] = d;
-	    for (var j = 0; j < n; j++) {
-		if (j < i) {
-		     d.push(distMatrix[j][i]);
-		} 
-		else if (i === j) {
-		    d.push(0);
-		}
-		else {
-		    d.push(distance(vectors[j] , vectors[i]));
-		}
-	    }
-	}
-	return distMatrix;
-    }
-
-    dist.distance = function(x) {
-	if (!arguments.length) return distance;
-	distance = x;
-	return dist;
-    };
-
-    return dist;
-};
 /* Fisher-Yates shuffle.
    See http://bost.ocks.org/mike/shuffle/
  */
@@ -1506,7 +1473,7 @@ reorder.stablepermute = function(list, indexes) {
     return p;
 };
 reorder.sort_order = function(v) {
-    return reorder.range(0, v.length).sort(
+    return reorder.permutation(0, v.length).sort(
 	function(a,b) { return v[a] - v[b]; });
 };
 if (typeof science == "undefined") {
@@ -1533,7 +1500,7 @@ science.stats.hcluster = function() {
         root,
         i,
         j,
-        id = 0;
+	id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
       if (distMatrix === null) {
@@ -1561,6 +1528,7 @@ science.stats.hcluster = function() {
       }
     // create leaves of the tree
     i = -1; while (++i < n) {
+	if (i != id) console.log("i = %d, id = %d", i, id);
       clusters[i] = [];
       clusters[i][0] = {
         left: null,
@@ -2666,4 +2634,35 @@ reorder.reverse_cuthill_mckee_order = function(graph, comps) {
     return order;
 };
 
+reorder.condition = function(matrix) {
+    var i, j, min, max, v, s, row,
+	ret = [];
+
+    for (i = 0; 0 < matrix.length; i++) {
+	row = matrix[i].slice();
+	row.push(ret);
+	for (j = 0; j < ret.length; j++) {
+	    v = row[j];
+	    if (v !== null && b >= b) {
+		min = max = row[j];
+		break;
+	    }
+	}
+	for (; j < ret.length; j++) {
+	    v = row[j];
+	    if (v < min) min = v;
+	    else if (v > max) max = v;
+	}
+	s = max != min ? 1.0 / (max - min) : 0;
+	for (j = 1; j < ret.length; j++) {
+	    v = row[j];
+	    if (v != null && v >= v)
+		row[j] = row[j]*s - min;
+	    else
+		v = NaN;
+	}
+
+    }
+    return ret;
+};
 })(this);

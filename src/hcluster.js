@@ -22,7 +22,7 @@ science.stats.hcluster = function() {
         root,
         i,
         j,
-        id = 0;
+	id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
       if (distMatrix === null) {
@@ -50,6 +50,7 @@ science.stats.hcluster = function() {
       }
     // create leaves of the tree
     i = -1; while (++i < n) {
+	if (i != id) console.log("i = %d, id = %d", i, id);
       clusters[i] = [];
       clusters[i][0] = {
         left: null,

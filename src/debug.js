@@ -1,10 +1,10 @@
 reorder.displaymat = function(mat, rowperm, colperm) {
     var i, j, row, col, str;
     if (! rowperm) {
-	rowperm = reorder.range(mat.length);
+	rowperm = reorder.permutation(mat.length);
     }
     if (! colperm) {
-	colperm = reorder.range(mat[0].length);
+	colperm = reorder.permutation(mat[0].length);
     }
     console.log('Matrix:');
     for (i = 0; i < mat.length; i++) {
