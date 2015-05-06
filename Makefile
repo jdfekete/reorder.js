@@ -19,6 +19,7 @@ reorder.v1.js: \
 	src/transpose.js \
 	src/correlation.js \
 	src/bandwidth.js \
+	src/edgesum.js \
 	src/permutation.js \
 	src/graph.js \
 	src/graph_random.js \

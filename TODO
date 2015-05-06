@@ -19,6 +19,7 @@ Examples:
 	Finish simple D3-based table visualization module
 	Finish simple canvas-based table visualization module
 	Create example(s) with tables and conditioning
+	       Show how to handle N/A values
 	Create example(s) with parallel coordinates and axes ordering
 
 Reordering:
