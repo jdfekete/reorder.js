@@ -72,7 +72,7 @@ function matrix(json) {
     }
     
     function computeBarycenter() {
-	var barycenter = reorder.barycenter(graph),
+	var barycenter = reorder.barycenter_order(graph),
 	    improved = reorder.adjacent_exchange(graph,
 						 barycenter[0],
 						 barycenter[1]);
@@ -85,7 +85,7 @@ function matrix(json) {
     }
 
     function computeRCM() {
-	var rcm = reorder.reverse_cuthill_mckee(graph);
+	var rcm = reorder.reverse_cuthill_mckee_order(graph);
 	rcm.forEach(function(lo, i) {
 	    nodes[i].rcm = lo;
 	});
