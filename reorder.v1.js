@@ -274,32 +274,41 @@ reorder.correlation = {
     pearsonMatrix: function(matrix) {
 	var a, ma,
 	    i, j, dx, 
+	    cor = reorder.correlation.pearson,
 	    n = matrix.length, ret, mx, sx, sx2;
 	if (n === 0)
 	    return NaN;
-	mx = Array(n);
-	sx = reorder.zeroes(n);
-	sx2 = reorder.zeroes(n);
-	for (i = 0; i < n; i++) {
-	    mx[i] = science.stats.mean(matrix[i]);
-	}
-	for (i = 0; i < n; i++) {
-	    a = matrix[i];
-	    ma = mx[i];
-	    for (j = 0; j < n; j++) {
-		dx = (a[j] - ma);
-		sx[j] += dx;
-		sx2[j] += dx*dx;
-	    }
-	}
-	ret = Array(n);
-	for (i = 0; i < n; i++) {
-	    ret[i] = Array(n);
-	    for (j = 0; j < n; j++) {
-		ret[i][j] = sx[i]*sx[j]/Math.sqrt(sx2[i]*sx2[j]);
+	// do it the hard way for now, we'll optimize later
+	ret = reorder.zeroes(n, n);
+	for (i = 0; i < (n-1); i++) {
+	    for (j = i+1; j < n; j++) {
+		var p = cor(matrix[i], matrix[j]);
+		ret[i][j] = ret[j][i] =p;
 	    }
 	}
 	return ret;
+	// mx = Array(n);
+	// sx = reorder.zeroes(n);
+	// sx2 = reorder.zeroes(n);
+	// for (i = 0; i < n; i++) {
+	//     mx[i] = science.stats.mean(matrix[i]);
+	// }
+	// for (i = 0; i < n; i++) {
+	//     a = matrix[i];
+	//     ma = mx[i];
+	//     for (j = 0; j < n; j++) {
+	// 	dx = (a[j] - ma);
+	// 	sx[j] += dx;
+	// 	sx2[j] += dx*dx;
+	//     }
+	// }
+	// for (i = 0; i < n; i++) {
+	//     ret[i] = Array(n);
+	//     for (j = 0; j < n; j++) {
+	// 	ret[i][j] = sx[i]*sx[j]/Math.sqrt(sx2[i]*sx2[j]);
+	//     }
+	// }
+	// return ret;
     }
 };
 reorder.bandwidth = function(graph, order) {

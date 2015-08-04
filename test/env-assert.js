@@ -13,7 +13,14 @@ function inDelta(actual, expected, delta) {
 function inDeltaArray(actual, expected, delta) {
   var n = expected.length, i = -1;
   if (actual.length !== n) return false;
-  while (++i < n) if (!inDelta(actual[i], expected[i], delta)) return false;
+  while (++i < n) {
+      if (Array.isArray(actual[i])) {
+	  if (! inDeltaArray(actual[i], expected[i], delta)) return false;
+      }
+      else {
+	  if (!inDeltaNumber(actual[i], expected[i], delta)) return false;
+      }
+  }
   return true;
 }
 
@@ -23,7 +30,11 @@ function inDeltaNumber(actual, expected, delta) {
 }
 
 
-assert.inDeltaArray = inDeltaArray;
+assert.inDeltaArray = function(actual, expected, delta, message) {
+    if (! inDeltaArray(actual, expected, delta))
+	assert.fail(actual, expected, message || "expected {actual} to equal to {expected} within "+delta);
+    return true;
+}
 
 
 function inDeltaAbs(actual, expected, delta) {
