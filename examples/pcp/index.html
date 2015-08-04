@@ -1,8 +1,12 @@
 <meta charset="UTF8">
 <script src="../../lib/d3.v3.js"></script>
 <script src="../../lib/d3.parcoords.js"></script>
+<script src="../../lib/science.v1.js"></script>
+<script src="../../lib/tiny-queue.js"></script>
+<script src="../../reorder.v1.js"></script>
 <link rel="stylesheet" type="text/css" href="../../lib/d3.parcoords.css">
 <div id="example" class="parcoords" style="width:360px;height:150px"></div>
+<div id="example2" class="parcoords" style="width:360px;height:150px"></div>
 
 <script>
 var data = [
@@ -11,11 +15,26 @@ var data = [
   [2,-2,4,4,0.5,2],
   [3,-3,9,6,0.33,4],
   [4,-4,16,8,0.25,9]
-];
+],
+  dimensions = reorder.range(6),
+  axes = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 var pc = d3.parcoords()("#example")
-  .data(data)
+  .data(reorder.array_to_dicts(data, axes))
   .render()
   .ticks(3)
   .createAxes();
+
+var pcp = reorder.pcp(data, axes),
+   ndata = pcp[0],
+   perm = pcp[1],
+   naxes = pcp[2];
+
+var pc2 = d3.parcoords()("#example2")
+  .data(reorder.array_to_dicts(ndata, naxes))
+  .render()
+  .ticks(3)
+  .dimensions(naxes)
+  .createAxes();
+
 </script>

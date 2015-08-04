@@ -51,7 +51,8 @@ reorder.v1.js: \
 	src/pca_order.js \
 	src/ca.js \
 	src/cuthill_mckee_order.js \
-	src/condition.js
+	src/condition.js \
+	src/pcp.js
 
 test: all
 	@npm test
