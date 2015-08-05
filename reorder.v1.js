@@ -2728,9 +2728,10 @@ function abs_matrix(x) {
     return x.map(function(y) { return y.map(Math.abs); });
 }
 
-function pcp(data, axes) {
-    if (arguments.length < 2) 
+function pcp(data, axes, invert) {
+    if (! axes)
 	axes = reorder.range(data[0].length);
+    
     var tdata = reorder.transpose(data),
 	pcor = reorder.correlation.pearsonMatrix(tdata),
 	abs_pcor = abs_matrix(pcor),
@@ -2742,26 +2743,28 @@ function pcp(data, axes) {
 	naxes = reorder.permute(axes, perm);
     tdata = reorder.permute(tdata, perm);
 
-    var i, c, sign = 1, signs = [], negs=0;
     
     console.log('Permutation is '+perm);
-    
-    for (i = 1; i < tdata.length; i++) {
-	c = pcor[perm[i-1]][perm[i]];
-	if (c < 0)
-	    sign = -sign;
-	if (sign < 0) {
-	    signs.push(-1);
-	    negs++;
+
+    if (invert) {
+	var i, c, sign = 1, signs = [], negs=0;
+	for (i = 1; i < tdata.length; i++) {
+	    c = pcor[perm[i-1]][perm[i]];
+	    if (c < 0)
+		sign = -sign;
+	    if (sign < 0) {
+		signs.push(-1);
+		negs++;
+	    }
+	    else
+		signs.push(1);
 	}
-	else
-	    signs.push(1);
-    }
-    sign = (negs > (tdata.length-negs)) ? -1 : 1;
-    for (i = 0; i < (tdata.length-1); i++) {
-	if (signs[i]*sign < 0) {
-	    naxes[i] = '-'+naxes[i];
-	    tdata[i] = tdata[i].map(function(x) { return -x; });
+	sign = (negs > (tdata.length-negs)) ? -1 : 1;
+	for (i = 0; i < (tdata.length-1); i++) {
+	    if (signs[i]*sign < 0) {
+		naxes[i] = '-'+naxes[i];
+		tdata[i] = tdata[i].map(function(x) { return -x; });
+	    }
 	}
     }
     var  ndata = reorder.transpose(tdata);

@@ -26,18 +26,18 @@ var pc1, pc2;
 
 // load csv file and create the chart
 d3.csv('cars.csv', function(data) {
-
-    var keys = data[0].keys();
+    var keys = Object.keys(data[0]);
+    keys.splice(keys.indexOf('name'), 1); // remove 'name'
     delete keys['name'];
     var array = reorder.dicts_to_array(data, keys),
         pcp = reorder.pcp(array, keys),
         narray = pcp[0],
         perm = pcp[1],
-        nkeys = pcp[1];
+        nkeys = pcp[2];
 
   pc1 = d3.parcoords()("#example1")
     .data(reorder.array_to_dicts(narray, nkeys))
-    .hideAxis(["name"])
+    //.hideAxis(["name"])
     .composite("darker")
     .color(function(d) { return blue_to_brown(d['economy (mpg)']); })  // quantitative color scale
     .alpha(0.35)
