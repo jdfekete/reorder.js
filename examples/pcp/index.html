@@ -20,21 +20,17 @@ var data = [
   axes = ['a', 'b', 'c', 'd', 'e', 'f'];
 
 var pc = d3.parcoords()("#example")
-  .data(reorder.array_to_dicts(data, axes))
+  .data(data)
   .render()
   .ticks(3)
   .createAxes();
 
-var pcp = reorder.pcp(data, axes),
-   ndata = pcp[0],
-   perm = pcp[1],
-   naxes = pcp[2];
-
 var pc2 = d3.parcoords()("#example2")
-  .data(reorder.array_to_dicts(ndata, naxes))
+  .data(data);
+  reorder.parcoords(pc2);
+  pc2
   .render()
   .ticks(3)
-  .dimensions(naxes)
   .createAxes();
 
 </script>

@@ -1,5 +1,4 @@
-require("science")
-require("../reorder.v1");
+require("science");
 require("../reorder.v1");
 
 var vows = require("vows"),
