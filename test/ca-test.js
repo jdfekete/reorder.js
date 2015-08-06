@@ -28,6 +28,24 @@ suite.addBatch({
 	    assert.inDeltaArray(col_order,
 				[0.008648877634363464,0.003012341005018805,-0.004699577426261494,-0.0042389549655066465],
 				0.001);
+	},
+	"harder": function() {
+	    var mat = [
+		[1, 0, 0, 1, 0],
+		[0, 1, 1, 0, 1],
+		[1, 0, 0, 1, 0],
+		[1, 1, 0, 0, 0],
+		[0, 1, 1, 0, 1]
+	    ],
+		res = reorder.ca(mat),
+		col_order = reorder.sort_order(res[0]),
+		row_order = reorder.sort_order(res[1]);
+	    console.log('col_order: '+col_order);
+	    console.log('row_order: '+row_order);
+	    reorder.printmat(mat);
+	    mat=reorder.permute(mat, col_order);
+	    mat=reorder.permutetranspose(mat, row_order);
+	    reorder.printmat(mat);
 	}
     }
 });
