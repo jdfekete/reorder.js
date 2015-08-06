@@ -1,23 +1,23 @@
 //Corresponence Analysis
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
 
-reorder.sumlines = function(v) {
+function sumrows(v) {
     var n = v.length,
 	o = v[0].length,
-	sumline = Array(n),
+	sumrow = Array(n),
 	i, j, row, s;
 
     for (i = 0; i < n; i++) {
 	row = v[i];
 	s = 0;
-	for (j = 0; j < o; j++)
+	for (j = 0; j < o; j++) 
 	    s += row[j];
-	sumline[i] = s;
+	sumrow[i] = s;
     }
-    return sumline;
-};
+    return sumrow;
+}
 
-reorder.sumcols = function(v) {
+function sumcols(v) {
     var n = v.length,
 	o = v[0].length,
 	sumcol = reorder.zeroes(o),
@@ -29,65 +29,106 @@ reorder.sumcols = function(v) {
 	    sumcol[j] += row[j];
     }
     return sumcol;
-};
+}
 
-reorder.ca = function(v, eps) {
+function multiply_by_transpose(a,b) {
+  var m = a.length,
+      n = b.length,
+      p = b[0].length,
+      i = -1,
+      j,
+      k;
+  if (p !== a[0].length) throw {"error": "columns(a) != rows(b); " + a[0].length + " != " + p};
+  var ab = new Array(m);
+  while (++i < m) {
+    ab[i] = new Array(n);
+    j = -1; while(++j < n) {
+      var s = 0;
+      k = -1; while (++k < p) s += a[i][k] * b[j][k];
+      ab[i][j] = s;
+    }
+  }
+  return ab;    
+}
+
+function ca(v, eps) {
     var n = v.length,
 	o = v[0].length,
-	sumline = reorder.sumlines(v),
-	sumcol = reorder.sumcols(v),
-	s = reorder.sum(sumcol),
-	i, j, row;
-
-    for (i = 0; i < n; i++) {
-	row = v[i];
-	for (j = 0; j < row.length; j++) 
-	    row[j] /= s;
-    }
-    sumline = reorder.sumlines(v);
-    sumcol = reorder.sumcols(v);
-
-    //reorder.printmat(v);
-    //console.log("lines: "+sumline);
-    //console.log("cols: "+sumcol);
+	sumrow = sumrows(v),
+	sumcol = sumcols(v),
+	s = sum(sumcol),
+	i, j, row,
+	tmp = Array(n),
+	orig = v;
     
-    var v2 = Array(n), ep;
-
     for (i = 0; i < n; i++) {
-	v2[i] = Array(o);
+	row = v[i].slice();
 	for (j = 0; j < o; j++) {
-	    ep = sumline[i]*sumcol[j];
-	    v2[i][j] = (v[i][j] - ep) / Math.sqrt(ep);
+	    row[j] /= s;
 	}
+	tmp[i] = row;
+	sumrow[i] /= s;
     }
-    //reorder.printmat(v2);
-
-    for (i = 0; i < n; i++) {
-	for (j = 0; j < o; j++) {
-	    ep = sumline[i]*sumcol[j];
-	    v[i][j] = (v[i][j] - ep) / (sumcol[j]*Math.sqrt(sumline[i]));
-	}
-    }
+    for (j = 0; j < o; j++)
+	sumcol[j] /= s;
+    
+    v = tmp; // get rid of original v
+    //console.log('normalized matrix:');
     //reorder.printmat(v);
+    //console.log('sumrow:'+sumrow);
+    //console.log('sumcol:'+sumcol);
 
-    var cov = Array(n);
-    for (i = 0; i < n; i++)
-	cov[i] = Array(n);
+    var pi = Array(n), // pre inertia matrix
+	ep; // don't store the expected values
 
-    for (i = 0; i < n; i++) 
-	for (j = i; j < n; j++) 
-	    cov[i][j] = cov[j][i] = reorder.covariance(v2[i], v2[j]);
-	    
-    //console.log("Variance-Covariance");
-    //reorder.printmat(cov,8);
+    for (i = 0; i < n; i++) {
+	row = pi[i] = Array(o);
+	for (j = 0; j < o; j++) {
+	    ep = sumrow[i]*sumcol[j];
+	    row[j] = (v[i][j] - ep) / Math.sqrt(ep);
+	}
+    }
+    //console.log('Pre inertia:');
+    //reorder.printmat(pi);
 
-    var eigenvector1 = reorder.poweriteration(cov, eps),
-	eigenvalue1 = 0;
-    for (i = 0; i < n; i++)
-	eigenvalue1 += eigenvector1[i]*cov[i][0];
-    eigenvalue1 /= eigenvector1[0];
-    //console.log("Eigenvalue1="+eigenvalue1);
+    var wc = Array(n); // weighted coordinates
 
-    return eigenvector1;
-};
+    for (i = 0; i < n; i++) {
+	row = wc[i] = Array(o);
+	for (j = 0; j < o; j++) {
+	    ep = sumrow[i]*sumcol[j];
+	    row[j] = (v[i][j] - ep) / (sumcol[j]*Math.sqrt(sumrow[i]));
+	}
+    }
+    //console.log('weighted coordinates:');
+    //reorder.printmat(wc);
 
+    var inertia = multiply_by_transpose(pi, pi);
+    //console.log('inertia:');
+    //reorder.printmat(inertia);
+    
+    var eigenvector = reorder.poweriteration_n(inertia,1, null, eps),
+	eigenvalue = eigenvector[1][0];
+    eigenvector = eigenvector[0][0];
+    //console.log('Eigenvalue: '+eigenvalue);
+
+    var cols = Array(o);
+    for (j = 0; j < o; j++) {
+	cols[j] = wc[0][j]*eigenvalue;
+    }
+    //console.log('Col vector:'+cols);
+
+    var rows = Array(n);
+    for (i = 0; i < n; i++) {
+	s = 0;
+	for (j = 0; j < o; j++) {
+	    s += v[i][j]*cols[j];
+	}
+	rows[i] = s/(sumrow[i]*Math.sqrt(eigenvalue));
+    }
+    //console.log('Row vector:'+rows);
+
+    return [rows, cols];
+}
+
+reorder.ca = ca;

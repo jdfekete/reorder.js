@@ -4,7 +4,7 @@ function normalize(v) {
     if (norm === 0 || Math.abs(norm - 1) < 1e-7) return v;
     while (i-- > 0)
 	v[i] /= norm;
-    return v;
+    return norm;
 }
 
 reorder.poweriteration = function(v, eps, init) {
@@ -49,19 +49,20 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 	i, j, k, l,
 	bk, dot, row,
 	tmp = Array(n),
-	s = 100;
+	s = 100,
+	eigenvalue = Array(p);
 
     reorder.assert(n == v[0].length, "poweriteration needs a square matrix");
     if (! init) {
 	for (i = 0; i < p; i++) {
 	    row = b[i] = reorder.random_array(n);
-	    normalize(row);
+	    eigenvalue[i] = normalize(row);
 	}
     }
     else {
 	for (i = 0; i < p; i++) {
 	    b[i] = init[i].slice(); // copy
-	    normalize(b[i]);
+	    eigenvalue[i] = normalize(b[i]);
 	}
     }
     if (! start)
@@ -83,12 +84,12 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 		for (j=0; j<n; j++) 
 		    tmp[i] += v[i][j] * bk[j];
 	    }
-	    normalize(tmp);
+	    eigenvalue[k] = normalize(tmp);
 	    if (reorder.dot(tmp, bk) > (1 - eps))
 	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}
 	//console.log('eig[%d]=%j',k, bk);
     }
-    return b;
+    return [b, eigenvalue];
 };

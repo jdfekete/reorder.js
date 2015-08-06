@@ -1,7 +1,10 @@
-reorder.sum = function(v) {
+function sum(v) {
     var i = v.length,
-	s = v[0];
-    while(i-- > 1)
-	s += v[i];
+	s = 0;
+    while(i-- > 0)
+	if (! isNaN(v[i]))
+	    s += v[i];
     return s;
-};
+}
+
+reorder.sum = sum;
