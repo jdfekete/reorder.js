@@ -1,7 +1,7 @@
 function normalize(v) {
-    var norm = science.lin.length(v),
+    var norm = reorder.length(v),
 	i = v.length;
-    if (norm === 0 || Math.abs(norm - 1) < 1e-7) return v;
+    if (norm === 0 || Math.abs(norm - 1) < 1e-9) return 1;
     while (i-- > 0)
 	v[i] /= norm;
     return norm;
@@ -89,7 +89,8 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}
-	//console.log('eig[%d]=%j',k, bk);
+	if (reorder.debug)
+	    console.log('eig[%d]=%j',k, bk);
     }
     return [b, eigenvalue];
 };

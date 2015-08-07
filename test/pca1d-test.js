@@ -53,9 +53,9 @@ suite.addBatch({
 		[56, 20, 82, 15],
 		[70, 20, 91, 15]
 	    ],
-		pca = reorder.pca1d(data, 0.0001);
+		pca = reorder.pca1d(data);
 	    
-	    assert.inDeltaArray(pca, [0.642, 0.195, 0.197, 0.715], 0.001);
+	    assert.inDeltaArrayOrNeg(pca, [0.642, 0.195, 0.197, 0.715], 0.001);
 	    assert.deepEqual(reorder.sort_order(pca), [1, 2, 0, 3]);
 	}
     }

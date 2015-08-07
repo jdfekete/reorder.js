@@ -110,7 +110,9 @@ reorder.barycenter = function(graph, comp, max_iter) {
 	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}
     }
-    //console.log('Best iter: '+best_iter);
+    if (reorder.debug) {
+	console.log('Best iter: '+best_iter);
+    }
 
     return [best_layer1, best_layer2, best_crossings];
 };

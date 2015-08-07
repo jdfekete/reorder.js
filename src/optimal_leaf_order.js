@@ -17,7 +17,6 @@ reorder.optimal_leaf_order = function() {
     var distanceMatrix = null,
         distance = reorder.distance.euclidean,
 	linkage = "complete",
-	debug = 0,
         leavesMap = {},
         orderMap = {};
 
@@ -94,7 +93,7 @@ reorder.optimal_leaf_order = function() {
 	    left = leaves(v.left),
 	    right = leaves(v.right);
 	
-	if (debug)
+	if (reorder.debug)
 	    console.log(reorder.printhcluster(v,0));
 
 	for (var i = 0; i < left.length; i++) {
@@ -119,12 +118,6 @@ reorder.optimal_leaf_order = function() {
 		.distanceMatrix(distanceMatrix);
 	return orderFull(hcluster(matrix));
     }
-
-    optimal_leaf_order.debug = function(x) {
-	if (!arguments.length) return debug;
-	debug = x;
-	return optimal_leaf_order;
-    };
 
     optimal_leaf_order.distance = function(x) {
 	if (!arguments.length) return distance;

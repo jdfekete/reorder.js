@@ -17,7 +17,6 @@ reorder.order = function() {
         distanceMatrix = null;
         vector = null;
         except = [];
-        debug = 0;
         i = 0;
         j = Infinity;
     }
@@ -73,7 +72,7 @@ reorder.order = function() {
         if (i === 0 && j == vector.length)
             return _order_except();
 
-        if (debug)
+        if (reorder.debug)
             console.log("i0="+i0+" j0="+j0);
 
         if (distanceMatrix !== null) {
@@ -171,7 +170,7 @@ reorder.order = function() {
             high = except[k];
             distanceMatrix = reorder.dist_remove(distanceMatrix, low+1, high-1);
             vector.splice(low+1, high-low-2);
-            if (debug)
+            if (reorder.debug)
                 console.log("Except["+low+", "+high+"]");
             if (distanceMatrix[low][low+1] !== 0) {
                 // boundaries are equal, they will survive
@@ -340,16 +339,15 @@ reorder.order = function() {
     }
 
     function _order() {
-        if (debug > 1)
+        if (reorder.debug > 1)
             reorder.printmat(distanceMatrix);
-        if (debug > 2)
+        if (reorder.debug > 2)
             reorder.printmat(vector);
 
         var perm = ordering()
-                .debug(debug)
                 .linkage(linkage)
                 .distanceMatrix(distanceMatrix)(vector);
-        if (debug)
+        if (reorder.debug)
             console.log("Permutation: "+perm);
 
         return perm;
@@ -361,12 +359,6 @@ reorder.order = function() {
          perm.splice(i, 0, nv);
          return perm;
      }
-
-    order.debug = function(x) {
-        if (!arguments.length) return debug;
-        debug = x;
-        return order;
-    };
 
     function _compute_dist() {
         if (distanceMatrix === null)

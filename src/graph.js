@@ -108,7 +108,9 @@ reorder.graph = function(nodes, links, directed) {
     graph.edges = function(node) { 
 	if (typeof node != "number") {
 	    node = node.index;
-	    console.log('received node %d', node);
+	    if (reorder.debug) {
+		console.log('received node %d', node);
+	    }
 	}
 	return edges[node]; 
     };

@@ -21,7 +21,9 @@ function gershgorin_bound(B) {
 	if (t > max)
 	    max = t;
     }
-    //console.log('gershgorin_bound=%d', max);
+    if (reorder.debug) {
+	console.log('gershgorin_bound=%d', max);
+    }
     return max;
 }
 

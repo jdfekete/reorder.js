@@ -122,8 +122,7 @@ suite.addBatch({
             
             var x = reorder.order()
 //		    .distance(reorder.distance.manhattan)
-		    .linkage("single")
-		    .debug(0)(data);
+		    .linkage("single")(data);
 //	    console.log(toLetter(x));
             assert.deepEqual(reorder.stablepermute(reorder.range(0,data.length), x),
 			     toNum([ 'a', 'f', 'e', 'd', 'c', 'b' ]));
@@ -143,8 +142,7 @@ suite.addBatch({
 		]);
             
             var x = reorder.order()
-		    .linkage("single")
-		    .debug(0)(data);
+		    .linkage("single")(data);
 	    console.log(toLetter(x));
             assert.deepEqual(reorder.stablepermute(data, x),
 			     toNum(['n','j','a','e','f','i','m','p','b','o','l','g','d','c','k','h']));
@@ -188,7 +186,6 @@ suite.addBatch({
             var x = reorder.order()
                     .limits(1,10)
                     .except([5, 10])
-                    .debug(0)
                     (data);
         // Since several rows are identical, there are multiple
 	// possible correct orderings
@@ -217,7 +214,6 @@ suite.addBatch({
             var x = reorder.order()
 		    .limits(1,11)
 		    .except([3, 8])
-                    .debug(0)
                     (data);
         // Since several rows are identical, there are multiple
 	// possible correct orderings
@@ -241,9 +237,7 @@ suite.addBatch({
 		    ];
 	    var x = reorder.order()
 		    .limits(1,12)
-		    .except([2, 4, 7, 12])
-		    .debug(0)
-	    (data);
+		    .except([2, 4, 7, 12])(data);
 	    // Since several rows are identical, there are multiple
 	    // possible correct orderings
 	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
@@ -264,9 +258,7 @@ suite.addBatch({
 		    ];
 	    var x = reorder.order()
 		    .limits(1,11)
-		    .except([1, 6])
-		    .debug(0)
-	    (data);
+		    .except([1, 6])(data);
 	    // Since several rows are identical, there are multiple
 	    // possible correct orderings
 	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
@@ -287,9 +279,7 @@ suite.addBatch({
 		    ];
 	    var x = reorder.order()
 		    .limits(1,10)
-		    .except([5, 9])
-		    .debug(0)
-	    (data);
+		    .except([5, 9])(data);
 	    // Since several rows are identical, there are multiple
 	    // possible correct orderings
 	    // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);

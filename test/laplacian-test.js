@@ -35,7 +35,7 @@ suite.addBatch({
 	"fiedler": function() {
 	    var f = reorder.fiedler_vector(eiffel_laplacian);
 
-	    assert.inDeltaArray(f,
+	    assert.inDeltaArrayOrNeg(f,
 				[0.2947, 0.1354, -0.8835, 0.1513, 0.3021],
 				0.001);
 	}

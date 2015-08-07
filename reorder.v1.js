@@ -1,6 +1,7 @@
 (function(exports){
 reorder = {version: "0.1.0"}; // semver
 
+reorder.debug = false;
 // Use as: [4,3,2].sort(reorder.cmp_number_asc);
 reorder.cmp_number_asc = function(a,b) { return a-b; };
 reorder.cmp_number = reorder.cmp_number_asc;
@@ -38,12 +39,6 @@ reorder.normalize = science.lin.normalize;
 reorder.zeroes = science.zeroes;
 reorder.displaymat = function(mat, rowperm, colperm) {
     var i, j, row, col, str;
-    if (! rowperm) {
-	rowperm = reorder.permutation(mat.length);
-    }
-    if (! colperm) {
-	colperm = reorder.permutation(mat[0].length);
-    }
     console.log('Matrix:');
     for (i = 0; i < mat.length; i++) {
 	row = rowperm ? mat[rowperm[i]] : mat[i];
@@ -56,18 +51,27 @@ reorder.displaymat = function(mat, rowperm, colperm) {
     }
 };
 
-reorder.printmat = function(m, prec) {
+reorder.printvec = function(row, prec, colperm, line) {
+    var j;
+    if (! line)
+	line = "";
+    for (j = 0; j < row.length; j++) {
+	if (line.length !== 0)
+	    line += ", ";
+	if (colperm)
+	    line += row[colperm[j]].toFixed(prec);
+	else
+	    line += row[j].toFixed(prec);
+    }
+    console.log(line);
+};
+
+reorder.printmat = function(m, prec, rowperm, colperm) {
     var i, j, row, line;
     if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
-	row = m[i];
-	line = "";
-	for (j = 0; j < row.length; j++) {
-	    if (line.length !== 0)
-		line += ", ";
-	    line += row[j].toFixed(prec);
-	}
-	console.log(i+": "+line);
+	row = rowperm ? m[rowperm[i]] : m[i];
+	reorder.printvec(row, prec, colperm, i+": ");
     }
 };
 
@@ -466,7 +470,9 @@ reorder.graph = function(nodes, links, directed) {
     graph.edges = function(node) { 
 	if (typeof node != "number") {
 	    node = node.index;
-	    console.log('received node %d', node);
+	    if (reorder.debug) {
+		console.log('received node %d', node);
+	    }
 	}
 	return edges[node]; 
     };
@@ -1109,7 +1115,9 @@ reorder.barycenter = function(graph, comp, max_iter) {
 	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}
     }
-    //console.log('Best iter: '+best_iter);
+    if (reorder.debug) {
+	console.log('Best iter: '+best_iter);
+    }
 
     return [best_layer1, best_layer2, best_crossings];
 };
@@ -1679,7 +1687,6 @@ reorder.optimal_leaf_order = function() {
     var distanceMatrix = null,
         distance = reorder.distance.euclidean,
 	linkage = "complete",
-	debug = 0,
         leavesMap = {},
         orderMap = {};
 
@@ -1756,7 +1763,7 @@ reorder.optimal_leaf_order = function() {
 	    left = leaves(v.left),
 	    right = leaves(v.right);
 	
-	if (debug)
+	if (reorder.debug)
 	    console.log(reorder.printhcluster(v,0));
 
 	for (var i = 0; i < left.length; i++) {
@@ -1781,12 +1788,6 @@ reorder.optimal_leaf_order = function() {
 		.distanceMatrix(distanceMatrix);
 	return orderFull(hcluster(matrix));
     }
-
-    optimal_leaf_order.debug = function(x) {
-	if (!arguments.length) return debug;
-	debug = x;
-	return optimal_leaf_order;
-    };
 
     optimal_leaf_order.distance = function(x) {
 	if (!arguments.length) return distance;
@@ -1832,7 +1833,6 @@ reorder.order = function() {
         distanceMatrix = null;
         vector = null;
         except = [];
-        debug = 0;
         i = 0;
         j = Infinity;
     }
@@ -1888,7 +1888,7 @@ reorder.order = function() {
         if (i === 0 && j == vector.length)
             return _order_except();
 
-        if (debug)
+        if (reorder.debug)
             console.log("i0="+i0+" j0="+j0);
 
         if (distanceMatrix !== null) {
@@ -1986,7 +1986,7 @@ reorder.order = function() {
             high = except[k];
             distanceMatrix = reorder.dist_remove(distanceMatrix, low+1, high-1);
             vector.splice(low+1, high-low-2);
-            if (debug)
+            if (reorder.debug)
                 console.log("Except["+low+", "+high+"]");
             if (distanceMatrix[low][low+1] !== 0) {
                 // boundaries are equal, they will survive
@@ -2155,16 +2155,15 @@ reorder.order = function() {
     }
 
     function _order() {
-        if (debug > 1)
+        if (reorder.debug > 1)
             reorder.printmat(distanceMatrix);
-        if (debug > 2)
+        if (reorder.debug > 2)
             reorder.printmat(vector);
 
         var perm = ordering()
-                .debug(debug)
                 .linkage(linkage)
                 .distanceMatrix(distanceMatrix)(vector);
-        if (debug)
+        if (reorder.debug)
             console.log("Permutation: "+perm);
 
         return perm;
@@ -2176,12 +2175,6 @@ reorder.order = function() {
          perm.splice(i, 0, nv);
          return perm;
      }
-
-    order.debug = function(x) {
-        if (!arguments.length) return debug;
-        debug = x;
-        return order;
-    };
 
     function _compute_dist() {
         if (distanceMatrix === null)
@@ -2301,9 +2294,9 @@ reorder.laplacian = function(graph, comp) {
     return lap;
 };
 function normalize(v) {
-    var norm = science.lin.length(v),
+    var norm = reorder.length(v),
 	i = v.length;
-    if (norm === 0 || Math.abs(norm - 1) < 1e-7) return v;
+    if (norm === 0 || Math.abs(norm - 1) < 1e-9) return 1;
     while (i-- > 0)
 	v[i] /= norm;
     return norm;
@@ -2391,7 +2384,8 @@ reorder.poweriteration_n = function(v, p, init, eps, start) {
 	    	break;
 	    bk = tmp; tmp = b[k]; b[k] = bk;  // swap b/tmp
 	}
-	//console.log('eig[%d]=%j',k, bk);
+	if (reorder.debug)
+	    console.log('eig[%d]=%j',k, bk);
     }
     return [b, eigenvalue];
 };
@@ -2418,7 +2412,9 @@ function gershgorin_bound(B) {
 	if (t > max)
 	    max = t;
     }
-    //console.log('gershgorin_bound=%d', max);
+    if (reorder.debug) {
+	console.log('gershgorin_bound=%d', max);
+    }
     return max;
 }
 
@@ -2548,7 +2544,9 @@ function multiply_by_transpose(a,b) {
   return ab;    
 }
 
-function ca(v, eps) {
+// Implementation according to:
+// http://web.univ-pau.fr/RECHERCHE/SET/LAFFLY/docs_laffly/INTRODUCTION_AFC.pdf
+function ca_no_svd(v, eps) {
     var n = v.length,
 	o = v[0].length,
 	sumrow = sumrows(v),
@@ -2570,10 +2568,12 @@ function ca(v, eps) {
 	sumcol[j] /= s;
     
     v = tmp; // get rid of original v
-    //console.log('normalized matrix:');
-    //reorder.printmat(v);
-    //console.log('sumrow:'+sumrow);
-    //console.log('sumcol:'+sumcol);
+    if (reorder.debug) {
+	console.log('normalized matrix:');
+	reorder.printmat(v);
+	console.log('sumrow:'+sumrow);
+	console.log('sumcol:'+sumcol);
+    }
 
     var pi = Array(n), // pre inertia matrix
 	ep; // don't store the expected values
@@ -2585,8 +2585,10 @@ function ca(v, eps) {
 	    row[j] = (v[i][j] - ep) / Math.sqrt(ep);
 	}
     }
-    //console.log('Pre inertia:');
-    //reorder.printmat(pi);
+    if (reorder.debug) {
+	console.log('Pre inertia:');
+	reorder.printmat(pi);
+    }
 
     var wc = Array(n); // weighted coordinates
 
@@ -2597,23 +2599,30 @@ function ca(v, eps) {
 	    row[j] = (v[i][j] - ep) / (sumcol[j]*Math.sqrt(sumrow[i]));
 	}
     }
-    //console.log('weighted coordinates:');
-    //reorder.printmat(wc);
+    if (reorder.debug) {
+	console.log('weighted coordinates:');
+	reorder.printmat(wc);
+    }
 
     var inertia = multiply_by_transpose(pi, pi);
-    //console.log('inertia:');
-    //reorder.printmat(inertia);
+    if (reorder.debug) {
+	console.log('inertia:');
+	reorder.printmat(inertia);
+    }
     
     var eigenvector = reorder.poweriteration_n(inertia,1, null, eps),
 	eigenvalue = eigenvector[1][0];
     eigenvector = eigenvector[0][0];
-    //console.log('Eigenvalue: '+eigenvalue);
+    if (reorder.debug)
+	console.log('Eigenvalue: '+eigenvalue);
 
     var cols = Array(o);
     for (j = 0; j < o; j++) {
 	cols[j] = wc[0][j]*eigenvalue;
     }
-    //console.log('Col vector:'+cols);
+    if (reorder.debug) {
+	console.log('Col vector:'+cols);
+    }
 
     var rows = Array(n);
     for (i = 0; i < n; i++) {
@@ -2623,12 +2632,120 @@ function ca(v, eps) {
 	}
 	rows[i] = s/(sumrow[i]*Math.sqrt(eigenvalue));
     }
-    //console.log('Row vector:'+rows);
+    if (reorder.debug) {
+	console.log('Row vector:'+rows);
+    }
 
     return [rows, cols];
 }
 
-reorder.ca = ca;
+function rescale(vec, vmin, vmax) {
+    var min = vec[0],
+	max = vec[0],
+	i = vec.length,
+	v,
+	scale;
+    while (i-- > 1) {
+	v = vec[i];
+	if (v < min)
+	    min = v;
+	else if (v > max)
+	    max = v;
+    }
+    scale = (vmax-vmin) / (max-min);
+    for (i = 0; i < vec.length; i++)
+	vec[i] = (vec[i]-min)*scale+vmin;
+    return (max - min);
+}
+
+function round10(vec) {
+    var n = vec.length;
+    while (n--)
+	vec[n] = Math.round(vec[n]*10)*0.1;
+}
+
+// Hill, M. O. 1973.
+// Reciprocal averaging: an eigenvector method of ordination.
+// J. Ecol. 61:237-49
+// http://www.britishecologicalsociety.org/100papers/100_Ecological_Papers/100_Influential_Papers_035.pdf
+function ca_reciprocal_averaging(v, eps, init, max_iter) {
+    var n = v.length,
+	o = v[0].length,
+	sumrow = sumrows(v),
+	sumcol = sumcols(v),
+	i, j, row, s, iter,
+	rows = reorder.zeroes(n),
+	cols = reorder.zeroes(o),
+	prev_cols = reorder.zeroes(n),
+	tmp,
+	eigenvalue;
+
+    if (! max_iter || max_iter < 10)
+	max_iter = 100;
+
+    if (! eps)
+	eps = 1e-9;
+
+    if (reorder.debug) {
+	console.log('n:'+n);
+	console.log('o:'+o);
+	console.log('sumrow:'+sumrow);
+	console.log('sumcol:'+sumcol);
+    }
+
+    if (init) {
+	for (j = 0; j < o; j++) {
+	    cols[j] = init[j];
+	}
+    }
+    else{
+	for (j = 0; j < o; j++) {
+	    cols[j] = sumcol[j] / n;
+	}
+    }
+    rescale(cols, 0, 100);
+    for (iter = 0; iter < max_iter; iter++) {
+	if (reorder.debug)
+	    reorder.printvec(cols, 1, null, 'cols at iter '+iter+'=');
+	for (i = 0; i < n; i++) {
+	    s = 0;
+	    row = v[i];
+	    for (j = 0; j < o; j++) {
+		s += cols[j]*row[j];
+	    }
+	    rows[i] = s / sumrow[i];
+	}
+	round10(rows);
+	if (reorder.debug)
+	    reorder.printvec(rows, 1, null, 'rows at iter '+iter+'=');
+	for (j = 0; j < o; j++) {
+	    s = 0;
+	    for (i = 0; i < n; i++) {
+		s += rows[i]*v[i][j];
+	    }
+	    cols[j] = s / sumcol[j];
+	}
+	if (reorder.debug)
+	    reorder.printvec(cols, 1, null, 'cols at iter '+iter+'=');
+	eigenvalue = rescale(cols, 0, 100);
+	if (reorder.distance.euclidean(cols, prev_cols) < (reorder.length(cols)*eps))
+	    break;
+	for (j = 0; j < o; j++) {
+	    prev_cols[j] = cols[j];
+	}
+    }
+    eigenvalue /= 100;
+    if (reorder.debug)
+	console.log('eigenvalue: '+eigenvalue);
+    return [rows, cols, eigenvalue];
+}
+
+reorder.ca_reciprocal_averaging = ca_reciprocal_averaging;
+
+reorder.ca_no_svd = ca_no_svd;
+
+reorder.ca = ca_no_svd;
+
 
 /*jshint loopfunc:true */
 reorder.cuthill_mckee = function(graph, comp) {
@@ -2786,7 +2903,8 @@ function pcp_flip_axes(perm, naxes, pcor) {
 	else
 	    signs.push(1);
     }
-    //console.log(signs);
+    if (reorder.debug)
+	console.log(signs);
     sign = (negs > (perm.length-negs)) ? -1 : 1;
     if (sign==-1) {
 	for (i = 0; i < (perm.length-1); i++)

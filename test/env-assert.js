@@ -44,9 +44,23 @@ function inDeltaAbs(actual, expected, delta) {
 
 assert.inDeltaArrayAbs = function(actual, expected, delta, message) {
   var n = expected.length, i = -1;
-  if (actual.length !== n) return false;
+  if (actual.length !== n) {
+      assert.fail(actual, expected, message || "expected {actual} to have the same length *" + n + "* as {expected}", null, assert.inDeltaArrayAbs);
+  }
   while (++i < n)
       if (!inDeltaAbs(actual[i], expected[i], delta)) 
 	  assert.fail(actual, expected, message || "expected {actual} to be in within *" + delta + "* of {expected}", null, assert.inDeltaArrayAbs);
   return true;
 };
+
+function neg(a) {
+    return a.map(function(x) { return -x; });
+}
+
+assert.inDeltaArrayOrNeg = function(actual, expected, delta, message) {
+    if (! inDeltaArray(actual, expected, delta) &&
+       ! inDeltaArray(neg(actual), expected, delta))
+	assert.fail(actual, expected, message || "expected {actual} to equal to {expected} within "+delta);
+    return true;
+};
+

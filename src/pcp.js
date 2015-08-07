@@ -50,7 +50,8 @@ function pcp_flip_axes(perm, naxes, pcor) {
 	else
 	    signs.push(1);
     }
-    //console.log(signs);
+    if (reorder.debug)
+	console.log(signs);
     sign = (negs > (perm.length-negs)) ? -1 : 1;
     if (sign==-1) {
 	for (i = 0; i < (perm.length-1); i++)

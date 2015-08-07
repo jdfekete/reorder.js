@@ -1,11 +1,5 @@
 reorder.displaymat = function(mat, rowperm, colperm) {
     var i, j, row, col, str;
-    if (! rowperm) {
-	rowperm = reorder.permutation(mat.length);
-    }
-    if (! colperm) {
-	colperm = reorder.permutation(mat[0].length);
-    }
     console.log('Matrix:');
     for (i = 0; i < mat.length; i++) {
 	row = rowperm ? mat[rowperm[i]] : mat[i];
@@ -18,18 +12,27 @@ reorder.displaymat = function(mat, rowperm, colperm) {
     }
 };
 
-reorder.printmat = function(m, prec) {
+reorder.printvec = function(row, prec, colperm, line) {
+    var j;
+    if (! line)
+	line = "";
+    for (j = 0; j < row.length; j++) {
+	if (line.length !== 0)
+	    line += ", ";
+	if (colperm)
+	    line += row[colperm[j]].toFixed(prec);
+	else
+	    line += row[j].toFixed(prec);
+    }
+    console.log(line);
+};
+
+reorder.printmat = function(m, prec, rowperm, colperm) {
     var i, j, row, line;
     if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
-	row = m[i];
-	line = "";
-	for (j = 0; j < row.length; j++) {
-	    if (line.length !== 0)
-		line += ", ";
-	    line += row[j].toFixed(prec);
-	}
-	console.log(i+": "+line);
+	row = rowperm ? m[rowperm[i]] : m[i];
+	reorder.printvec(row, prec, colperm, i+": ");
     }
 };
 
