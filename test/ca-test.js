@@ -26,30 +26,24 @@ function compare_order(row_order1, row_order2, msg) {
 suite.addBatch({
     "ca": {
 	"simple": function() {
-	    var mat = reorder.transpose([
+	    var mat = [
 		[1, 0, 0, 1, 1, 0, 0, 1],
 		[0, 1, 1, 0, 0, 1, 0, 1],
 		[1, 1, 0, 0, 0, 1, 1, 0],
 		[1, 1, 1, 1, 1, 0, 0, 1],
 		[1, 1, 0, 1, 0, 0, 0, 1],
 		[1, 0, 0, 0, 1, 0, 0, 0]
-	    ]),
-		res1 = reorder.ca_reciprocal_averaging(mat, null, [100, 0, 100, 0, 100, 0]),
-		row_order1 = res1[0],
-		col_order1 = res1[1],
-		res2 = reorder.ca_no_svd(mat),
-		row_order2 = res2[0],
-		col_order2 = res2[1],
-		ecol = [-1.044914, 0.970130, 1.675125, -0.439146, -0.321923, -1.239397],
-		erow = [-0.396887, 0.682180, 0.384491, -0.871822, -1.314724, 1.915459, 2.425954, -0.302626],
+	    ],
+		res2 = reorder.ca_decorana(mat),
+		row_order2 = res2.rows,
+		col_order2 = res2.cols,
+		erow = [-1.044914, 0.970130, 1.675125, -0.439146, -0.321923, -1.239397],
+		ecol = [-0.396887, 0.682180, 0.384491, -0.871822, -1.314724, 1.915459, 2.425954, -0.302626],
 		i, tmp;
 
-	    compare_order(row_order1, row_order2, 'ratio between rows RA and no_svd:');
-	    compare_order(col_order1, col_order2, 'ratio between cols RA and no_svd:');
-	    compare_order(row_order1, erow, 'ratio between rows RA and svd:');	    
-	    compare_order(col_order1, ecol, 'ratio between rows RA and svd:');	    
-	    compare_order(row_order2, erow, 'ratio between rows no_svd and svd:');	    
-	    compare_order(col_order2, ecol, 'ratio between rows no_svd and svd:');	    
+	    reorder.printvec(row_order2, 6);
+	    reorder.printvec(col_order2, 6);
+
 	    /*
 	    assert.inDeltaArray(row_order,
 				[24, 52, 42, 11, 0, 84, 100, 25],
