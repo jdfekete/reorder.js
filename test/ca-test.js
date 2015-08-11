@@ -52,22 +52,22 @@ suite.addBatch({
 	    assert.permutationEqual(row_order, erows);
 	    assert.permutationEqual(col_order, ecols);
 	},
-	"harder": function() {
-	    var mat = [
-		[1, 0, 0, 1, 0],
-		[0, 1, 1, 0, 1],
-		[1, 0, 0, 1, 0],
-		[1, 1, 0, 0, 0],
-		[0, 1, 1, 0, 1]
-	    ],
-		res = reorder.ca_order(mat),
-		col_order = res.cols,
-		row_order = res.rows;
-	    console.log('col_order: '+col_order);
-	    console.log('row_order: '+row_order);
-	    reorder.displaymat(mat);
-	    reorder.displaymat(mat, col_order, row_order);
-	},
+	// "harder": function() {
+	//     var mat = [
+	// 	[1, 0, 0, 1, 0],
+	// 	[0, 1, 1, 0, 1],
+	// 	[1, 0, 0, 1, 0],
+	// 	[1, 1, 0, 0, 0],
+	// 	[0, 1, 1, 0, 1]
+	//     ],
+	// 	res = reorder.ca_order(mat),
+	// 	col_order = res.cols,
+	// 	row_order = res.rows;
+	//     console.log('col_order: '+col_order);
+	//     console.log('row_order: '+row_order);
+	//     reorder.displaymat(mat);
+	//     reorder.displaymat(mat, col_order, row_order);
+	// },
 	// "bertin": function() {
 	//     var mat = [
 	// 	[6, 6, 2, 5, 3],
@@ -104,10 +104,10 @@ suite.addBatch({
 
 	    assert.permutationEqual(row_order, erows);
 	    assert.permutationEqual(col_order, ecols);
-	    console.log('col_order: '+col_order);
-	    console.log('row_order: '+row_order);
-	    reorder.printmat(mat);
-	    reorder.printmat(mat, col_order, row_order);
+	    // console.log('col_order: '+col_order);
+	    // console.log('row_order: '+row_order);
+	    // reorder.printmat(mat);
+	    // reorder.printmat(mat, col_order, row_order);
 	}
     }
 });
