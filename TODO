@@ -15,12 +15,15 @@ Documentation:
 
 Examples:
 	Finish simple D3-based graph visualization module
-	Create simple canvas-based graph visualization module
 	Finish simple D3-based table visualization module
 	Finish simple canvas-based table visualization module
 	Create example(s) with tables and conditioning
 	       Show how to handle N/A values
+
+Example done:
 	Create example(s) with parallel coordinates and axes ordering
+	Create simple canvas-based graph visualization module
+
 
 Reordering:
 	Sloan ordering

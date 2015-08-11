@@ -220,7 +220,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
 	    }
 	    trans(y3,y4,x,aidot,mi,n,dat);//,4);
 	    a = 0.0;
-	    b14 = 0.0,
+	    b14 = 0.0;
 	    b24 = 0.0;
 	    for (j = 0; j < n; j++) {
 		ay = y4[j];
@@ -349,7 +349,7 @@ function solve_tridiag(tol, a11, a12, a22, a23, a33, a34, a44) {
 	ax2=ax2/ex;
 	ax3=ax3/ex;
 	ax4=ax4/ex;
-	if((itimes+1)%5 == 0) {
+	if((itimes+1)%5 === 0) {
 	    exx=Math.sqrt(ex);
 	    resi=Math.sqrt(sqr(ax1-axx1/exx)+sqr(ax2-axx2/exx)+
 			   sqr(ax3-axx3/exx)+sqr(ax4-axx4/exx));
