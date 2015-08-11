@@ -33,6 +33,74 @@ reorder.array1d = function(n, v) {
 	a[i] = v;
     return a;
 };
+
+function check_distance_matrix(mat, tol) {
+    var i, j, v1, v2, n = mat.length, row;
+    if (! tol)
+	tol = 1e-10;
+
+    if (n != mat[0].length)
+	return "Inconsistent dimensions";
+    
+    for (i = 0; i < (n-1); i++) {
+	row = mat[i];
+	v1 = row[i];
+	if (v1 < 0)
+	    return "Negative value at diagonal "+i;
+	if (v1 > tol)
+	    return "Diagonal not zero at "+i;
+	for (j = 1; j < n; j++) {
+	    v1 = row[j];
+	    v2 = mat[j][i];
+	    if (Math.abs(v1 - v2) > tol)
+		return "Inconsistency at "+i+","+j;
+	    if (v1 < 0)
+		return "Negative value at "+i+","+j;
+	    if (v2 < 0)
+		return "Negative value at "+j+","+i;
+	}
+    }
+    return false;
+}
+
+function fix_distance_matrix(mat, tol) {
+    var i, j, v1, v2, n = mat.length, row;
+    if (! tol)
+	tol = 1e-10;
+
+    if (n != mat[0].length)
+	throw "Inconsistent dimensions "+n+" != "+mat[0].length;
+    
+    for (i = 0; i < (n-1); i++) {
+	row = mat[i];
+	v1 = row[i];
+	if (v1 < 0) {
+	    if (-v1 > tol)
+		throw "Negative value at diagonal"+i;
+	    v1 = row[i] = 0;
+	}
+	else if (v1 > tol) {
+	    throw "Diagonal not zero at "+i;
+	}
+	for (j = 1; j < n; j++) {
+	    v1 = row[j];
+	    v2 = mat[j][i];
+	    if (Math.abs(v1 - v2) > tol)
+		throw "Inconsistency at "+i+","+j;
+	    if (v1 < 0)
+		v1 = 0;
+	    if (v2 < 0)
+		v2 = 0;
+	    if (v1 != v2) {
+		v1 += v2;
+		v1 /= 2;
+	    }
+	    row[j] = v1;
+	    mat[j][i] = v1;
+	}
+    }
+    return mat;
+}
 reorder.dot = science.lin.dot;
 reorder.length = science.lin.length;
 reorder.normalize = science.lin.normalize;
