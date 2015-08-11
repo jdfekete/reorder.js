@@ -26,6 +26,11 @@ function compare_order(row_order1, row_order2, msg) {
 suite.addBatch({
     "ca": {
 	"simple": function() {
+	    // Ground truth with R, package "ca":
+	    // library(ca)
+	    // res=ca(mat)
+	    // erows = res$rowcoord[,1]
+	    // ecols = res$colcoord[,1]
 	    var mat = [
 		[1, 0, 0, 1, 1, 0, 0, 1],
 		[0, 1, 1, 0, 0, 1, 0, 1],
@@ -34,24 +39,18 @@ suite.addBatch({
 		[1, 1, 0, 1, 0, 0, 0, 1],
 		[1, 0, 0, 0, 1, 0, 0, 0]
 	    ],
-		res2 = reorder.ca_decorana(mat),
-		row_order2 = res2.rows,
-		col_order2 = res2.cols,
-		erow = [-1.044914, 0.970130, 1.675125, -0.439146, -0.321923, -1.239397],
-		ecol = [-0.396887, 0.682180, 0.384491, -0.871822, -1.314724, 1.915459, 2.425954, -0.302626],
-		i, tmp;
+		res = reorder.ca_order(mat),
+		row_order = res.rows,
+		col_order = res.cols,
+		erows = reorder.sort_order(
+		    [-1.044914, 0.970130, 1.675125, -0.439146, -0.321923, -1.239397]
+		),
+		ecols = reorder.sort_order(
+		    [-0.396887, 0.682180, 0.384491, -0.871822, -1.314724, 1.915459, 2.425954, -0.302626]
+		);
 
-	    reorder.printvec(row_order2, 6);
-	    reorder.printvec(col_order2, 6);
-
-	    /*
-	    assert.inDeltaArray(row_order,
-				[24, 52, 42, 11, 0, 84, 100, 25],
-				0.001);
-	    assert.inDeltaArray(col_order,
-				[23.5, 55.9, 68.6, 33.2, 35.1, 20.9],
-				0.001);
-	     */
+	    assert.permutationEqual(row_order, erows);
+	    assert.permutationEqual(col_order, ecols);
 	},
 	"harder": function() {
 	    var mat = [
@@ -61,9 +60,9 @@ suite.addBatch({
 		[1, 1, 0, 0, 0],
 		[0, 1, 1, 0, 1]
 	    ],
-		res = reorder.ca(mat),
-		col_order = reorder.sort_order(res[0]),
-		row_order = reorder.sort_order(res[1]);
+		res = reorder.ca_order(mat),
+		col_order = res.cols,
+		row_order = res.rows;
 	    console.log('col_order: '+col_order);
 	    console.log('row_order: '+row_order);
 	    reorder.displaymat(mat);
@@ -93,13 +92,13 @@ suite.addBatch({
 		[36,68,74,22],
 		[0,30,111,59]
 	    ],
-		res = reorder.ca(mat),
-		col_order = reorder.sort_order(res[0]),
-		row_order = reorder.sort_order(res[1]);
+		res = reorder.ca_order(mat),
+		col_order = res.cols,
+		row_order = res.rows;
 	    console.log('col_order: '+col_order);
 	    console.log('row_order: '+row_order);
 	    reorder.printmat(mat);
-	    reorder.printmat(mat, row_order, col_order);
+	    reorder.printmat(mat, col_order, row_order);
 	}
     }
 });
