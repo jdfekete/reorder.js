@@ -94,7 +94,16 @@ suite.addBatch({
 	    ],
 		res = reorder.ca_order(mat),
 		col_order = res.cols,
-		row_order = res.rows;
+		row_order = res.rows,
+		erows = reorder.sort_order(
+		    [-0.9283350, -1.1010641,  1.5381971, -0.2229937,  0.7141957]
+		),
+		ecols = reorder.sort_order(
+		    [-1.1276880, -0.8747596,  0.4626773,  1.4348968]
+		);
+
+	    assert.permutationEqual(row_order, erows);
+	    assert.permutationEqual(col_order, ecols);
 	    console.log('col_order: '+col_order);
 	    console.log('row_order: '+row_order);
 	    reorder.printmat(mat);
