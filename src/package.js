@@ -18,6 +18,7 @@ require("util").puts(JSON.stringify({
 	"tiny-queue": "0.2.1"
     },
     "devDependencies": {
+	"numeric": "1.2.6",
 	"seedrandom": "2.3.11",
 	"uglify-js": "2.4.20",
 	"vows": "0.8.1",
