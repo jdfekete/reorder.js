@@ -27,12 +27,7 @@ require("util").puts(JSON.stringify({
     "scripts": {
 	"test": "vows --nocolor; echo"
     },
-    "licenses": [
-	{
-	    "type": "BSD-3",
-	    "url": "https://github.com/jdfekete/reorder.js/blob/master/LICENSE"
-	}
-    ],
+    "license": "BSD-2-Clause",
     "jshintConfig": {
 	"laxbreak": true
     }
