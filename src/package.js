@@ -22,7 +22,8 @@ require("util").puts(JSON.stringify({
 	"uglify-js": "2.4.20",
 	"vows": "0.8.1",
 	"jsonfile": "2.0.0",
-	"jshint": "2.7.0"
+	"jshint": "2.7.0",
+        "numeric": "1.2.6"
     },
     "scripts": {
 	"test": "vows --nocolor; echo"
