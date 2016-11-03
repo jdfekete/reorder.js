@@ -72,23 +72,23 @@ def optimal(v, S, left, right, is_leaf, is_empty):
 			Ls = [j]
 		
 		# maximize similarity
-		maximum, order = float("inf"), None
+		maximum, order = 0., None
 		for k in Ks:
 			w_maximum, w_order = M(w, i, k)
 			for l in Ls:
 				x_maximum, x_order = M(x, l, j)
 				similarity = w_maximum + S(k, l) + x_maximum
-				if similarity < maximum:
+				if similarity > maximum:
 					maximum, order = similarity, w_order + x_order
 
 		return maximum, order
 	
 	# and now the external loop
-	maximum = float("inf")
+	maximum = 0.
 	for i in T(left(v)):
 		for j in T(right(v)):
 			similarity, order = M(v, i, j)
-			if similarity < maximum:
+			if similarity > maximum:
 				maximum, optimal_order = similarity, order
 	
 	return optimal_order
