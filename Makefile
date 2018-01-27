@@ -3,11 +3,11 @@ JS_COMPILER = $(NODE_PATH)/uglify-js/bin/uglifyjs
 #JS_TESTER = $(NODE_PATH)/vows/bin/vows --nocolor -v
 
 all: \
-	reorder.v1.js \
-	reorder.v1.min.js \
+	reorder.v1.0.2.js \
+	reorder.v1.0.2.min.js \
 	package.json
 
-reorder.v1.js: \
+reorder.v1.0.2.js: \
 	src/core.js \
 	src/utils.js \
 	src/aliases.js \
