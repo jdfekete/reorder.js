@@ -4,8 +4,7 @@ JS_COMPILER = $(NODE_PATH)/uglify-js/bin/uglifyjs
 
 all: \
 	reorder.v1.js \
-	reorder.v1.min.js \
-	package.json
+	reorder.v1.min.js
 
 reorder.v1.js: \
 	src/core.js \
@@ -76,11 +75,5 @@ install: package.json
 	mkdir -p node_modules
 	npm install
 
-package.json: src/package.js
-	@rm -f $@
-	node src/package.js > $@
-	@chmod a-w $@
-
-
 clean:
-	rm -rf reorder*.js package.json node_modules
+	rm -rf reorder*.js node_modules

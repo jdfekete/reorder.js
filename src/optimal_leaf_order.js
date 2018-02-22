@@ -108,7 +108,6 @@ reorder.optimal_leaf_order = function() {
 	distanceMatrix = null;
 	return optimal_order;
     }
-    optimal_leaf_order.order = orderFull;
 
     function optimal_leaf_order(matrix) {
 	if (distanceMatrix === null)
@@ -118,6 +117,8 @@ reorder.optimal_leaf_order = function() {
 		.distanceMatrix(distanceMatrix);
 	return orderFull(hcluster(matrix));
     }
+    optimal_leaf_order.order = orderFull;
+    optimal_leaf_order.reorder = optimal_leaf_order;
 
     optimal_leaf_order.distance = function(x) {
 	if (!arguments.length) return distance;
