@@ -23,7 +23,6 @@
     "index.js",
     "lib",
     "node_modules",
-    "package.json",
     "src",
     "test",
     "**/.*",
