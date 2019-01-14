@@ -2565,7 +2565,7 @@ reorder.pca1d = function(v, eps) {
 };
 
 reorder.pca_order = function(v, eps) {
-    return reorder.sort_order(pca1d(v, eps));
+    return reorder.sort_order(reorder.pca1d(v, eps));
 };
 //Corresponence Analysis
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
