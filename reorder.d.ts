@@ -2,8 +2,8 @@ export = reorder;
 export as namespace reorder;
 
 declare namespace reorder {
-    version: string;
-    debug: boolean;
+    export var version: string;
+    export var debug: boolean;
     type Distance = (a: number, b: number) => number;
     type Order = number[];
     function cmp_number_asc(a: number, b: number): number;
