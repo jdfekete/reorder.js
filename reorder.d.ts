@@ -5,6 +5,7 @@ declare namespace reorder {
     export var version: string;
     export var debug: boolean;
     type Distance = (a: number, b: number) => number;
+    export var distance: { [key: string]: Distance };
     type Order = number[];
     function cmp_number_asc(a: number, b: number): number;
     function cmp_number_desc(a: number, b: number): number;
