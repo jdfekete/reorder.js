@@ -1,0 +1,46 @@
+{
+   "name": "reorder.js",
+   "version": "1.0.6",
+   "description": "Matrix reordering in JavaScript.",
+   "keywords": [
+      "matrix",
+      "reordering",
+      "mathematics"
+   ],
+   "homepage": "http://www.aviz.fr/~fekete",
+   "repository": {
+      "type": "git",
+      "url": "http://github.com/jdfekete/reorder.js.git"
+   },
+   "main": "./reorder.v1.js",
+   "unpkg": "reorder.v1.min.js",
+   "jsdelivr": "reorder.v1.min.js",
+   "types": "./reorder.d.ts",
+   "author": [
+      {
+         "name": "Jean-Daniel Fekete",
+         "url": "http://www.aviz.fr/~fekete"
+      }
+   ],
+   "scripts": {
+      "build": "make all",
+      "clean": "make clean",
+      "test": "vows --nocolor; echo"
+   },
+   "dependencies": {
+      "science": "1.9.2",
+      "tiny-queue": "0.2.1"
+   },
+   "devDependencies": {
+      "jshint": "^2.9.7",
+      "jsonfile": "2.0.0",
+      "numeric": "1.2.6",
+      "seedrandom": "2.3.11",
+      "uglify-js": "3.4.9",
+      "vows": "^0.8.2"
+   },
+   "license": "BSD-2-Clause",
+   "jshintConfig": {
+      "laxbreak": true
+   }
+}
