@@ -12,9 +12,11 @@
       "type": "git",
       "url": "http://github.com/jdfekete/reorder.js.git"
    },
-   "main": "./reorder.v1.js",
    "unpkg": "reorder.v1.min.js",
    "jsdelivr": "reorder.v1.min.js",
+   "main": "dist/reorder.cjs.js",
+   "module": "dist/reorder.esm.js",
+   "browser": "dist/reorder.umd.js",
    "types": "./reorder.d.ts",
    "author": [
       {
@@ -23,18 +25,23 @@
       }
    ],
    "scripts": {
-      "build": "make all",
-      "clean": "make clean",
+      "build": "rollup -c",
       "test": "vows --nocolor; echo"
    },
+   "files": [
+      "dist"
+   ],
    "dependencies": {
       "science": "1.9.2",
       "tiny-queue": "0.2.1"
    },
    "devDependencies": {
+      "@rollup/plugin-commonjs": "^17.0.0",
+      "@rollup/plugin-node-resolve": "^11.0.1",
       "jshint": "^2.9.7",
       "jsonfile": "2.0.0",
       "numeric": "1.2.6",
+      "rollup": "^2.35.1",
       "seedrandom": "2.3.11",
       "uglify-js": "3.4.9",
       "vows": "^0.8.2"

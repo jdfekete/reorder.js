@@ -1024,7 +1024,7 @@ function count_out_crossings(graph, v, w, inv) {
  * @param {list} layer2 - the ordered list of nodes in layer 2
  * @returns {list} a tuple containing the new layer1, layer2, and crossings count
  */
-function adjacent_exchange(graph, layer1, layer2) {
+export function adjacent_exchange(graph, layer1, layer2) {
     layer1 = layer1.slice();
     layer2 = layer2.slice();
     var i, v, w, c0, c1,
@@ -1069,8 +1069,6 @@ function adjacent_exchange(graph, layer1, layer2) {
 
     return [layer1, layer2, improved];
 }
-
-reorder.adjacent_exchange = adjacent_exchange;
 reorder.barycenter_order = function(graph, comps, max_iter) {
     var orders = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
@@ -2285,9 +2283,6 @@ reorder.order = function() {
             if (list[i-1] >= list[i])
                 throw "Invalid list, indices not sorted";
         except = list.slice(0);
-        // except = list.sort(function(a,b) {
-        //     return a-b;
-        // });
         return order;
     };
 
