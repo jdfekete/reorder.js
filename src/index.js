@@ -20,3 +20,9 @@ export {
   covariancetranspose,
   variancecovariance
 } from './covariance';
+export {
+  cuthill_mckee,
+  reverse_cuthill_mckee,
+  cuthill_mckee_order,
+  reverse_cuthill_mckee_order
+} from './cuthill_mckee_order';

@@ -1,6 +1,6 @@
 
 /*jshint loopfunc:true */
-reorder.cuthill_mckee = function(graph, comp) {
+export function cuthill_mckee(graph, comp) {
     if (comp.length < 3)
 	return comp;
 
@@ -41,12 +41,11 @@ reorder.cuthill_mckee = function(graph, comp) {
     return perm;
 };
 
-reorder.reverse_cuthill_mckee = function(graph, comp) {
+export function reverse_cuthill_mckee(graph, comp) {
     return reorder.cuthill_mckee(graph, comp).reverse();
 };
 
-
-reorder.cuthill_mckee_order = function(graph, comps) {
+export function cuthill_mckee_order(graph, comps) {
     var i, comp, order = [];
     if (! comps) {
 	comps = graph.components();
@@ -59,7 +58,7 @@ reorder.cuthill_mckee_order = function(graph, comps) {
     return order;
 };
 
-reorder.reverse_cuthill_mckee_order = function(graph, comps) {
+export function reverse_cuthill_mckee_order(graph, comps) {
     var i, comp, order = [];
     if (! comps) {
 	comps = graph.components();
