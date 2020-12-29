@@ -1,4 +1,4 @@
-reorder.bfs = function(graph, v, fn) {
+export function bfs(graph, v, fn) {
     var q = new Queue(),
 	discovered = {}, i, e, v2, edges;
     q.push(v);
@@ -21,7 +21,7 @@ reorder.bfs = function(graph, v, fn) {
     }
 };
 
-reorder.bfs_distances = function(graph, v) {
+export function bfs_distances(graph, v) {
     var dist = {};
     dist[v] = 0;
     reorder.bfs(graph, v, function(v, c) {
@@ -31,7 +31,7 @@ reorder.bfs_distances = function(graph, v) {
     return dist;
 };
 
-reorder.all_pairs_distance_bfs = function(graph, comps) {
+export function all_pairs_distance_bfs(graph, comps) {
     if (! comps)
 	comps = [ graph.nodes_indices() ];
     var nodes = comps.reduce(reorder.flatten)
