@@ -1,6 +1,8 @@
-reorder.covariance = reorder.dot;
+import { dot } from './aliases';
 
-reorder.covariancetranspose = function(v, a, b) {
+export const covariance = dot;
+
+export function covariancetranspose(v, a, b) {
     var n = v.length,
 	cov = 0,
 	i;
@@ -10,7 +12,7 @@ reorder.covariancetranspose = function(v, a, b) {
     return cov;
 };
 
-reorder.variancecovariance = function(v) {
+export function variancecovariance(v) {
     var o = v[0].length,
 	cov = Array(o),
 	i, j;

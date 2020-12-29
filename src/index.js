@@ -15,3 +15,8 @@ export { condition } from './condition';
 export { version, debug } from './core';
 export { correlation } from './correlation';
 export { count_crossings } from './count_crossings';
+export {
+  covariance,
+  covariancetranspose,
+  variancecovariance
+} from './covariance';
