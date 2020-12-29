@@ -1,4 +1,4 @@
-reorder.complete_graph = function(n, directed) {
+export function complete_graph(n, directed) {
     var nodes = graph_empty_nodes(n),
 	links = [],
 	i, j;
