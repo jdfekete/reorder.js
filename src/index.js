@@ -6,3 +6,4 @@ export {
   floyd_warshall_with_path,
   floyd_warshall_path
 } from './all_pairs_distance';
+export { bandwidth } from './bandwidth';

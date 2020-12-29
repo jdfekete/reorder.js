@@ -1,4 +1,4 @@
-reorder.bandwidth = function(graph, order) {
+export function bandwidth(graph, order) {
     if (! order)
 	order = reorder.range(graph.nodes().length);
 
