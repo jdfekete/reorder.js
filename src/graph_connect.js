@@ -1,4 +1,4 @@
-reorder.graph_connect = function(graph, comps) {
+export function graph_connect(graph, comps) {
     var i, j, links = graph.links();
 
     if (! comps)

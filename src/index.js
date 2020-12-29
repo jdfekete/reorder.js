@@ -45,3 +45,4 @@ export {
 } from './graph2distmat';
 export { graph2mat } from './graph2mat';
 export { complete_graph } from './graph_complete';
+export { graph_connect } from './graph_connect';
