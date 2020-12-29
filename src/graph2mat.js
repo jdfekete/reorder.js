@@ -1,4 +1,4 @@
-reorder.graph2mat = function(graph, directed) {
+export function graph2mat(graph, directed) {
     var nodes = graph.nodes(),
 	links = graph.links(),
 	n = nodes.length,

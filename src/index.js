@@ -43,3 +43,4 @@ export {
   graph2valuemats,
   valuemats_reorder
 } from './graph2distmat';
+export { graph2mat } from './graph2mat';
