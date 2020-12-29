@@ -36,3 +36,4 @@ export {
 export { dist, distmax, distmin, dist_remove } from './dist';
 export { distance } from './distance';
 export { edgesum } from './edgesum';
+export { fiedler_vector } from './fiedler';
