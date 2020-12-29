@@ -7,3 +7,4 @@ export {
   floyd_warshall_path
 } from './all_pairs_distance';
 export { bandwidth } from './bandwidth';
+export { barycenter_order, barycenter } from './barycenter_order';

@@ -1,4 +1,4 @@
-reorder.barycenter_order = function(graph, comps, max_iter) {
+export function barycenter_order(graph, comps, max_iter) {
     var orders = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
     if (! comps) {
@@ -36,7 +36,7 @@ function median(neighbors) {
 	return (neighbors[lm]*rspan + neighbors[rm]*lspan) / (lspan+rspan);
 }
 
-reorder.barycenter = function(graph, comp, max_iter) {
+export function barycenter(graph, comp, max_iter) {
     var nodes = graph.nodes(),
 	layer1, layer2, crossings, iter,
 	best_layer1, best_layer2, best_crossings, best_iter,
