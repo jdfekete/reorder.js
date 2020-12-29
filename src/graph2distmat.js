@@ -2,7 +2,7 @@
 // into a distance matrix suitable for reordering with e.g.
 // Optimal Leaf Ordering.
 
-function distmat2valuemat(distmat) {
+export function distmat2valuemat(distmat) {
     var n = distmat.length,
 	valuemat = reorder.zeroes(n, n),
 	max_dist = reorder.distmax(distmat),
@@ -15,9 +15,8 @@ function distmat2valuemat(distmat) {
     }
     return valuemat;
 }
-reorder.distmat2valuemat = distmat2valuemat;
 
-reorder.graph2valuemats = function(graph, comps) {
+export function graph2valuemats(graph, comps) {
     if (! comps)
 	comps = graph.components();
 
@@ -25,7 +24,7 @@ reorder.graph2valuemats = function(graph, comps) {
     return dists.map(distmat2valuemat);
 };
 
-reorder.valuemats_reorder = function(valuemats, leaforder, comps) {
+export function valuemats_reorder(valuemats, leaforder, comps) {
     var orders = valuemats.map(leaforder);
 
     if (comps) {

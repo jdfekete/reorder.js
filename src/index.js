@@ -38,3 +38,8 @@ export { distance } from './distance';
 export { edgesum } from './edgesum';
 export { fiedler_vector } from './fiedler';
 export { graph } from './graph';
+export {
+  distmat2valuemat,
+  graph2valuemats,
+  valuemats_reorder
+} from './graph2distmat';
