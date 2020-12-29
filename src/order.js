@@ -387,12 +387,12 @@ reorder.order = function() {
     };
 
     order.except = function(list) {
+        var i;
         if (!arguments.length) return except.slice(0);
-        except = list.sort(function(a,b) {
-            if (a >= b)
+        for (i = 1; i < list.length; i++)
+            if (list[i-1] >= list[i])
                 throw "Invalid list, indices not sorted";
-            return a-b;
-        });
+        except = list.slice(0);
         return order;
     };
 
