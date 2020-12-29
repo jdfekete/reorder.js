@@ -1,4 +1,4 @@
-reorder.graph_random_erdos_renyi = function(n, p, directed) {
+export function graph_random_erdos_renyi(n, p, directed) {
     if (p <= 0)
 	return reorder.graph_empty(n, directed);
     else if (p >= 1)
@@ -42,4 +42,4 @@ reorder.graph_random_erdos_renyi = function(n, p, directed) {
     return reorder.graph(nodes, links, directed).init();
 };
 
-reorder.graph_random = reorder.graph_random_erdos_renyi;
+export const graph_random = graph_random_erdos_renyi;
