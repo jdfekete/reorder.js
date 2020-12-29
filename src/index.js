@@ -26,3 +26,10 @@ export {
   cuthill_mckee_order,
   reverse_cuthill_mckee_order
 } from './cuthill_mckee_order';
+export {
+  displaymat,
+  printve,
+  printmat,
+  assert,
+  printhcluster
+} from './debug';
