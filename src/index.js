@@ -13,3 +13,4 @@ export { bfs_order } from './bfs_order';
 export { ca_decorana, ca, ca_order } from './ca';
 export { condition } from './condition';
 export { version, debug } from './core';
+export { correlation } from './correlation';

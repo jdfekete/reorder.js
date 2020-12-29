@@ -1,4 +1,4 @@
-reorder.correlation = {
+export const correlation = {
     pearson: function(a, b) {
 	var ma = science.stats.mean(a),
 	    mb = science.stats.mean(b),
