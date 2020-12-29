@@ -35,3 +35,4 @@ export {
 } from './debug';
 export { dist, distmax, distmin, dist_remove } from './dist';
 export { distance } from './distance';
+export { edgesum } from './edgesum';

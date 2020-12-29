@@ -1,4 +1,4 @@
-reorder.edgesum = function(graph, order) {
+export function edgesum(graph, order) {
     if (! order)
 	order = reorder.range(graph.nodes().length);
 
