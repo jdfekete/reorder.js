@@ -33,3 +33,9 @@ export {
   assert,
   printhcluster
 } from './debug';
+export {
+  dist,
+  distmax,
+  distmin,
+  dist_remove
+} from './dist';
