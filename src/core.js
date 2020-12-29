@@ -1,3 +1,2 @@
-reorder = {version: "1.0.2"}; // semver
-
-reorder.debug = false;
+export const version = "1.0.2";
+export const debug = false;
