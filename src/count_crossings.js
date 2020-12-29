@@ -2,7 +2,7 @@
 // Simple and Efficient Bilayer Cross Counting.
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
 /*jshint loopfunc:true */
-function count_crossings(graph, north, south) {
+export function count_crossings(graph, north, south) {
     var i, j, n,
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
@@ -61,5 +61,3 @@ function count_crossings(graph, north, south) {
     }
     return crosscount;
 }
-
-reorder.count_crossings = count_crossings;
