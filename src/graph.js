@@ -1,4 +1,4 @@
-reorder.graph = function(nodes, links, directed) {
+export function graph(nodes, links, directed) {
     var graph = {},
         linkDistance = 1,
         edges,
