@@ -46,3 +46,4 @@ export {
 export { graph2mat } from './graph2mat';
 export { complete_graph } from './graph_complete';
 export { graph_connect } from './graph_connect';
+export { graph_empty_nodes, graph_empty } from './graph_empty';
