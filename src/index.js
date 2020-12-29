@@ -10,3 +10,4 @@ export { bandwidth } from './bandwidth';
 export { barycenter_order, barycenter } from './barycenter_order';
 export { bfs, bfs_distances, all_pairs_distance_bfs } from './bfs';
 export { bfs_order } from './bfs_order';
+export { ca_decorana, ca, ca_order } from './ca';

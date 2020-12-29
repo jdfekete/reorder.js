@@ -362,10 +362,10 @@ function solve_tridiag(tol, a11, a12, a22, a23, a33, a34, a44) {
     return [ax1, ax2, ax3, ax4];
 }
 
-reorder.ca_decorana = decorana;
-reorder.ca = decorana;
+export const ca_decorana = decorana;
+export const ca = decorana;
 
-reorder.ca_order = function(dat) {
+export function ca_order(dat) {
     var res = reorder.ca(dat);
     return { rows: reorder.sort_order(res.rows),
 	     cols: reorder.sort_order(res.cols),
