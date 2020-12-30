@@ -51,8 +51,7 @@ export { graph_random_erdos_renyi, graph_random } from './graph_random';
 export { hcluster } from './hcluster';
 export { intersect_sorted_ints } from './intersect';
 export { laplacian } from './laplacian';
-//export {
-//} from '';
+export { mat2graph } from './mat2graph';
 //export {
 //} from '';
 //export {
