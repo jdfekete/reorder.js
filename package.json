@@ -26,6 +26,7 @@
    ],
    "scripts": {
       "build": "rollup -c",
+      "pretest": "npm run build",
       "test": "vows --nocolor; echo"
    },
    "files": [
