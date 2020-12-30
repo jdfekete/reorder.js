@@ -1,4 +1,4 @@
-function array_to_dicts(data, axes) {
+export function array_to_dicts(data, axes) {
     if (arguments.length < 2) 
 	axes = reorder.range(data[0].length);
     var ret = [], row, dict, i, j;
@@ -13,9 +13,7 @@ function array_to_dicts(data, axes) {
     return ret;
 }
 
-reorder.array_to_dicts = array_to_dicts;
-
-function dicts_to_array(dicts, keys) {
+export function dicts_to_array(dicts, keys) {
     if (arguments.length < 2)
 	keys = Object.keys(dicts[0]);
     var n = keys.length,
@@ -30,8 +28,6 @@ function dicts_to_array(dicts, keys) {
     }
     return array;
 }
-
-reorder.dicts_to_array = dicts_to_array;
 
 function abs_matrix(x) {
     return x.map(function(y) { return y.map(Math.abs); });
@@ -60,7 +56,7 @@ function pcp_flip_axes(perm, naxes, pcor) {
     return signs;
 }
 
-function pcp(data, axes) {
+export function pcp(data, axes) {
     if (! axes)
 	axes = reorder.range(data[0].length);
     
@@ -81,9 +77,7 @@ function pcp(data, axes) {
     return [ndata, perm, naxes, signs, pcor];
 }
 
-reorder.pcp = pcp;
-
-function parcoords(p) {
+export function parcoords(p) {
     p.detectDimensions()
 	.autoscale();
 
@@ -132,5 +126,3 @@ function parcoords(p) {
     dimensions = discarded.reverse().concat(dimensions); // put back string columns
     return p.dimensions(dimensions);
 }
-
-reorder.parcoords = parcoords;

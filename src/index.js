@@ -55,7 +55,11 @@ export { meantranspose, meancolumns } from './mean';
 export { optimal_leaf_order } from './optimal_leaf_order';
 export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
-//export {
-//} from '';
+export {
+  array_to_dicts,
+  dicts_to_array,
+  pcp,
+  parcoords
+} from './pcp';
 //export {
 //} from '';
