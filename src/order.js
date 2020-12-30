@@ -4,6 +4,7 @@ import { debug } from './core';
 import { dist_remove, distmax, dist } from './dist';
 import { assert, printmat } from './debug';
 import { range } from './range';
+import { permutation } from './permutation';
 
 export function order() {
     var distance = distances.euclidean,
@@ -144,8 +145,7 @@ export function order() {
                            "Invalid constrained permutation end");
         }
         if (i0 !== 0) {
-            perm = reorder
-                .permutation(i0)
+            perm = permutation(i0)
                 .concat(perm.map(function(v) { return v + i0; }));
         }
         if (orig.length > j0) {
