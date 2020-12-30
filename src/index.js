@@ -69,5 +69,13 @@ export { spectral_order } from './spectral_order';
 export { stablepermute } from './stablepermute';
 export { sum } from './sum';
 export { transposeSlice } from './transpose';
-//export {
-//} from '';
+export {
+  cmp_number,
+  cmp_number_asc,
+  cmp_number_desc,
+  flatten,
+  infinities,
+  array1d,
+  check_distance_matrix,
+  fix_distance_matrix
+} from './utils';

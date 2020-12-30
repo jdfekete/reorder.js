@@ -1,15 +1,15 @@
 // Use as: [4,3,2].sort(reorder.cmp_number_asc);
-reorder.cmp_number_asc = function(a,b) { return a-b; };
-reorder.cmp_number = reorder.cmp_number_asc;
+export function cmp_number_asc(a,b) { return a-b; };
+export const cmp_number = cmp_number_asc;
 
 // Use as: [4,3,2].sort(reorder.cmp_number_desc);
-reorder.cmp_number_desc = function(a,b) { return b-a; };
+export function cmp_number_desc(a,b) { return b-a; };
 
 // Use as: [[4,3],[2]].reduce(reorder.flaten);
-reorder.flatten = function(a,b) { return a.concat(b); };
+export function flatten(a,b) { return a.concat(b); };
 
 // Constructs a multi-dimensional array filled with Infinity.
-reorder.infinities = function(n) {
+export function infinities(n) {
     var i = -1,
 	a = [];
     if (arguments.length === 1)
@@ -22,7 +22,7 @@ reorder.infinities = function(n) {
     return a;
 };
 
-reorder.array1d = function(n, v) {
+export function array1d(n, v) {
     var i = -1,
 	a = Array(n);
     while (++i < n)
@@ -30,7 +30,7 @@ reorder.array1d = function(n, v) {
     return a;
 };
 
-function check_distance_matrix(mat, tol) {
+export function check_distance_matrix(mat, tol) {
     var i, j, v1, v2, n = mat.length, row;
     if (! tol)
 	tol = 1e-10;
@@ -59,7 +59,7 @@ function check_distance_matrix(mat, tol) {
     return false;
 }
 
-function fix_distance_matrix(mat, tol) {
+export function fix_distance_matrix(mat, tol) {
     var i, j, v1, v2, n = mat.length, row;
     if (! tol)
 	tol = 1e-10;
