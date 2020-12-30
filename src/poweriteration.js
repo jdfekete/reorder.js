@@ -43,7 +43,7 @@ export function poweriteration(v, eps, init) {
 	var t = tmp; tmp = b; b = t; // swap b/tmp
     }
     return tmp;
-};
+}
 
 export function poweriteration_n(v, p, init, eps, start) {
     if (! eps) 
@@ -98,4 +98,4 @@ export function poweriteration_n(v, p, init, eps, start) {
 	    console.log('eig[%d]=%j',k, bk);
     }
     return [b, eigenvalue];
-};
+}

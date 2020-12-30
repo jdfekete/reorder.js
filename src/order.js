@@ -18,7 +18,7 @@ export function order() {
 
 
     function _reset() {
-        distance = distances.euclidean,
+        distance = distances.euclidean;
         ordering = optimal_leaf_order;
         linkage = "complete";
         distanceMatrix = null;
@@ -431,4 +431,4 @@ export function order() {
     order.orderrowsexcept = order.orderexcept;
 
     return order;
-};
+}

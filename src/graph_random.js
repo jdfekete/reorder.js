@@ -44,6 +44,6 @@ export function graph_random_erdos_renyi(n, p, directed) {
 	}
     }
     return graph(nodes, links, directed).init();
-};
+}
 
 export const graph_random = graph_random_erdos_renyi;

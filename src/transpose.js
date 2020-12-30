@@ -15,4 +15,4 @@ export function transposeSlice(a, start, end) {
 	j = -1; while (++j < m) b[i-start][j] = a[j][i];
     }
     return b;
-};
+}

@@ -1,4 +1,4 @@
-import { range } from './range'
+import { range } from './range';
 
 export const permutation = range;
 

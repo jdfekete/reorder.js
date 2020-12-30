@@ -10,7 +10,7 @@ export function covariancetranspose(v, a, b) {
 	cov += v[i][a]*v[i][b];
     }
     return cov;
-};
+}
 
 export function variancecovariance(v) {
     var o = v[0].length,
@@ -25,4 +25,4 @@ export function variancecovariance(v) {
 	    cov[i][j] = cov[j][i] = covariancetranspose(v, i, j);
     }
     return cov;
-};
+}

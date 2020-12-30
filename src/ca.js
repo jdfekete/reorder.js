@@ -374,4 +374,4 @@ export function ca_order(dat) {
     return { rows: sort_order(res.rows),
 	     cols: sort_order(res.cols),
 	     details: res };
-};
+}

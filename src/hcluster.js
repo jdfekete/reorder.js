@@ -142,7 +142,7 @@ export function hcluster() {
   };
 
   return hcluster;
-};
+}
 
 function calculateCentroid(c1Size, c1Centroid, c2Size, c2Centroid) {
   var newCentroid = [],

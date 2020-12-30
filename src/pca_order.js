@@ -35,8 +35,8 @@ export function pca1d(v, eps) {
     v = center(v);
     var cov = variancecovariance(v);
     return poweriteration(cov, eps);
-};
+}
 
 export function pca_order(v, eps) {
     return sort_order(pca1d(v, eps));
-};
+}

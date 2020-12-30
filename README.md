@@ -11,9 +11,23 @@ and [NPM](http://www.npmjs.org) installed. Once you have done that, run the
 following from the root directory of this repository to install the development
 dependencies:
 
-    make install
+```
+npm run build
+```
+
+## Testing
+
+To run the tests in the distribution, use the following command:
+
+```
+npm run test
+```
 
 ## Thanks
+
+Thanks to Curran Kelleher @curran for adapting the library to modern JavaScript modules.
+
+Thanks to Philippe Rivière @fil for porting the "Les Misérables" example to [observablehq](https://observablehq.com/@fil/hello-reorder-js)
 
 Thanks to [Renaud Blanch](http://iihm.imag.fr/blanch/) for giving me his implementation of the 'Optimal Leaf Ordering' algorithm. He has improved it and the distribution is available as [ordering](https://bitbucket.org/rndblnch/ordering).
 

@@ -20,4 +20,4 @@ export function complete_graph(n, directed) {
 	}
     }
     return graph(nodes, links, directed).init();
-};
+}

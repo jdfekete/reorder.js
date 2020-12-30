@@ -32,7 +32,7 @@ export function dist() {
     };
 
     return dist;
-};
+}
 
 export function distmax(distMatrix) {
     var max = 0,
@@ -46,7 +46,7 @@ export function distmax(distMatrix) {
 		max = row[j];
     }
     return max;
-};
+}
 
 export function distmin(distMatrix) {
     var min = Infinity,
@@ -60,7 +60,7 @@ export function distmin(distMatrix) {
 		min = row[j];
     }
     return min;
-};
+}
 
 export function dist_remove(dist, n, m) {
     if (arguments.length < 3)
@@ -70,4 +70,4 @@ export function dist_remove(dist, n, m) {
     for (i = dist.length; i-- > 0; )
 	dist[i].splice(n, m-n);
     return dist;
-};
+}

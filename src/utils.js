@@ -1,12 +1,12 @@
 // Use as: [4,3,2].sort(cmp_number_asc);
-export function cmp_number_asc(a,b) { return a-b; };
+export function cmp_number_asc(a,b) { return a-b; }
 export const cmp_number = cmp_number_asc;
 
 // Use as: [4,3,2].sort(cmp_number_desc);
-export function cmp_number_desc(a,b) { return b-a; };
+export function cmp_number_desc(a,b) { return b-a; }
 
 // Use as: [[4,3],[2]].reduce(flaten);
-export function flatten(a,b) { return a.concat(b); };
+export function flatten(a,b) { return a.concat(b); }
 
 // Constructs a multi-dimensional array filled with Infinity.
 export function infinities(n) {
@@ -20,7 +20,7 @@ export function infinities(n) {
 	    a[i] = infinities.apply(
 		this, Array.prototype.slice.call(arguments, 1));
     return a;
-};
+}
 
 export function array1d(n, v) {
     var i = -1,
@@ -28,7 +28,7 @@ export function array1d(n, v) {
     while (++i < n)
 	a[i] = v;
     return a;
-};
+}
 
 export function check_distance_matrix(mat, tol) {
     var i, j, v1, v2, n = mat.length, row;

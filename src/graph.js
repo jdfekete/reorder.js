@@ -247,4 +247,4 @@ export function graph(nodes, links, directed) {
     };
 
     return graph;
-};
+}

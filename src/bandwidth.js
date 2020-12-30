@@ -15,4 +15,4 @@ export function bandwidth(graph, order) {
 	max = Math.max(max, d);
     }
     return max;
-};
+}

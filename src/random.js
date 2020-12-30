@@ -19,11 +19,11 @@ export function randomPermute(array, i, j) {
 	array[k] = t;
     }
     return array;
-};
+}
 
 export function randomPermutation(n) {
     return randomPermute(permutation(n));
-};
+}
 
 export function random_array(n, min, max) {
     var ret = Array(n);
@@ -37,7 +37,7 @@ export function random_array(n, min, max) {
 	while(n) ret[--n] = min + Math.random()*(max-min);
     }
     return ret;
-};
+}
 
 export function random_matrix(p, n, m, sym) {
     if (! m)
@@ -77,5 +77,4 @@ export function random_matrix(p, n, m, sym) {
 	}
     }
     return mat;
-};
-
+}

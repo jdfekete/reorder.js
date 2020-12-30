@@ -11,4 +11,4 @@ export function graph_connect(graph, comps) {
     }
     graph.links(links);
     return graph.init();
-};
+}

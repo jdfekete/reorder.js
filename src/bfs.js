@@ -21,7 +21,7 @@ export function bfs(graph, v, fn) {
 	}
 	fn(v, -1);
     }
-};
+}
 
 export function bfs_distances(graph, v) {
     var dist = {};
@@ -31,7 +31,7 @@ export function bfs_distances(graph, v) {
 	    dist[c] = dist[v]+1;
     });
     return dist;
-};
+}
 
 export function all_pairs_distance_bfs(graph, comps) {
     if (! comps)
@@ -52,5 +52,5 @@ export function all_pairs_distance_bfs(graph, comps) {
 	}
     }
     return mat;
-};
+}
 

@@ -29,4 +29,4 @@ export function mat2graph(mat, directed) {
 	    return 1 + max_value - l.value;
 	})
 	.init();
-};
+}

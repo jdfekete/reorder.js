@@ -14,4 +14,4 @@ export function range(start, stop, step) {
 	for (; i < stop; i += step)
 	    range.push(i);
     return range;
-};
+}

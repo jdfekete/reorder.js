@@ -42,4 +42,4 @@ export function graph2mat(graph, directed) {
 	}
     }
     return mat;
-};
+}

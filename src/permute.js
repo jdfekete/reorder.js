@@ -35,5 +35,4 @@ export function permutetranspose(array, indexes) {
     while (m-- > 0)
 	array[m] = permute(array[m], indexes);
     return array;
-};
-
+}

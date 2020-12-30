@@ -148,6 +148,6 @@ export function optimal_leaf_order() {
     optimal_leaf_order.distanceMatrix = optimal_leaf_order.distance_matrix; // compatibility
 
     return optimal_leaf_order;
-};
+}
 
 

@@ -14,4 +14,4 @@ export function edgesum(graph, order) {
 	sum += d;
     }
     return sum;
-};
+}

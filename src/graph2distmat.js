@@ -28,7 +28,7 @@ export function graph2valuemats(graph, comps) {
 
     var	dists = all_pairs_distance(graph, comps);
     return dists.map(distmat2valuemat);
-};
+}
 
 export function valuemats_reorder(valuemats, leaforder, comps) {
     var orders = valuemats.map(leaforder);
@@ -39,4 +39,4 @@ export function valuemats_reorder(valuemats, leaforder, comps) {
 	});
     }
     return orders.reduce(flatten);
-};
+}

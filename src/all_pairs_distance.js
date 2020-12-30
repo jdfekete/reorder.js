@@ -18,7 +18,7 @@ export function all_pairs_distance(graph, comps) {
     for (var i = 0; i < comps.length; i++) 
 	distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
     return distances;
-};
+}
 
 /**
  * Returns a distance matrix, computed for the specified
@@ -56,8 +56,8 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
 	for (i=0; i<comp.length; i++)
 	    if (dist[i][k] != Infinity) {
 		for (j=0; j<comp.length; j++)
-		    if (dist[k][j] != Infinity
-			&& dist[i][j] > dist[i][k] + dist[k][j]) {
+		    if (dist[k][j] != Infinity &&
+			dist[i][j] > dist[i][k] + dist[k][j]) {
 			dist[i][j] = dist[i][k] + dist[k][j];
 			dist[j][i] = dist[i][j];
 		    }

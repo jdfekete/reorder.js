@@ -7,4 +7,4 @@ export function graph_empty_nodes(n) {
 
 export function graph_empty(n, directed) {
     return graph(graph_empty_nodes(n), [], directed);
-};
+}

@@ -6,4 +6,4 @@ export function stablepermute(list, indexes) {
 	p.reverse();
     }
     return p;
-};
+}

@@ -26,4 +26,4 @@ export function laplacian(graph, comp) {
     }
 
     return lap;
-};
+}

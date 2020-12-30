@@ -16,7 +16,7 @@ export function barycenter_order(graph, comps, max_iter) {
 		   orders[2]+o[2] ];
     }
     return orders;
-};
+}
 
 // Take the list of neighbor indexes and return the median according to 
 // P. Eades and N. Wormald, Edge crossings in drawings of bipartite graphs.
@@ -120,4 +120,4 @@ export function barycenter(graph, comp, max_iter) {
     }
 
     return [best_layer1, best_layer2, best_crossings];
-};
+}

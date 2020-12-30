@@ -28,4 +28,4 @@ export function condition(matrix) {
 
     }
     return ret;
-};
+}

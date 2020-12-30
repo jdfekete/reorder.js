@@ -9,7 +9,7 @@ export function meantranspose(v, j) {
     while(++i < n) m += (v[i][j] - m) / (i+1);
 
     return m;
-};
+}
 
 export function meancolumns(v) {
     var n = v.length;
@@ -26,5 +26,4 @@ export function meancolumns(v) {
     }
 
     return m;
-};
-
+}
