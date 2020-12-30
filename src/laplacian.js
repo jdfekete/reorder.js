@@ -1,4 +1,4 @@
-reorder.laplacian = function(graph, comp) {
+export function laplacian(graph, comp) {
     var n = comp.length,
 	lap = reorder.zeroes(n, n),
 	inv = inverse_permutation(comp),

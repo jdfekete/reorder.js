@@ -50,3 +50,12 @@ export { graph_empty_nodes, graph_empty } from './graph_empty';
 export { graph_random_erdos_renyi, graph_random } from './graph_random';
 export { hcluster } from './hcluster';
 export { intersect_sorted_ints } from './intersect';
+export { laplacian } from './laplacian';
+//export {
+//} from '';
+//export {
+//} from '';
+//export {
+//} from '';
+//export {
+//} from '';
