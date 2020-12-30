@@ -1,4 +1,4 @@
-export { zeroes, dot, length, normalize, mean } from './aliases';
+export { zeroes, dot, length, normalize, mean, transpose } from './aliases';
 export {
   all_pairs_distance,
   all_pairs_distance_floyd_warshall,
@@ -67,9 +67,7 @@ export {
 } from './sort_order';
 export { spectral_order } from './spectral_order';
 export { stablepermute } from './stablepermute';
-//export {
-//} from '';
-//export {
-//} from '';
+export { sum } from './sum';
+export { transposeSlice } from './transpose';
 //export {
 //} from '';
