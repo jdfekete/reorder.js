@@ -1,5 +1,4 @@
-export { adjacent_exchange } from './adjacent_exchange';
-export { zeroes, dot, length, normalize } from './aliases';
+export { zeroes, dot, length, normalize, mean } from './aliases';
 export {
   all_pairs_distance,
   all_pairs_distance_floyd_warshall,
@@ -52,8 +51,7 @@ export { hcluster } from './hcluster';
 export { intersect_sorted_ints } from './intersect';
 export { laplacian } from './laplacian';
 export { mat2graph } from './mat2graph';
-//export {
-//} from '';
+export { meantranspose, meancolumns } from './mean';
 //export {
 //} from '';
 //export {
