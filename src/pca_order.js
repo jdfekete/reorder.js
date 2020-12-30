@@ -22,7 +22,7 @@ function center(v) {
 
 
 // See http://en.wikipedia.org/wiki/Power_iteration
-reorder.pca1d = function(v, eps) {
+export function pca1d(v, eps) {
     var n = v.length;
 
     if (v.length === 0) return null;
@@ -32,6 +32,6 @@ reorder.pca1d = function(v, eps) {
     return reorder.poweriteration(cov, eps);
 };
 
-reorder.pca_order = function(v, eps) {
+export function pca_order(v, eps) {
     return reorder.sort_order(reorder.pca1d(v, eps));
 };
