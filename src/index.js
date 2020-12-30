@@ -60,7 +60,10 @@ export { permutation, inverse_permutation } from './permutation';
 export { permute, permute_inplace, permutetranspose } from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
 export { range } from './range';
-//export {
-//} from '';
+export {
+  sort_order,
+  sort_order_ascending,
+  sort_order_descending
+} from './sort_order';
 //export {
 //} from '';
