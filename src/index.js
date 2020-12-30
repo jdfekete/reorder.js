@@ -66,8 +66,7 @@ export {
   sort_order_descending
 } from './sort_order';
 export { spectral_order } from './spectral_order';
-//export {
-//} from '';
+export { stablepermute } from './stablepermute';
 //export {
 //} from '';
 //export {
