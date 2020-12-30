@@ -65,5 +65,12 @@ export {
   sort_order_ascending,
   sort_order_descending
 } from './sort_order';
+export { spectral_order } from './spectral_order';
+//export {
+//} from '';
+//export {
+//} from '';
+//export {
+//} from '';
 //export {
 //} from '';

@@ -1,4 +1,4 @@
-function spectral_order(graph, comps) {
+export function spectral_order(graph, comps) {
     var i, vec, comp, perm, order = [];
     if (! comps)
 	comps = graph.components();
@@ -11,5 +11,3 @@ function spectral_order(graph, comps) {
     }
     return order;
 }
-
-reorder.spectral_order = spectral_order;
