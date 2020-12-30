@@ -1,5 +1,5 @@
 require("science");
-require("../reorder.v1");
+var reorder = require("../dist/reorder.cjs");
 
 var vows = require("vows"),
     assert = require("assert");
