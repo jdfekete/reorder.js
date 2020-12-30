@@ -52,7 +52,7 @@ export function poweriteration_n(v, p, init, eps, start) {
     var n = v.length,
 	b = Array(p), 
 	i, j, k, l,
-	bk, dot, row,
+	bk, d, row,
 	tmp = Array(n),
 	s = 100,
 	eigenvalue = Array(p);
@@ -79,9 +79,9 @@ export function poweriteration_n(v, p, init, eps, start) {
 	    // Orthogonalize vector
 	    for (l = 0; l < k; l++) {
 		row = b[l];
-		dot = dot(bk, row);
+		d = dot(bk, row);
 		for (i = 0; i < n; i++)
-		    bk[i] -= dot*row[i];
+		    bk[i] -= d*row[i];
 	    }
 	    
 	    for(i=0; i<n; i++) {

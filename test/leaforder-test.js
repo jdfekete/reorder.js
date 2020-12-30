@@ -1,4 +1,3 @@
-require("science");
 var reorder = require("../dist/reorder.cjs");
 
 var vows = require("vows"),
@@ -88,7 +87,7 @@ suite.addBatch({
 	    
 	    remove_equal_dist(dm);
 	    //reorder.printmat(dm);
-	    var h1 = science.stats.hcluster()
+	    var h1 = reorder.hcluster()
 		    .linkage("complete")
 		    .distanceMatrix(dm)(array);
 
@@ -101,7 +100,7 @@ suite.addBatch({
 
 	    assert.deepEqual(d2, dm);
 
-	    var h2 = science.stats.hcluster()
+	    var h2 = reorder.hcluster()
 		    .linkage("complete")
 		    .distanceMatrix(d2)(a2);
 
