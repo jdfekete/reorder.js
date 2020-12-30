@@ -1,6 +1,7 @@
+import { inverse_permutation } from './permutation';
 
 /*jshint loopfunc:true */
-reorder.cuthill_mckee = function(graph, comp) {
+export function cuthill_mckee(graph, comp) {
     if (comp.length < 3)
 	return comp;
 
@@ -41,12 +42,11 @@ reorder.cuthill_mckee = function(graph, comp) {
     return perm;
 };
 
-reorder.reverse_cuthill_mckee = function(graph, comp) {
-    return reorder.cuthill_mckee(graph, comp).reverse();
+export function reverse_cuthill_mckee(graph, comp) {
+    return cuthill_mckee(graph, comp).reverse();
 };
 
-
-reorder.cuthill_mckee_order = function(graph, comps) {
+export function cuthill_mckee_order(graph, comps) {
     var i, comp, order = [];
     if (! comps) {
 	comps = graph.components();
@@ -54,12 +54,12 @@ reorder.cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.cuthill_mckee(graph, comp));
+	    cuthill_mckee(graph, comp));
     }
     return order;
 };
 
-reorder.reverse_cuthill_mckee_order = function(graph, comps) {
+export function reverse_cuthill_mckee_order(graph, comps) {
     var i, comp, order = [];
     if (! comps) {
 	comps = graph.components();
@@ -67,7 +67,7 @@ reorder.reverse_cuthill_mckee_order = function(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.reverse_cuthill_mckee(graph, comp));
+	    reverse_cuthill_mckee(graph, comp));
     }
     return order;
 };

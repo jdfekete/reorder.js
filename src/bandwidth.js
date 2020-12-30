@@ -1,6 +1,9 @@
-reorder.bandwidth = function(graph, order) {
+import { range } from './range';
+import { inverse_permutation } from './permutation';
+
+export function bandwidth(graph, order) {
     if (! order)
-	order = reorder.range(graph.nodes().length);
+	order = range(graph.nodes().length);
 
     var inv = inverse_permutation(order),
 	links = graph.links(),

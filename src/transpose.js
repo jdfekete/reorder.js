@@ -1,6 +1,4 @@
-reorder.transpose = science.lin.transpose;
-
-reorder.transposeSlice = function(a, start, end) {
+export function transposeSlice(a, start, end) {
     if (arguments.length < 3) {
 	end = a[0].length;
 	if (arguments.length < 2) {

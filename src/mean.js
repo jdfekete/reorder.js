@@ -1,6 +1,4 @@
-reorder.mean = science.stats.mean;
-
-reorder.meantranspose = function(v, j) {
+export function meantranspose(v, j) {
     var n = v.length;
     if (n === 0) return NaN;
     var o = v[0].length,
@@ -13,7 +11,7 @@ reorder.meantranspose = function(v, j) {
     return m;
 };
 
-reorder.meancolumns = function(v) {
+export function meancolumns(v) {
     var n = v.length;
     if (n === 0) return NaN;
     var o = v[0].length,

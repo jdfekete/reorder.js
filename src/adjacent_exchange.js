@@ -1,3 +1,5 @@
+import { inverse_permutation } from './permutation';
+
 // Accorging to
 // E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo. 1993. A
 // Technique for Drawing Directed Graphs. IEEE Trans. Softw. Eng. 19, 3
@@ -46,7 +48,7 @@ function count_out_crossings(graph, v, w, inv) {
  * @param {list} layer2 - the ordered list of nodes in layer 2
  * @returns {list} a tuple containing the new layer1, layer2, and crossings count
  */
-function adjacent_exchange(graph, layer1, layer2) {
+export function adjacent_exchange(graph, layer1, layer2) {
     layer1 = layer1.slice();
     layer2 = layer2.slice();
     var i, v, w, c0, c1,
@@ -91,5 +93,3 @@ function adjacent_exchange(graph, layer1, layer2) {
 
     return [layer1, layer2, improved];
 }
-
-reorder.adjacent_exchange = adjacent_exchange;

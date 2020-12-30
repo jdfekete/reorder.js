@@ -1,7 +1,7 @@
 function isNum(a, b) {
     return !(isNaN(a) || isNaN(b) || a==Infinity || b == Infinity);
 }
-reorder.distance = {
+export const distance = {
     euclidean: function(a, b) {
 	var i = a.length,
             s = 0,

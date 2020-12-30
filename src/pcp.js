@@ -1,6 +1,14 @@
-function array_to_dicts(data, axes) {
+import { range } from './range';
+import { debug } from './core';
+import { transpose } from './aliases';
+import { correlation } from './correlation';
+import { optimal_leaf_order } from './optimal_leaf_order';
+import { permute } from './permute';
+import { hcluster } from './hcluster';
+
+export function array_to_dicts(data, axes) {
     if (arguments.length < 2) 
-	axes = reorder.range(data[0].length);
+	axes = range(data[0].length);
     var ret = [], row, dict, i, j;
     for (i = 0; i < data.length; i++) {
 	row = data[i];
@@ -13,9 +21,7 @@ function array_to_dicts(data, axes) {
     return ret;
 }
 
-reorder.array_to_dicts = array_to_dicts;
-
-function dicts_to_array(dicts, keys) {
+export function dicts_to_array(dicts, keys) {
     if (arguments.length < 2)
 	keys = Object.keys(dicts[0]);
     var n = keys.length,
@@ -30,8 +36,6 @@ function dicts_to_array(dicts, keys) {
     }
     return array;
 }
-
-reorder.dicts_to_array = dicts_to_array;
 
 function abs_matrix(x) {
     return x.map(function(y) { return y.map(Math.abs); });
@@ -50,7 +54,7 @@ function pcp_flip_axes(perm, naxes, pcor) {
 	else
 	    signs.push(1);
     }
-    if (reorder.debug)
+    if (debug)
 	console.log(signs);
     sign = (negs > (perm.length-negs)) ? -1 : 1;
     if (sign==-1) {
@@ -60,30 +64,28 @@ function pcp_flip_axes(perm, naxes, pcor) {
     return signs;
 }
 
-function pcp(data, axes) {
+export function pcp(data, axes) {
     if (! axes)
-	axes = reorder.range(data[0].length);
+	axes = range(data[0].length);
     
-    var tdata = reorder.transpose(data),
-	pcor = reorder.correlation.pearsonMatrix(tdata),
+    var tdata = transpose(data),
+	pcor = correlation.pearsonMatrix(tdata),
 	abs_pcor = abs_matrix(pcor),
-	h1 = science.stats.hcluster()
+	h1 = hcluster()
 	    .linkage("complete")
 	    .distanceMatrix(abs_pcor)(tdata),
-	perm = reorder.optimal_leaf_order()
+	perm = optimal_leaf_order()
 	    .distanceMatrix(abs_pcor)(tdata),
-	naxes = reorder.permute(axes, perm);
-    tdata = reorder.permute(tdata, perm);
+	naxes = permute(axes, perm);
+    tdata = permute(tdata, perm);
 
     
     var signs = pcp_flip_axes(perm, naxes, pcor),
-	ndata = reorder.transpose(tdata);
+	ndata = transpose(tdata);
     return [ndata, perm, naxes, signs, pcor];
 }
 
-reorder.pcp = pcp;
-
-function parcoords(p) {
+export function parcoords(p) {
     p.detectDimensions()
 	.autoscale();
 
@@ -114,15 +116,15 @@ function parcoords(p) {
 	    i--;
 	}
     }
-    var pcor = reorder.correlation.pearsonMatrix(tdata),
+    var pcor = correlation.pearsonMatrix(tdata),
 	abs_pcor = abs_matrix(pcor),
-	h1 = science.stats.hcluster()
+	h1 = hcluster()
 	    .linkage("complete")
 	    .distanceMatrix(abs_pcor)(tdata),
-	perm = reorder.optimal_leaf_order()
+	perm = optimal_leaf_order()
 	    .distanceMatrix(abs_pcor)(tdata),
-	naxes = reorder.permute(dimensions, perm);
-    tdata = reorder.permute(tdata, perm);
+	naxes = permute(dimensions, perm);
+    tdata = permute(tdata, perm);
     
     var signs = pcp_flip_axes(perm, naxes, pcor);
     for (i = 0; i < signs.length; i++) {
@@ -132,5 +134,3 @@ function parcoords(p) {
     dimensions = discarded.reverse().concat(dimensions); // put back string columns
     return p.dimensions(dimensions);
 }
-
-reorder.parcoords = parcoords;

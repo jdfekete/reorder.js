@@ -1,6 +1,7 @@
+import { bfs } from './bfs';
 
 /*jshint loopfunc:true */
-bfs_order = function(graph, comps) {
+export const bfs_order = function(graph, comps) {
     if (! comps)
 	comps = graph.components();
 
@@ -8,7 +9,7 @@ bfs_order = function(graph, comps) {
 
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
-	reorder.bfs(graph, comp[0], function(v, c) {
+	bfs(graph, comp[0], function(v, c) {
 	    if (c >= 0 && v != c)
 		order.push(v);
 	});

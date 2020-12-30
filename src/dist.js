@@ -1,5 +1,7 @@
-reorder.dist = function() {
-    var distance = reorder.distance.euclidean;
+import { distance as distances } from './distance';
+
+export function dist() {
+    var distance = distances.euclidean;
 
     function dist(vectors) {
 	var n = vectors.length,
@@ -32,7 +34,7 @@ reorder.dist = function() {
     return dist;
 };
 
-reorder.distmax = function (distMatrix) {
+export function distmax(distMatrix) {
     var max = 0,
 	n=distMatrix.length,
 	i, j, row;
@@ -46,7 +48,7 @@ reorder.distmax = function (distMatrix) {
     return max;
 };
 
-reorder.distmin = function(distMatrix) {
+export function distmin(distMatrix) {
     var min = Infinity,
 	n=distMatrix.length,
 	i, j, row;
@@ -60,8 +62,7 @@ reorder.distmin = function(distMatrix) {
     return min;
 };
 
-
-reorder.dist_remove = function(dist, n, m) {
+export function dist_remove(dist, n, m) {
     if (arguments.length < 3)
 	m = n+1;
     var i;

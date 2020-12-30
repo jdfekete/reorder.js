@@ -1,4 +1,6 @@
-reorder.correlation = {
+import { zeroes } from './aliases';
+
+export const correlation = {
     pearson: function(a, b) {
 	var ma = science.stats.mean(a),
 	    mb = science.stats.mean(b),
@@ -18,12 +20,12 @@ reorder.correlation = {
     pearsonMatrix: function(matrix) {
 	var a, ma,
 	    i, j, dx, 
-	    cor = reorder.correlation.pearson,
+	    cor = correlation.pearson,
 	    n = matrix.length, ret, mx, sx, sx2;
 	if (n === 0)
 	    return NaN;
 	// do it the hard way for now, we'll optimize later
-	ret = reorder.zeroes(n, n);
+	ret = zeroes(n, n);
 	for (i = 0; i < (n-1); i++) {
 	    for (j = i+1; j < n; j++) {
 		var p = cor(matrix[i], matrix[j]);
@@ -32,8 +34,8 @@ reorder.correlation = {
 	}
 	return ret;
 	// mx = Array(n);
-	// sx = reorder.zeroes(n);
-	// sx2 = reorder.zeroes(n);
+	// sx = zeroes(n);
+	// sx2 = zeroes(n);
 	// for (i = 0; i < n; i++) {
 	//     mx[i] = science.stats.mean(matrix[i]);
 	// }

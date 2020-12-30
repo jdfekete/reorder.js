@@ -1,4 +1,7 @@
-reorder.graph = function(nodes, links, directed) {
+import { debug } from './core';
+import { cmp_number } from './utils';
+
+export function graph(nodes, links, directed) {
     var graph = {},
         linkDistance = 1,
         edges,
@@ -108,7 +111,7 @@ reorder.graph = function(nodes, links, directed) {
     graph.edges = function(node) { 
 	if (typeof node != "number") {
 	    node = node.index;
-	    if (reorder.debug) {
+	    if (debug) {
 		console.log('received node %d', node);
 	    }
 	}
@@ -229,7 +232,7 @@ reorder.graph = function(nodes, links, directed) {
 		}
 	    }
 	    if (ccomp.length) {
-		ccomp.sort(reorder.cmp_number);
+		ccomp.sort(cmp_number);
 		comps.push(ccomp);
 	    }
 	}

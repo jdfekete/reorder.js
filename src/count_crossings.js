@@ -1,13 +1,17 @@
+import { permutation, inverse_permutation } from './permutation';
+import { cmp_number } from './utils';
+import { zeroes } from './aliases';
+
 // Wilhelm Barth, Petra Mutzel, Michael Jünger: 
 // Simple and Efficient Bilayer Cross Counting.
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
 /*jshint loopfunc:true */
-function count_crossings(graph, north, south) {
+export function count_crossings(graph, north, south) {
     var i, j, n,
 	firstIndex, treeSize, tree, index, weightSum,
 	invert = false, crosscount;
 
-    var comp = reorder.permutation(graph.nodes().length);
+    var comp = permutation(graph.nodes().length);
 
     if (north===undefined) {
 	north = comp.filter(function(n) { return graph.outDegree(n) !== 0; });
@@ -38,7 +42,7 @@ function count_crossings(graph, north, south) {
 		    return south_inv[e.source.index];
 		});
 	}
-	n.sort(reorder.cmp_number);
+	n.sort(cmp_number);
 	southsequence = southsequence.concat(n);
     }
     
@@ -47,7 +51,7 @@ function count_crossings(graph, north, south) {
 	firstIndex <<= 1;
     treeSize = 2 * firstIndex - 1;
     firstIndex -= 1;
-    tree = reorder.zeroes(treeSize);
+    tree = zeroes(treeSize);
 
     crosscount = 0;
     for (i = 0; i < southsequence.length; i++) {
@@ -61,5 +65,3 @@ function count_crossings(graph, north, south) {
     }
     return crosscount;
 }
-
-reorder.count_crossings = count_crossings;

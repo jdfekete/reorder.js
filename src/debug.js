@@ -1,4 +1,4 @@
-reorder.displaymat = function(mat, rowperm, colperm) {
+export function displaymat(mat, rowperm, colperm) {
     var i, j, row, col, str;
     console.log('Matrix:');
     for (i = 0; i < mat.length; i++) {
@@ -12,7 +12,7 @@ reorder.displaymat = function(mat, rowperm, colperm) {
     }
 };
 
-reorder.printvec = function(row, prec, colperm, line) {
+export function printvec(row, prec, colperm, line) {
     var j;
     if (! line)
 	line = "";
@@ -27,28 +27,28 @@ reorder.printvec = function(row, prec, colperm, line) {
     console.log(line);
 };
 
-reorder.printmat = function(m, prec, rowperm, colperm) {
+export function printmat(m, prec, rowperm, colperm) {
     var i, j, row, line;
     if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
 	row = rowperm ? m[rowperm[i]] : m[i];
-	reorder.printvec(row, prec, colperm, i+": ");
+	printvec(row, prec, colperm, i+": ");
     }
 };
 
-reorder.assert = function(v, msg) {
+export function assert(v, msg) {
     if (! v) {
 	console.log(msg);
 	throw msg || "Assertion failed";
     }
 };
 
-reorder.printhcluster = function(cluster,indent) {
+export function printhcluster(cluster,indent) {
     if (cluster.left === null) 
 	return  Array(indent+1).join(' ')+"id: "+cluster.id;
 
     return Array(indent+1).join(' ')
 	+"id: "+cluster.id+", dist: "+cluster.dist+"\n"
-	+reorder.printhcluster(cluster.left, indent+1)+"\n"
-	+reorder.printhcluster(cluster.right, indent+1);
+	+printhcluster(cluster.left, indent+1)+"\n"
+	+printhcluster(cluster.right, indent+1);
 };

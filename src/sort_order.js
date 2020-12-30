@@ -1,11 +1,13 @@
-reorder.sort_order = function(v) {
-    return reorder.permutation(0, v.length).sort(
+import { permutation } from './permutation';
+
+export function sort_order(v) {
+    return permutation(0, v.length).sort(
 	function(a,b) { return v[a] - v[b]; });
 };
 
-reorder.sort_order_ascending = reorder.sort_order;
+export const sort_order_ascending = sort_order;
 
-reorder.sort_order_descending = function(v) {
-    return reorder.permutation(0, v.length).sort(
+export function sort_order_descending(v) {
+    return permutation(0, v.length).sort(
 	function(a,b) { return v[b] - v[a]; });
 };

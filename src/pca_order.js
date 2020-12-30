@@ -1,3 +1,8 @@
+import { meancolumns } from './mean';
+import { variancecovariance } from './covariance';
+import { poweriteration } from './poweriteration';
+import { sort_order } from './sort_order';
+
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
 function center(v) {
@@ -5,7 +10,7 @@ function center(v) {
 
     if (n === 0) return null;
     
-    var mean = reorder.meancolumns(v),
+    var mean = meancolumns(v),
 	o = mean.length,
 	v1 = Array(n),
 	i, j, row;
@@ -22,16 +27,16 @@ function center(v) {
 
 
 // See http://en.wikipedia.org/wiki/Power_iteration
-reorder.pca1d = function(v, eps) {
+export function pca1d(v, eps) {
     var n = v.length;
 
     if (v.length === 0) return null;
 
     v = center(v);
-    var cov = reorder.variancecovariance(v);
-    return reorder.poweriteration(cov, eps);
+    var cov = variancecovariance(v);
+    return poweriteration(cov, eps);
 };
 
-reorder.pca_order = function(v, eps) {
-    return reorder.sort_order(reorder.pca1d(v, eps));
+export function pca_order(v, eps) {
+    return sort_order(pca1d(v, eps));
 };

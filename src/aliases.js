@@ -1,4 +1,5 @@
-reorder.dot = science.lin.dot;
-reorder.length = science.lin.length;
-reorder.normalize = science.lin.normalize;
-reorder.zeroes = science.zeroes;
+import { lin, stats } from 'science';
+
+export { zeroes } from 'science';
+export const { dot, length, normalize, transpose } = lin;
+export const { mean } = stats;

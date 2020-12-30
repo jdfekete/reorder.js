@@ -1,4 +1,4 @@
-function sum(v) {
+export function sum(v) {
     var i = v.length,
 	s = 0;
     while(i-- > 0)
@@ -6,5 +6,3 @@ function sum(v) {
 	    s += v[i];
     return s;
 }
-
-reorder.sum = sum;

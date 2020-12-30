@@ -1,4 +1,4 @@
-reorder.range = function(start, stop, step) {
+export function range(start, stop, step) {
     if (arguments.length < 3) {
 	step = 1;
 	if (arguments.length < 2) {

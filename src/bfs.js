@@ -1,4 +1,6 @@
-reorder.bfs = function(graph, v, fn) {
+import { flatten, cmp_number } from './utils';
+
+export function bfs(graph, v, fn) {
     var q = new Queue(),
 	discovered = {}, i, e, v2, edges;
     q.push(v);
@@ -21,21 +23,21 @@ reorder.bfs = function(graph, v, fn) {
     }
 };
 
-reorder.bfs_distances = function(graph, v) {
+export function bfs_distances(graph, v) {
     var dist = {};
     dist[v] = 0;
-    reorder.bfs(graph, v, function(v, c) {
+    bfs(graph, v, function(v, c) {
 	if (c >= 0 && v != c)
 	    dist[c] = dist[v]+1;
     });
     return dist;
 };
 
-reorder.all_pairs_distance_bfs = function(graph, comps) {
+export function all_pairs_distance_bfs(graph, comps) {
     if (! comps)
 	comps = [ graph.nodes_indices() ];
-    var nodes = comps.reduce(reorder.flatten)
-	    .sort(reorder.cmp_number),
+    var nodes = comps.reduce(flatten)
+	    .sort(cmp_number),
 	mat = Array(nodes.length),
 	i, j, dist;
 
@@ -43,7 +45,7 @@ reorder.all_pairs_distance_bfs = function(graph, comps) {
 	mat[i] = Array(nodes.length);
 
     for (i = 0; i < nodes.length; i++) {
-	dist = reorder.bfs_distances(graph, i);
+	dist = bfs_distances(graph, i);
 	for (j in dist) {
 	    mat[i][j] = dist[j];
 	    mat[j][i] = dist[j];

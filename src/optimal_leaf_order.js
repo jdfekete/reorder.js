@@ -1,3 +1,9 @@
+import { distance as distances } from './distance';
+import { debug } from './core';
+import { hcluster } from './hcluster';
+import { printhcluster } from './debug';
+import { dist } from './dist';
+
 /**
  * optimal dendrogram ordering
  * 
@@ -13,9 +19,9 @@
  * http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
  */
 
-reorder.optimal_leaf_order = function() {
+export function optimal_leaf_order() {
     var distanceMatrix = null,
-        distance = reorder.distance.euclidean,
+        distance = distances.euclidean,
 	linkage = "complete",
         leavesMap = {},
         orderMap = {};
@@ -93,8 +99,8 @@ reorder.optimal_leaf_order = function() {
 	    left = leaves(v.left),
 	    right = leaves(v.right);
 	
-	if (reorder.debug)
-	    console.log(reorder.printhcluster(v,0));
+	if (debug)
+	    console.log(printhcluster(v,0));
 
 	for (var i = 0; i < left.length; i++) {
 	    for (var j = 0; j < right.length; j++) {
@@ -111,11 +117,11 @@ reorder.optimal_leaf_order = function() {
 
     function optimal_leaf_order(matrix) {
 	if (distanceMatrix === null)
-	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
-	var hcluster = science.stats.hcluster()
+	    distanceMatrix = (dist().distance(distance))(matrix);
+	var cluster = hcluster()
 		.linkage(linkage)
 		.distanceMatrix(distanceMatrix);
-	return orderFull(hcluster(matrix));
+	return orderFull(cluster(matrix));
     }
     optimal_leaf_order.order = orderFull;
     optimal_leaf_order.reorder = optimal_leaf_order;

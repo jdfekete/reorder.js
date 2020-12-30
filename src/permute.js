@@ -1,13 +1,12 @@
-function permute_copy(list, perm) {
+export function permute(list, perm) {
     var m = perm.length;
     var copy = list.slice();
     while (m--)
 	copy[m] = list[perm[m]];
     return copy;
 }
-reorder.permute = permute_copy;
 
-function permute_inplace(list, perm) {
+export function permute_inplace(list, perm) {
     var i, j, v, tmp;
 
     //list = list.slice();
@@ -30,12 +29,11 @@ function permute_inplace(list, perm) {
     }
     return list;
 }
-reorder.permute_inplace = permute_inplace;
 
-reorder.permutetranspose = function(array, indexes) {
+export function permutetranspose(array, indexes) {
     var m = array.length;
     while (m-- > 0)
-	array[m] = reorder.permute(array[m], indexes);
+	array[m] = permute(array[m], indexes);
     return array;
 };
 

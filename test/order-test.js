@@ -1,5 +1,4 @@
-require("science");
-require("../reorder.v1");
+var reorder = require("../dist/reorder.cjs");
 var seedrandom = require('seedrandom');
 
 var vows = require("vows"),

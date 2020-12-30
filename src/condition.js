@@ -1,4 +1,4 @@
-reorder.condition = function(matrix) {
+export function condition(matrix) {
     var i, j, min, max, v, s, row,
 	ret = [];
 
