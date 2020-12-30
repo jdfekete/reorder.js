@@ -1,3 +1,4 @@
+import { infinities } from './utils';
 /**
  * Returns a list of distance matrices, computed for the specified
  * connected components of a graph, or all the components if none is
@@ -26,7 +27,7 @@ export function all_pairs_distance(graph, comps) {
  * nodes in the list of connected components.
  */
 export function all_pairs_distance_floyd_warshall(graph, comp) {
-    var dist = reorder.infinities(comp.length, comp.length),
+    var dist = infinities(comp.length, comp.length),
 	i, j, k, inv;
     // Floyd Warshall, 
     // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
@@ -79,7 +80,7 @@ export function floyd_warshall_with_path(graph, comp) {
     if (! comp)
 	comp = graph.components()[0];
 
-    var dist = reorder.infinities(comp.length, comp.length),
+    var dist = infinities(comp.length, comp.length),
 	next = Array(comp.length),
 	directed = graph.directed(),
 	i, j, k, inv;

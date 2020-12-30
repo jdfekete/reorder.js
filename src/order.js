@@ -1,7 +1,13 @@
+import { distance } from './distance';
+import { optimal_leaf_order } from './optimal_leaf_order';
+import { debug } from './core';
+import { dist_remove, distmax, dist } from './dist';
+import { assert, printmat } from './debug';
+import { range } from './range';
 
 export function order() {
-    var distance = reorder.distance.euclidean,
-        ordering = reorder.optimal_leaf_order,
+    var distance = distance.euclidean,
+        ordering = optimal_leaf_order,
         linkage = "complete",
         distanceMatrix = null,
         vector,
@@ -11,8 +17,8 @@ export function order() {
 
 
     function _reset() {
-        distance = reorder.distance.euclidean;
-        ordering = reorder.optimal_leaf_order;
+        distance = distance.euclidean;
+        ordering = optimal_leaf_order;
         linkage = "complete";
         distanceMatrix = null;
         vector = null;
@@ -72,21 +78,21 @@ export function order() {
         if (i === 0 && j == vector.length)
             return _order_except();
 
-        if (reorder.debug)
+        if (debug)
             console.log("i0="+i0+" j0="+j0);
 
         if (distanceMatrix !== null) {
             if (j0 !== vector.length)
-                reorder.dist_remove(distanceMatrix, j0, vector.length);
+                dist_remove(distanceMatrix, j0, vector.length);
             if (i0 > 0)
-                reorder.dist_remove(distanceMatrix, 0, i0);
+                dist_remove(distanceMatrix, 0, i0);
         }
         else {
             _compute_dist();
         }
         // Apply constraints on the min/max indices
 
-        var max = reorder.distmax(distanceMatrix);
+        var max = distmax(distanceMatrix);
         if (i0 < i) {
             // row i0 should be far away from each rows so move it away
             // by changing the distance matrix, adding "max" to each
@@ -123,18 +129,18 @@ export function order() {
             if (perm[0] !== 0)
                 perm.reverse();
             if (j0 > j) {
-                reorder.assert(perm[0] === 0 && perm[perm.length-1]==perm.length-1,
+                assert(perm[0] === 0 && perm[perm.length-1]==perm.length-1,
                        "Invalid constrained permutation endpoints");
             }
             else {
-                reorder.assert(perm[0] === 0,
+                assert(perm[0] === 0,
                        "Invalid constrained permutation start");
             }
         }
         else if (j0 > j) {
             if (perm[perm.length-1] !== (perm.length-1))
                 perm = perm.reverse();
-            reorder.assert(perm[perm.length-1] == perm.length-1,
+            assert(perm[perm.length-1] == perm.length-1,
                            "Invalid constrained permutation end");
         }
         if (i0 !== 0) {
@@ -143,7 +149,7 @@ export function order() {
                 .concat(perm.map(function(v) { return v + i0; }));
         }
         if (orig.length > j0) {
-            perm = perm.concat(reorder.range(j0, orig.length));
+            perm = perm.concat(range(j0, orig.length));
         }
         return perm;
     }
@@ -168,9 +174,9 @@ export function order() {
         for (k = except.length-1; k > 0 ; k -= 2) {
             low = except[k-1];
             high = except[k];
-            distanceMatrix = reorder.dist_remove(distanceMatrix, low+1, high-1);
+            distanceMatrix = dist_remove(distanceMatrix, low+1, high-1);
             vector.splice(low+1, high-low-2);
-            if (reorder.debug)
+            if (debug)
                 console.log("Except["+low+", "+high+"]");
             if (distanceMatrix[low][low+1] !== 0) {
                 // boundaries are equal, they will survive
@@ -196,12 +202,12 @@ export function order() {
                 // reversed order
                 Array.prototype.splice
                     .apply(perm,
-                           [pos, 0].concat(reorder.range(high-2,low,-1)));
+                           [pos, 0].concat(range(high-2,low,-1)));
             }
             else if (perm[pos+1] == (high-1)) {
                 Array.prototype.splice
                     .apply(perm,
-                           [pos+1, 0].concat(reorder.range(low+1,high-1)));
+                           [pos+1, 0].concat(range(low+1,high-1)));
             }
             else {
                 throw "Range not respected";
@@ -249,7 +255,7 @@ export function order() {
                     }
                     e.unshift(l);
                     // remove equivalent item from dist and vector
-                    distanceMatrix = reorder.dist_remove(distanceMatrix, l);
+                    distanceMatrix = dist_remove(distanceMatrix, l);
                     vector.splice(l, 1);
                 }
                 else if (row[l] < 0)
@@ -339,15 +345,15 @@ export function order() {
     }
 
     function _order() {
-        if (reorder.debug > 1)
-            reorder.printmat(distanceMatrix);
-        if (reorder.debug > 2)
-            reorder.printmat(vector);
+        if (debug > 1)
+            printmat(distanceMatrix);
+        if (debug > 2)
+            printmat(vector);
 
         var perm = ordering()
                 .linkage(linkage)
                 .distanceMatrix(distanceMatrix)(vector);
-        if (reorder.debug)
+        if (debug)
             console.log("Permutation: "+perm);
 
         return perm;
@@ -362,7 +368,7 @@ export function order() {
 
     function _compute_dist() {
         if (distanceMatrix === null)
-            distanceMatrix = (reorder.dist().distance(distance))(vector);
+            distanceMatrix = (dist().distance(distance))(vector);
         return distanceMatrix;
     }
 
@@ -397,7 +403,7 @@ export function order() {
     };
 
     function _orderExcept(vector, i, j) {
-        var distanceMatrix = (reorder.dist().distance(distance))(vector);
+        var distanceMatrix = (dist().distance(distance))(vector);
         var row, k, l, rev = false, args, pos = -1;
 
         // Set a null distance to stick i/i+1 together
@@ -417,7 +423,7 @@ export function order() {
             perm.reverse();
             pos = perm.length-pos-1;
         }
-        args = [pos+1, 0].concat(reorder.range(i+1,j-1));
+        args = [pos+1, 0].concat(range(i+1,j-1));
         Array.prototype.splice.apply(perm, args);
         return perm;
     }

@@ -1,10 +1,13 @@
+import { zeroes } from './aliases';
+import { assert } from './debug';
+
 export function laplacian(graph, comp) {
     var n = comp.length,
-	lap = reorder.zeroes(n, n),
+	lap = zeroes(n, n),
 	inv = inverse_permutation(comp),
 	i, j, k, row, sum, edges, v, e, other;
 
-    reorder.assert(! graph.directed(), "Laplacian only for undirected graphs");
+    assert(! graph.directed(), "Laplacian only for undirected graphs");
     for (i = 0; i < n; i++) {
 	v = comp[i];
 	row = lap[i];

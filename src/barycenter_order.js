@@ -1,3 +1,6 @@
+import { cmp_number } from './utils';
+import { debug } from './core';
+
 export function barycenter_order(graph, comps, max_iter) {
     var orders = [[], [], 0];
     // Compute the barycenter heuristic on each connected component
@@ -5,7 +8,7 @@ export function barycenter_order(graph, comps, max_iter) {
 	comps = graph.components();
     }
     for (var i = 0; i < comps.length; i++) {
-	var o = reorder.barycenter(graph, comps[i], max_iter);
+	var o = barycenter(graph, comps[i], max_iter);
 	orders = [ orders[0].concat(o[0]),
 		   orders[1].concat(o[1]),
 		   orders[2]+o[2] ];
@@ -23,7 +26,7 @@ function median(neighbors) {
 	return neighbors[0];
     if (neighbors.length === 2)
 	return (neighbors[0]+neighbors[1])/2;
-    neighbors.sort(reorder.cmp_number);
+    neighbors.sort(cmp_number);
     if (neighbors.length % 2)
 	return neighbors[(neighbors.length-1)/2];
     var rm = neighbors.length/2,
@@ -110,7 +113,7 @@ export function barycenter(graph, comp, max_iter) {
 	    max_iter = Math.max(max_iter, iter + 2); // we improved so go on
 	}
     }
-    if (reorder.debug) {
+    if (debug) {
 	console.log('Best iter: '+best_iter);
     }
 

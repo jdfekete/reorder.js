@@ -1,7 +1,7 @@
 /* Fisher-Yates shuffle.
    See http://bost.ocks.org/mike/shuffle/
  */
-reorder.randomPermute = function(array, i, j) {
+export function randomPermute(array, i, j) {
     if (arguments.length < 3) {
 	j = array.length;
 	if (arguments.length < 2) {
@@ -18,11 +18,11 @@ reorder.randomPermute = function(array, i, j) {
     return array;
 };
 
-reorder.randomPermutation = function(n) {
+export function randomPermutation(n) {
     return reorder.randomPermute(reorder.permutation(n));
 };
 
-reorder.random_array = function(n, min, max) {
+export function random_array(n, min, max) {
     var ret = Array(n);
     if (arguments.length == 1) {
 	while(n) ret[--n] = Math.random();
@@ -36,7 +36,7 @@ reorder.random_array = function(n, min, max) {
     return ret;
 };
 
-reorder.random_matrix = function(p, n, m, sym) {
+export function random_matrix(p, n, m, sym) {
     if (! m)
 	m = n;
     if (n != m)

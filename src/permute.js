@@ -33,7 +33,7 @@ export function permute_inplace(list, perm) {
 export function permutetranspose(array, indexes) {
     var m = array.length;
     while (m-- > 0)
-	array[m] = reorder.permute(array[m], indexes);
+	array[m] = permute(array[m], indexes);
     return array;
 };
 

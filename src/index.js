@@ -59,6 +59,12 @@ export { array_to_dicts, dicts_to_array, pcp, parcoords } from './pcp';
 export { permutation, inverse_permutation } from './permutation';
 export { permute, permute_inplace, permutetranspose } from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
+export {
+  randomPermute,
+  randomPermutation,
+  random_array,
+  random_matrix
+} from './random';
 export { range } from './range';
 export {
   sort_order,

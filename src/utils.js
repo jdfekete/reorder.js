@@ -1,11 +1,11 @@
-// Use as: [4,3,2].sort(reorder.cmp_number_asc);
+// Use as: [4,3,2].sort(cmp_number_asc);
 export function cmp_number_asc(a,b) { return a-b; };
 export const cmp_number = cmp_number_asc;
 
-// Use as: [4,3,2].sort(reorder.cmp_number_desc);
+// Use as: [4,3,2].sort(cmp_number_desc);
 export function cmp_number_desc(a,b) { return b-a; };
 
-// Use as: [[4,3],[2]].reduce(reorder.flaten);
+// Use as: [[4,3],[2]].reduce(flaten);
 export function flatten(a,b) { return a.concat(b); };
 
 // Constructs a multi-dimensional array filled with Infinity.
@@ -17,7 +17,7 @@ export function infinities(n) {
 	    a[i] = Infinity;
     else
 	while (++i < n)
-	    a[i] = reorder.infinities.apply(
+	    a[i] = infinities.apply(
 		this, Array.prototype.slice.call(arguments, 1));
     return a;
 };

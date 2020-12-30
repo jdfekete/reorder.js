@@ -1,3 +1,8 @@
+import { distance } from './distance';
+import { debug } from './core';
+import { printhcluster } from './debug';
+import { dist } from './dist';
+
 /**
  * optimal dendrogram ordering
  * 
@@ -15,7 +20,7 @@
 
 export function optimal_leaf_order() {
     var distanceMatrix = null,
-        distance = reorder.distance.euclidean,
+        distance = distance.euclidean,
 	linkage = "complete",
         leavesMap = {},
         orderMap = {};
@@ -93,8 +98,8 @@ export function optimal_leaf_order() {
 	    left = leaves(v.left),
 	    right = leaves(v.right);
 	
-	if (reorder.debug)
-	    console.log(reorder.printhcluster(v,0));
+	if (debug)
+	    console.log(printhcluster(v,0));
 
 	for (var i = 0; i < left.length; i++) {
 	    for (var j = 0; j < right.length; j++) {
@@ -111,7 +116,7 @@ export function optimal_leaf_order() {
 
     function optimal_leaf_order(matrix) {
 	if (distanceMatrix === null)
-	    distanceMatrix = (reorder.dist().distance(distance))(matrix);
+	    distanceMatrix = (dist().distance(distance))(matrix);
 	var hcluster = science.stats.hcluster()
 		.linkage(linkage)
 		.distanceMatrix(distanceMatrix);

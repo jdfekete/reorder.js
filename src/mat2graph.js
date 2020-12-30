@@ -1,3 +1,5 @@
+import { graph } from './graph';
+
 export function mat2graph(mat, directed) {
     var n = mat.length,
 	nodes = [],
@@ -22,7 +24,7 @@ export function mat2graph(mat, directed) {
 	    }
 	}
     }
-    return reorder.graph(nodes, links, directed)
+    return graph(nodes, links, directed)
 	.linkDistance(function(l, i) {
 	    return 1 + max_value - l.value;
 	})

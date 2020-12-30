@@ -1,3 +1,7 @@
+import { zeroes } from './aliases';
+import { array1d } from './utils';
+import { debug } from './core';
+import { sort_order } from './sort_order';
 //Corresponence Analysis
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
 
@@ -20,7 +24,7 @@ function sumrows(v) {
 function sumcols(v) {
     var n = v.length,
 	o = v[0].length,
-	sumcol = reorder.zeroes(o),
+	sumcol = zeroes(o),
 	i, j, row;
 
     for (i = 0; i < n; i++) {
@@ -49,11 +53,11 @@ function decorana(dat) {
     
     adotj = sumcols(dat);
     aidot = sumrows(dat);
-    //console.log('adotj='); reorder.printvec(adotj);
-    //console.log('aidot='); reorder.printvec(aidot);
+    //console.log('adotj='); printvec(adotj);
+    //console.log('aidot='); printvec(aidot);
 
-    s1 = eigy(reorder.array1d(nr, 1.0),
-	      reorder.array1d(nc, 1.0),
+    s1 = eigy(array1d(nr, 1.0),
+	      array1d(nc, 1.0),
 	      nr, nc, dat, aidot, adotj);
     if (s1.eig < ZEROEIG) {
         s1.rows = s1.cols = [];
@@ -139,10 +143,10 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
 	a11, a12, a22, a23, a33, a34, a44, 
 	res, ax1, ax2, ax3, ax4,
 	b13, b14, b24, row,
-	y2 = reorder.zeroes(n),
-	y3 = reorder.zeroes(n),
-	y4 = reorder.zeroes(n),
-	y5 = reorder.zeroes(n),
+	y2 = zeroes(n),
+	y3 = zeroes(n),
+	y4 = zeroes(n),
+	y5 = zeroes(n),
 	tol;
 
     tot = 0.0;
@@ -269,7 +273,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
     }
     // 200
     //console.log('eigenvalue',a11.toFixed(6));
-    if (a12 > tol && reorder.debug > 0) {
+    if (a12 > tol && debug > 0) {
 	console.log("residual bigger than tolerance on axis 1");
     }
     var aymax = y[0],
@@ -366,8 +370,8 @@ export const ca_decorana = decorana;
 export const ca = decorana;
 
 export function ca_order(dat) {
-    var res = reorder.ca(dat);
-    return { rows: reorder.sort_order(res.rows),
-	     cols: reorder.sort_order(res.cols),
+    var res = ca(dat);
+    return { rows: sort_order(res.rows),
+	     cols: sort_order(res.cols),
 	     details: res };
 };
