@@ -59,8 +59,7 @@ export { array_to_dicts, dicts_to_array, pcp, parcoords } from './pcp';
 export { permutation, inverse_permutation } from './permutation';
 export { permute, permute_inplace, permutetranspose } from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
-//export {
-//} from '';
+export { range } from './range';
 //export {
 //} from '';
 //export {
