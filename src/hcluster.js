@@ -1,9 +1,6 @@
-if (typeof science == "undefined") {
-    science = {version: "1.9.1"}; // semver [jdf] should be defined
-    science.stats = {};
-}
-
-science.stats.hcluster = function() {
+// This is a modified implementation of hcluster derived from:
+// https://github.com/jasondavies/science.js/blob/master/src/stats/hcluster.js
+export function hcluster() {
   var distance = reorder.distance.euclidean,
       linkage = "single", // single, complete or average
       distMatrix = null;
