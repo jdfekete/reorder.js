@@ -12,8 +12,8 @@
       "type": "git",
       "url": "http://github.com/jdfekete/reorder.js.git"
    },
-   "unpkg": "reorder.v1.min.js",
-   "jsdelivr": "reorder.v1.min.js",
+   "unpkg": "dist/reorder.umd.js",
+   "jsdelivr": "dist/reorder.umd.js",
    "main": "dist/reorder.cjs.js",
    "module": "dist/reorder.esm.js",
    "browser": "dist/reorder.umd.js",
