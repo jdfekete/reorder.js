@@ -1,4 +1,6 @@
 import { infinities } from './utils';
+import { inverse_permutation } from './permutation';
+
 /**
  * Returns a list of distance matrices, computed for the specified
  * connected components of a graph, or all the components if none is

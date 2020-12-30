@@ -1,3 +1,4 @@
+import { inverse_permutation } from './permutation';
 
 /*jshint loopfunc:true */
 export function cuthill_mckee(graph, comp) {

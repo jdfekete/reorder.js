@@ -1,4 +1,5 @@
 import { cmp_number } from './utils';
+import { inverse_permutation } from './permutation';
 import { debug } from './core';
 
 export function barycenter_order(graph, comps, max_iter) {

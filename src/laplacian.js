@@ -1,5 +1,6 @@
 import { zeroes } from './aliases';
 import { assert } from './debug';
+import { inverse_permutation } from './permutation';
 
 export function laplacian(graph, comp) {
     var n = comp.length,

@@ -1,4 +1,4 @@
-import { permutation } from './permutation';
+import { permutation, inverse_permutation } from './permutation';
 import { cmp_number } from './utils';
 import { zeroes } from './aliases';
 
