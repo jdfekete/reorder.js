@@ -7,7 +7,7 @@ function normalize(v) {
     return norm;
 }
 
-reorder.poweriteration = function(v, eps, init) {
+export function poweriteration(v, eps, init) {
     if (! eps) 
 	eps = 1e-9;
 	
@@ -40,7 +40,7 @@ reorder.poweriteration = function(v, eps, init) {
     return tmp;
 };
 
-reorder.poweriteration_n = function(v, p, init, eps, start) {
+export function poweriteration_n(v, p, init, eps, start) {
     if (! eps) 
 	eps = 1e-9;
 	
