@@ -1,4 +1,4 @@
-import { graph_empty } from './graph_empty';
+import { graph_empty, graph_empty_nodes } from './graph_empty';
 import { complete_graph } from './graph_complete';
 import { graph } from './graph';
 
