@@ -1,4 +1,3 @@
-require("science");
 var reorder = require("../dist/reorder.cjs");
 
 

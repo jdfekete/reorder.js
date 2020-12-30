@@ -1,4 +1,3 @@
-require("science");
 Queue = require('tiny-queue');
 var reorder = require("../dist/reorder.cjs");
 
