@@ -49,3 +49,4 @@ export { graph_connect } from './graph_connect';
 export { graph_empty_nodes, graph_empty } from './graph_empty';
 export { graph_random_erdos_renyi, graph_random } from './graph_random';
 export { hcluster } from './hcluster';
+export { intersect_sorted_ints } from './intersect';
