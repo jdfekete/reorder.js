@@ -1,3 +1,6 @@
+import { permutation } from './permutation';
+import { zeroes } from './aliases';
+
 /* Fisher-Yates shuffle.
    See http://bost.ocks.org/mike/shuffle/
  */
@@ -19,7 +22,7 @@ export function randomPermute(array, i, j) {
 };
 
 export function randomPermutation(n) {
-    return reorder.randomPermute(reorder.permutation(n));
+    return randomPermute(permutation(n));
 };
 
 export function random_array(n, min, max) {
@@ -43,7 +46,7 @@ export function random_matrix(p, n, m, sym) {
 	sym = false;
     else if (! sym)
 	sym = true;
-    var mat = reorder.zeroes(n, m), i, j, cnt;
+    var mat = zeroes(n, m), i, j, cnt;
 
     if (sym) {
 	for (i = 0; i < n; i++) {

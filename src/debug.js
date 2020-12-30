@@ -12,7 +12,7 @@ export function displaymat(mat, rowperm, colperm) {
     }
 };
 
-export function printve(row, prec, colperm, line) {
+export function printvec(row, prec, colperm, line) {
     var j;
     if (! line)
 	line = "";
@@ -32,7 +32,7 @@ export function printmat(m, prec, rowperm, colperm) {
     if (! prec) prec=4;
     for (i = 0; i < m.length; i++) {
 	row = rowperm ? m[rowperm[i]] : m[i];
-	reorder.printvec(row, prec, colperm, i+": ");
+	printvec(row, prec, colperm, i+": ");
     }
 };
 
@@ -49,6 +49,6 @@ export function printhcluster(cluster,indent) {
 
     return Array(indent+1).join(' ')
 	+"id: "+cluster.id+", dist: "+cluster.dist+"\n"
-	+reorder.printhcluster(cluster.left, indent+1)+"\n"
-	+reorder.printhcluster(cluster.right, indent+1);
+	+printhcluster(cluster.left, indent+1)+"\n"
+	+printhcluster(cluster.right, indent+1);
 };

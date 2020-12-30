@@ -1,3 +1,5 @@
+import { zeroes } from './aliases';
+
 export function graph2mat(graph, directed) {
     var nodes = graph.nodes(),
 	links = graph.links(),
@@ -23,7 +25,7 @@ export function graph2mat(graph, directed) {
 		cols--;
 	}
 	//console.log("Rows: "+rows+" Cols: "+cols);
-	mat = reorder.zeroes(rows, cols);
+	mat = zeroes(rows, cols);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];
@@ -31,7 +33,7 @@ export function graph2mat(graph, directed) {
 	}
     }
     else {
-	mat = reorder.zeroes(n, n);
+	mat = zeroes(n, n);
 	
 	for (i = 0; i < links.length; i++) {
 	    l = links[i];

@@ -22,7 +22,7 @@ export function variancecovariance(v) {
     }
     for (i = 0; i < o; i++) {
 	for (j = i; j < o; j++)
-	    cov[i][j] = cov[j][i] = reorder.covariancetranspose(v, i, j);
+	    cov[i][j] = cov[j][i] = covariancetranspose(v, i, j);
     }
     return cov;
 };

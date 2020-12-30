@@ -27,7 +27,7 @@ export {
 } from './cuthill_mckee_order';
 export {
   displaymat,
-  printve,
+  printvec,
   printmat,
   assert,
   printhcluster

@@ -1,5 +1,7 @@
+import { distance } from './distance';
+
 export function dist() {
-    var distance = reorder.distance.euclidean;
+    var distance = distance.euclidean;
 
     function dist(vectors) {
 	var n = vectors.length,

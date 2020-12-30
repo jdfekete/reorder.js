@@ -1,4 +1,9 @@
-// Compute te Fiedler vector, the smallest non-null eigenvector of a matrix.
+import { debug } from './core';
+import { poweriteration, poweriteration_n } from './poweriteration';
+import { array1d } from './utils';
+import { random_array } from './random';
+
+// Compute the Fiedler vector, the smallest non-null eigenvector of a matrix.
 // See:
 // Yehuda Koren, Liran Carmel, David Harel
 // ACE: A Fast Multiscale Eigenvector Computation for Drawing Huge Graphs
@@ -21,7 +26,7 @@ function gershgorin_bound(B) {
 	if (t > max)
 	    max = t;
     }
-    if (reorder.debug) {
+    if (debug) {
 	console.log('gershgorin_bound=%d', max);
     }
     return max;
@@ -42,7 +47,7 @@ export function fiedler_vector(B, eps) {
 		row[j] = - row[j];
 	}
     }
-    var init = [ reorder.array1d(n, 1), reorder.random_array(n) ],
-	eig = reorder.poweriteration_n(Bhat, 2, init, eps, 1);
+    var init = [ array1d(n, 1), random_array(n) ],
+	eig = poweriteration_n(Bhat, 2, init, eps, 1);
     return eig[0][1];
 }

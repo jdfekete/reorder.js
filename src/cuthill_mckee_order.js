@@ -42,7 +42,7 @@ export function cuthill_mckee(graph, comp) {
 };
 
 export function reverse_cuthill_mckee(graph, comp) {
-    return reorder.cuthill_mckee(graph, comp).reverse();
+    return cuthill_mckee(graph, comp).reverse();
 };
 
 export function cuthill_mckee_order(graph, comps) {
@@ -53,7 +53,7 @@ export function cuthill_mckee_order(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.cuthill_mckee(graph, comp));
+	    cuthill_mckee(graph, comp));
     }
     return order;
 };
@@ -66,7 +66,7 @@ export function reverse_cuthill_mckee_order(graph, comps) {
     for (i = 0; i < comps.length; i++) {
 	comp = comps[i];
 	order = order.concat(
-	    reorder.reverse_cuthill_mckee(graph, comp));
+	    reverse_cuthill_mckee(graph, comp));
     }
     return order;
 };

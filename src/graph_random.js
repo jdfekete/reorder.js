@@ -1,8 +1,12 @@
+import { graph_empty } from './graph_empty';
+import { complete_graph } from './graph_complete';
+import { graph } from './graph';
+
 export function graph_random_erdos_renyi(n, p, directed) {
     if (p <= 0)
-	return reorder.graph_empty(n, directed);
+	return graph_empty(n, directed);
     else if (p >= 1)
-	return reorder.graph_complete(n, directed);
+	return complete_graph(n, directed);
 
     var nodes = graph_empty_nodes(n),
 	links = [],
@@ -39,7 +43,7 @@ export function graph_random_erdos_renyi(n, p, directed) {
 		links.push({source: v, target: w});
 	}
     }
-    return reorder.graph(nodes, links, directed).init();
+    return graph(nodes, links, directed).init();
 };
 
 export const graph_random = graph_random_erdos_renyi;

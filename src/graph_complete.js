@@ -1,3 +1,5 @@
+import { graph } from './graph';
+
 export function complete_graph(n, directed) {
     var nodes = graph_empty_nodes(n),
 	links = [],
@@ -17,5 +19,5 @@ export function complete_graph(n, directed) {
 		links.push({source: i, target: j });
 	}
     }
-    return reorder.graph(nodes, links, directed).init();
+    return graph(nodes, links, directed).init();
 };

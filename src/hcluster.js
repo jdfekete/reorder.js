@@ -1,7 +1,9 @@
+import { distance } from './distance';
+
 // This is a modified implementation of hcluster derived from:
 // https://github.com/jasondavies/science.js/blob/master/src/stats/hcluster.js
 export function hcluster() {
-  var distance = reorder.distance.euclidean,
+  var distance = distance.euclidean,
       linkage = "single", // single, complete or average
       distMatrix = null;
 
