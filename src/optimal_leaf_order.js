@@ -13,7 +13,7 @@
  * http://www.cs.cmu.edu/~zivbj/compBio/k-aryBio.pdf
  */
 
-reorder.optimal_leaf_order = function() {
+export function optimal_leaf_order() {
     var distanceMatrix = null,
         distance = reorder.distance.euclidean,
 	linkage = "complete",

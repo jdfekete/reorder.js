@@ -52,7 +52,6 @@ export { intersect_sorted_ints } from './intersect';
 export { laplacian } from './laplacian';
 export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
-//export {
-//} from '';
+export { optimal_leaf_order } from './optimal_leaf_order';
 //export {
 //} from '';
