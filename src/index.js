@@ -1,3 +1,4 @@
+export { adjacent_exchange } from './adjacent_exchange';
 export { zeroes, dot, length, normalize, mean, transpose } from './aliases';
 export {
   all_pairs_distance,

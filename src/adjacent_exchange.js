@@ -1,3 +1,5 @@
+import { inverse_permutation } from './permutation';
+
 // Accorging to
 // E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo. 1993. A
 // Technique for Drawing Directed Graphs. IEEE Trans. Softw. Eng. 19, 3

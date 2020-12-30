@@ -1,6 +1,7 @@
 import { cmp_number } from './utils';
 import { inverse_permutation } from './permutation';
 import { debug } from './core';
+import { count_crossings } from './count_crossings';
 
 export function barycenter_order(graph, comps, max_iter) {
     var orders = [[], [], 0];
