@@ -57,8 +57,7 @@ export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
 export { array_to_dicts, dicts_to_array, pcp, parcoords } from './pcp';
 export { permutation, inverse_permutation } from './permutation';
-//export {
-//} from '';
+export { permute, permute_inplace, permutetranspose } from './permute';
 //export {
 //} from '';
 //export {
