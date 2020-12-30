@@ -17,7 +17,7 @@ export default [
   },
   {
     input: "src/index.js",
-    external: ["science"],
+    external: ["@sgratzl/science"],
     output: [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" },

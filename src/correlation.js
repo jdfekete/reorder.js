@@ -1,9 +1,9 @@
-import { zeroes } from './aliases';
+import { zeroes, mean } from './aliases';
 
 export const correlation = {
     pearson: function(a, b) {
-	var ma = science.stats.mean(a),
-	    mb = science.stats.mean(b),
+	var ma = mean(a),
+	    mb = mean(b),
 	    s1 = 0, s2 = 0, s3 = 0, i, dx, dy,
 	    n = Math.min(a.length, b.length);
 	if (n === 0)
