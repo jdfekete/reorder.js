@@ -1,5 +1,5 @@
 
-reorder.order = function() {
+export function order() {
     var distance = reorder.distance.euclidean,
         ordering = reorder.optimal_leaf_order,
         linkage = "complete",

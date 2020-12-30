@@ -53,5 +53,10 @@ export { laplacian } from './laplacian';
 export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
 export { optimal_leaf_order } from './optimal_leaf_order';
+export { order } from './order';
+//export {
+//} from '';
+//export {
+//} from '';
 //export {
 //} from '';
