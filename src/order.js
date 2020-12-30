@@ -1,4 +1,4 @@
-import { distance } from './distance';
+import { distance as distances } from './distance';
 import { optimal_leaf_order } from './optimal_leaf_order';
 import { debug } from './core';
 import { dist_remove, distmax, dist } from './dist';
@@ -6,7 +6,7 @@ import { assert, printmat } from './debug';
 import { range } from './range';
 
 export function order() {
-    var distance = distance.euclidean,
+    var distance = distances.euclidean,
         ordering = optimal_leaf_order,
         linkage = "complete",
         distanceMatrix = null,
@@ -17,7 +17,7 @@ export function order() {
 
 
     function _reset() {
-        distance = distance.euclidean;
+        distance = distances.euclidean,
         ordering = optimal_leaf_order;
         linkage = "complete";
         distanceMatrix = null;

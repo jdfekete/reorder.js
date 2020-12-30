@@ -1,5 +1,6 @@
-import { distance } from './distance';
+import { distance as distances } from './distance';
 import { debug } from './core';
+import { hcluster } from './hcluster';
 import { printhcluster } from './debug';
 import { dist } from './dist';
 
@@ -20,7 +21,7 @@ import { dist } from './dist';
 
 export function optimal_leaf_order() {
     var distanceMatrix = null,
-        distance = distance.euclidean,
+        distance = distances.euclidean,
 	linkage = "complete",
         leavesMap = {},
         orderMap = {};
@@ -117,10 +118,10 @@ export function optimal_leaf_order() {
     function optimal_leaf_order(matrix) {
 	if (distanceMatrix === null)
 	    distanceMatrix = (dist().distance(distance))(matrix);
-	var hcluster = science.stats.hcluster()
+	var cluster = hcluster()
 		.linkage(linkage)
 		.distanceMatrix(distanceMatrix);
-	return orderFull(hcluster(matrix));
+	return orderFull(cluster(matrix));
     }
     optimal_leaf_order.order = orderFull;
     optimal_leaf_order.reorder = optimal_leaf_order;

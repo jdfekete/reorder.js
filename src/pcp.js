@@ -4,6 +4,7 @@ import { transpose } from './aliases';
 import { correlation } from './correlation';
 import { optimal_leaf_order } from './optimal_leaf_order';
 import { permute } from './permute';
+import { hcluster } from './hcluster';
 
 export function array_to_dicts(data, axes) {
     if (arguments.length < 2) 
@@ -70,7 +71,7 @@ export function pcp(data, axes) {
     var tdata = transpose(data),
 	pcor = correlation.pearsonMatrix(tdata),
 	abs_pcor = abs_matrix(pcor),
-	h1 = science.stats.hcluster()
+	h1 = hcluster()
 	    .linkage("complete")
 	    .distanceMatrix(abs_pcor)(tdata),
 	perm = optimal_leaf_order()
@@ -117,7 +118,7 @@ export function parcoords(p) {
     }
     var pcor = correlation.pearsonMatrix(tdata),
 	abs_pcor = abs_matrix(pcor),
-	h1 = science.stats.hcluster()
+	h1 = hcluster()
 	    .linkage("complete")
 	    .distanceMatrix(abs_pcor)(tdata),
 	perm = optimal_leaf_order()
