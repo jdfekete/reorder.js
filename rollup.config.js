@@ -1,5 +1,6 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import versionInjector from 'rollup-plugin-version-injector';
 import pkg from "./package.json";
 
 export default [
@@ -8,12 +9,13 @@ export default [
     output: {
       name: "reorder",
       file: pkg.browser,
-      format: "umd",
+      format: "umd"
     },
     plugins: [
       resolve(),
       commonjs(),
-    ],
+      versionInjector()
+    ]
   },
   {
     input: "src/index.js",
@@ -22,6 +24,9 @@ export default [
       { file: pkg.main, format: "cjs" },
       { file: pkg.module, format: "es" },
     ],
-  },
+    plugins: [
+      versionInjector()
+    ]
+  }
 ];
 
