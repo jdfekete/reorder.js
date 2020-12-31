@@ -6,8 +6,7 @@ import { optimal_leaf_order } from './optimal_leaf_order';
 import { permute } from './permute';
 import { hcluster } from './hcluster';
 
-export function array_to_dicts(data, axes) {
-  if (arguments.length < 2) axes = range(data[0].length);
+export function array_to_dicts(data, axes=range(data[0].length)) {
   const ret = [];
   let row;
   let dict;
@@ -24,8 +23,7 @@ export function array_to_dicts(data, axes) {
   return ret;
 }
 
-export function dicts_to_array(dicts, keys) {
-  if (arguments.length < 2) keys = Object.keys(dicts[0]);
+export function dicts_to_array(dicts, keys=Object.keys(dicts[0])) {
   const n = keys.length;
   const m = dicts.length;
   const array = Array(m);

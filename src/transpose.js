@@ -1,10 +1,4 @@
-export function transposeSlice(a, start, end) {
-  if (arguments.length < 3) {
-    end = a[0].length;
-    if (arguments.length < 2) {
-      start = 0;
-    }
-  }
+export function transposeSlice(a, start=0, end=a[0].length) {
   const m = a.length;
   const n = end;
   let i = start - 1;
