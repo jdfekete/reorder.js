@@ -42,9 +42,7 @@ export function dicts_to_array(dicts, keys) {
 }
 
 function abs_matrix(x) {
-  return x.map((y) => {
-    return y.map(Math.abs);
-  });
+  return x.map(y => y.map(Math.abs));
 }
 
 function pcp_flip_axes(perm, naxes, pcor) {

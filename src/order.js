@@ -133,9 +133,7 @@ export function order() {
     }
     if (i0 !== 0) {
       perm = permutation(i0).concat(
-        perm.map((v) => {
-          return v + i0;
-        })
+        perm.map(v => v + i0)
       );
     }
     if (orig.length > j0) {
@@ -332,9 +330,7 @@ export function order() {
   }
 
   function _perm_insert(perm, i, nv) {
-    perm = perm.map((v) => {
-      return v < nv ? v : v + 1;
-    });
+    perm = perm.map(v => v < nv ? v : v + 1);
     perm.splice(i, 0, nv);
     return perm;
   }

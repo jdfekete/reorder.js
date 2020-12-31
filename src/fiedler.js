@@ -38,9 +38,7 @@ export function fiedler_vector(B, eps) {
   const n = B.length;
 
   const // Copy B
-    Bhat = B.map((row) => {
-      return row.slice();
-    });
+    Bhat = B.map(row => row.slice());
 
   let i;
   let j;

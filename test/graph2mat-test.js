@@ -12,9 +12,7 @@ function remove_zeroes(mat) {
   for (i = mat.length - 1; i >= 0; i--) {
     const row = mat[i];
     if (
-      row.some((a) => {
-        return a > 0;
-      })
+      row.some(a => a > 0)
     ) {
       //console.log('remove row %d', i);
       break;
@@ -23,9 +21,7 @@ function remove_zeroes(mat) {
   }
   for (j = mat[0].length - 1; j >= 0; j--) {
     if (
-      mat.some((row) => {
-        return row[j] != 0;
-      })
+      mat.some(row => row[j] != 0)
     ) {
       //console.log('remove column %d', j);
       break;

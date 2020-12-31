@@ -15,11 +15,7 @@ export function graph(nodes, links, directed) {
     return graph;
   };
 
-  graph.nodes_indices = () => {
-    return nodes.map((n) => {
-      return n.index;
-    });
-  };
+  graph.nodes_indices = () => nodes.map(n => n.index);
 
   graph.generate_nodes = (n) => {
     nodes = [];
@@ -32,11 +28,10 @@ export function graph(nodes, links, directed) {
     links = x;
     return graph;
   };
-  graph.links_indices = () => {
-    return links.map((l) => {
-      return { source: l.source.index, target: l.target.index };
-    });
-  };
+  graph.links_indices = () => links.map(l => ({
+    source: l.source.index,
+    target: l.target.index
+  }));
   graph.linkDistance = function (x) {
     if (!arguments.length) return linkDistance;
     linkDistance = typeof x === 'function' ? x : +x;
@@ -226,9 +221,7 @@ export function graph(nodes, links, directed) {
         comps.push(ccomp);
       }
     }
-    comps.sort((a, b) => {
-      return b.length - a.length;
-    });
+    comps.sort((a, b) => b.length - a.length);
     return comps;
   }
 

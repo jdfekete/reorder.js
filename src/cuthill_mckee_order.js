@@ -32,16 +32,10 @@ export function cuthill_mckee(graph, comp) {
     perm.push(n);
     e = graph
       .edges(n)
-      .map((edge) => {
-        return graph.other(edge, n).index;
-      })
-      .filter((n) => {
-        return !visited[n] && n in inv;
-      })
-      .sort((a, b) => {
-        // ascending by degree
-        return graph.degree(a) - graph.degree(b);
-      });
+      .map(edge => graph.other(edge, n).index)
+      .filter(n => !visited[n] && n in inv)
+      .sort((a, b) => // ascending by degree
+    graph.degree(a) - graph.degree(b));
 
     e.forEach(queue.push, queue);
   }

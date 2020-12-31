@@ -34,9 +34,7 @@ export function valuemats_reorder(valuemats, leaforder, comps) {
   let orders = valuemats.map(leaforder);
 
   if (comps) {
-    orders = orders.map((d, i) => {
-      return permute(comps[i], d);
-    });
+    orders = orders.map((d, i) => permute(comps[i], d));
   }
   return orders.reduce(flatten);
 }

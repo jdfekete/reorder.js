@@ -21,12 +21,8 @@ export function count_crossings(graph, north, south) {
   const comp = permutation(graph.nodes().length);
 
   if (north === undefined) {
-    north = comp.filter((n) => {
-      return graph.outDegree(n) !== 0;
-    });
-    south = comp.filter((n) => {
-      return graph.inDegree(n) !== 0;
-    });
+    north = comp.filter(n => graph.outDegree(n) !== 0);
+    south = comp.filter(n => graph.inDegree(n) !== 0);
   }
 
   // Choose the smaller axis
@@ -42,13 +38,9 @@ export function count_crossings(graph, north, south) {
 
   for (i = 0; i < north.length; i++) {
     if (invert) {
-      n = graph.inEdges(north[i]).map((e) => {
-        return south_inv[e.target.index];
-      });
+      n = graph.inEdges(north[i]).map(e => south_inv[e.target.index]);
     } else {
-      n = graph.outEdges(north[i]).map((e) => {
-        return south_inv[e.source.index];
-      });
+      n = graph.outEdges(north[i]).map(e => south_inv[e.source.index]);
     }
     n.sort(cmp_number);
     southsequence = southsequence.concat(n);
