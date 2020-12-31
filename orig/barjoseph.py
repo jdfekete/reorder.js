@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """optimal dendrogram ordering
 
 implementation of binary tree ordering described in [Bar-Joseph et al., 2003]
