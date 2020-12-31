@@ -1,5 +1,5 @@
-import { lin, stats } from 'science';
+import { lin, stats, zeroes } from '@sgratzl/science';
 
-export { zeroes } from 'science';
+export { zeroes };
 export const { dot, length, normalize, transpose } = lin;
 export const { mean } = stats;
