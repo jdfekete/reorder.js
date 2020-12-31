@@ -11,13 +11,12 @@ import { inverse_permutation } from './permutation';
  * nodes in the list of connected components.
  */
 export function all_pairs_distance(graph, comps) {
-    var distances = [];
-    if (! comps)
-	comps = graph.components();
+  var distances = [];
+  if (!comps) comps = graph.components();
 
-    for (var i = 0; i < comps.length; i++) 
-	distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
-    return distances;
+  for (var i = 0; i < comps.length; i++)
+    distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
+  return distances;
 }
 
 /**
@@ -29,41 +28,41 @@ export function all_pairs_distance(graph, comps) {
  * nodes in the list of connected components.
  */
 export function all_pairs_distance_floyd_warshall(graph, comp) {
-    var dist = infinities(comp.length, comp.length),
-	i, j, k, inv;
-    // Floyd Warshall, 
-    // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
-    // O(n^3) unfortunately
+  var dist = infinities(comp.length, comp.length),
+    i,
+    j,
+    k,
+    inv;
+  // Floyd Warshall,
+  // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
+  // O(n^3) unfortunately
 
-    inv = inverse_permutation(comp);
+  inv = inverse_permutation(comp);
 
+  for (i = 0; i < comp.length; i++) dist[i][i] = 0;
+
+  var build_dist = function (e) {
+    if (e.source == e.target) return;
+    if (!(e.source.index in inv) || !(e.target.index in inv)) return; // ignore edges outside of comp
+    var u = inv[e.source.index],
+      v = inv[e.target.index];
+    dist[v][u] = dist[u][v] = graph.distance(e.index);
+  };
+  for (i = 0; i < comp.length; i++) {
+    graph.edges(comp[i]).forEach(build_dist);
+  }
+
+  for (k = 0; k < comp.length; k++) {
     for (i = 0; i < comp.length; i++)
-	dist[i][i] = 0;
-    
-    var build_dist = function(e) {
-	if (e.source == e.target) return;
-	if (! (e.source.index in inv) || ! (e.target.index in inv))
-	    return; // ignore edges outside of comp
-	var u = inv[e.source.index],
-	    v = inv[e.target.index];
-	dist[v][u] = dist[u][v] = graph.distance(e.index);
-    };
-    for (i = 0; i < comp.length; i++) {
-	graph.edges(comp[i]).forEach(build_dist);
-    }
-
-    for (k=0; k<comp.length; k++) {
-	for (i=0; i<comp.length; i++)
-	    if (dist[i][k] != Infinity) {
-		for (j=0; j<comp.length; j++)
-		    if (dist[k][j] != Infinity &&
-			dist[i][j] > dist[i][k] + dist[k][j]) {
-			dist[i][j] = dist[i][k] + dist[k][j];
-			dist[j][i] = dist[i][j];
-		    }
-	    }
-    }
-    return dist;
+      if (dist[i][k] != Infinity) {
+        for (j = 0; j < comp.length; j++)
+          if (dist[k][j] != Infinity && dist[i][j] > dist[i][k] + dist[k][j]) {
+            dist[i][j] = dist[i][k] + dist[k][j];
+            dist[j][i] = dist[i][j];
+          }
+      }
+  }
+  return dist;
 }
 
 /**
@@ -79,71 +78,73 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
  */
 
 export function floyd_warshall_with_path(graph, comp) {
-    if (! comp)
-	comp = graph.components()[0];
+  if (!comp) comp = graph.components()[0];
 
-    var dist = infinities(comp.length, comp.length),
-	next = Array(comp.length),
-	directed = graph.directed(),
-	i, j, k, inv;
-    // Floyd Warshall, 
-    // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
-    // O(n^3) unfortunately
+  var dist = infinities(comp.length, comp.length),
+    next = Array(comp.length),
+    directed = graph.directed(),
+    i,
+    j,
+    k,
+    inv;
+  // Floyd Warshall,
+  // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
+  // O(n^3) unfortunately
 
-    inv = inverse_permutation(comp);
-    
+  inv = inverse_permutation(comp);
+
+  for (i = 0; i < comp.length; i++) {
+    dist[i][i] = 0;
+    next[i] = Array(comp.length);
+  }
+
+  var build_dist = function (e) {
+    if (e.source == e.target) return;
+    var u = inv[e.source.index],
+      v = inv[e.target.index];
+    dist[u][v] = graph.distance(e);
+    next[u][v] = v;
+    if (!directed) {
+      dist[v][u] = graph.distance(e);
+      next[v][u] = u;
+    }
+  };
+
+  for (i = 0; i < comp.length; i++) {
+    graph.edges(comp[i]).forEach(build_dist);
+  }
+
+  for (k = 0; k < comp.length; k++) {
     for (i = 0; i < comp.length; i++) {
-	dist[i][i] = 0;
-	next[i] = Array(comp.length);
+      for (j = 0; j < comp.length; j++) {
+        if (dist[i][j] > dist[i][k] + dist[k][j]) {
+          dist[i][j] = dist[i][k] + dist[k][j];
+          next[i][j] = next[i][k];
+          if (!directed) {
+            dist[j][i] = dist[i][j];
+            next[j][i] = next[k][j];
+          }
+        }
+      }
     }
-    
-    var build_dist = function(e) {
-	if (e.source == e.target) return;
-	var u = inv[e.source.index],
-	    v = inv[e.target.index];
-	dist[u][v] = graph.distance(e);
-	next[u][v] = v;
-	if (! directed) {
-	    dist[v][u] = graph.distance(e);
-	    next[v][u] = u;
-	}
-    };
-    
-    for (i = 0; i < comp.length; i++) {
-	graph.edges(comp[i]).forEach(build_dist);
-    }
-
-    for (k=0; k<comp.length; k++) {
-	for (i=0; i<comp.length; i++) {
-	    for (j=0; j<comp.length; j++) {
-		if (dist[i][j] > dist[i][k] + dist[k][j]) {
-		    dist[i][j] = dist[i][k] + dist[k][j];
-		    next[i][j] = next[i][k];
-		    if (! directed) {
-			dist[j][i] = dist[i][j];
-			next[j][i] = next[k][j];
-		    }
-		}
-	    }
-	}
-    }
-    return [dist, next];
+  }
+  return [dist, next];
 }
 
 /**
  * Returns the shortest path from node u to node v, from the table
  * returned by {@link floyd_warshall_with_path}.
- * @param {Array} next - the next information 
+ * @param {Array} next - the next information
  * @param {Integer} u - the starting node
  * @param {Integer} v - the ending node
  * @return {list} a list of nodes in the shortest path from u to v
  */
 export function floyd_warshall_path(next, u, v) {
-    if (next[u][v] === undefined) return [];
-    var path = [u];
-    while (u != v) {
-	u = next[u][v];
-	path.push(u);
-    }
-    return path;
+  if (next[u][v] === undefined) return [];
+  var path = [u];
+  while (u != v) {
+    u = next[u][v];
+    path.push(u);
+  }
+  return path;
 }

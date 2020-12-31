@@ -1,18 +1,18 @@
 import { bfs } from './bfs';
 
 /*jshint loopfunc:true */
-export const bfs_order = function(graph, comps) {
-    if (! comps)
-	comps = graph.components();
+export const bfs_order = function (graph, comps) {
+  if (!comps) comps = graph.components();
 
-    var i, comp, order = [];
+  var i,
+    comp,
+    order = [];
 
-    for (i = 0; i < comps.length; i++) {
-	comp = comps[i];
-	bfs(graph, comp[0], function(v, c) {
-	    if (c >= 0 && v != c)
-		order.push(v);
-	});
-    }
-    return order;
+  for (i = 0; i < comps.length; i++) {
+    comp = comps[i];
+    bfs(graph, comp[0], function (v, c) {
+      if (c >= 0 && v != c) order.push(v);
+    });
+  }
+  return order;
 };

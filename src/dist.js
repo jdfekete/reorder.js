@@ -1,73 +1,69 @@
 import { distance as distances } from './distance';
 
 export function dist() {
-    var distance = distances.euclidean;
+  var distance = distances.euclidean;
 
-    function dist(vectors) {
-	var n = vectors.length,
-            distMatrix = [];
+  function dist(vectors) {
+    var n = vectors.length,
+      distMatrix = [];
 
-	for (var i = 0; i < n; i++) {
-	    var d = [];
-	    distMatrix[i] = d;
-	    for (var j = 0; j < n; j++) {
-		if (j < i) {
-		     d.push(distMatrix[j][i]);
-		} 
-		else if (i === j) {
-		    d.push(0);
-		}
-		else {
-		    d.push(distance(vectors[i] , vectors[j]));
-		}
-	    }
-	}
-	return distMatrix;
+    for (var i = 0; i < n; i++) {
+      var d = [];
+      distMatrix[i] = d;
+      for (var j = 0; j < n; j++) {
+        if (j < i) {
+          d.push(distMatrix[j][i]);
+        } else if (i === j) {
+          d.push(0);
+        } else {
+          d.push(distance(vectors[i], vectors[j]));
+        }
+      }
     }
+    return distMatrix;
+  }
 
-    dist.distance = function(x) {
-	if (!arguments.length) return distance;
-	distance = x;
-	return dist;
-    };
-
+  dist.distance = function (x) {
+    if (!arguments.length) return distance;
+    distance = x;
     return dist;
+  };
+
+  return dist;
 }
 
 export function distmax(distMatrix) {
-    var max = 0,
-	n=distMatrix.length,
-	i, j, row;
+  var max = 0,
+    n = distMatrix.length,
+    i,
+    j,
+    row;
 
-    for (i = 0; i < n; i++) {
-	row = distMatrix[i];
-	for (j = i+1; j < n; j++)
-	    if (row[j] > max)
-		max = row[j];
-    }
-    return max;
+  for (i = 0; i < n; i++) {
+    row = distMatrix[i];
+    for (j = i + 1; j < n; j++) if (row[j] > max) max = row[j];
+  }
+  return max;
 }
 
 export function distmin(distMatrix) {
-    var min = Infinity,
-	n=distMatrix.length,
-	i, j, row;
+  var min = Infinity,
+    n = distMatrix.length,
+    i,
+    j,
+    row;
 
-    for (i = 0; i < n; i++) {
-	row = distMatrix[i];
-	for (j = i+1; j < n; j++)
-	    if (row[j] < min)
-		min = row[j];
-    }
-    return min;
+  for (i = 0; i < n; i++) {
+    row = distMatrix[i];
+    for (j = i + 1; j < n; j++) if (row[j] < min) min = row[j];
+  }
+  return min;
 }
 
 export function dist_remove(dist, n, m) {
-    if (arguments.length < 3)
-	m = n+1;
-    var i;
-    dist.splice(n, m-n);
-    for (i = dist.length; i-- > 0; )
-	dist[i].splice(n, m-n);
-    return dist;
+  if (arguments.length < 3) m = n + 1;
+  var i;
+  dist.splice(n, m - n);
+  for (i = dist.length; i-- > 0; ) dist[i].splice(n, m - n);
+  return dist;
 }
