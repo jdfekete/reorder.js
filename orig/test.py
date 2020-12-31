@@ -1,3 +1,5 @@
+from math import exp
+
 from hcluster import pdist, linkage, leaves_list, squareform, dendrogram
 import numpy as np
 import matplotlib as mp
@@ -34,7 +36,7 @@ from utils import memoise
 from barjoseph import optimal
 
 leaves = optimal(root, **{
-    "S":        lambda i, j: X[i][j],
+    "S":        lambda i, j: exp(-X[i][j]),
     "left":     lambda i: None if i < count else Z[i-count][0],
     "right":    lambda i: None if i < count else Z[i-count][1],
     "is_leaf":  lambda i: i < count,
