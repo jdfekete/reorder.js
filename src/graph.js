@@ -2,12 +2,12 @@ import { debug } from './core';
 import { cmp_number } from './utils';
 
 export function graph(nodes, links, directed) {
-  var graph = {},
-    linkDistance = 1,
-    edges,
-    inEdges,
-    outEdges,
-    components;
+  const graph = {};
+  let linkDistance = 1;
+  let edges;
+  let inEdges;
+  let outEdges;
+  let components;
 
   graph.nodes = function (x) {
     if (!arguments.length) return nodes;
@@ -15,15 +15,15 @@ export function graph(nodes, links, directed) {
     return graph;
   };
 
-  graph.nodes_indices = function () {
-    return nodes.map(function (n) {
+  graph.nodes_indices = () => {
+    return nodes.map((n) => {
       return n.index;
     });
   };
 
-  graph.generate_nodes = function (n) {
+  graph.generate_nodes = (n) => {
     nodes = [];
-    for (var i = 0; i < n; i++) nodes.push({ id: i });
+    for (let i = 0; i < n; i++) nodes.push({ id: i });
     return graph;
   };
 
@@ -32,8 +32,8 @@ export function graph(nodes, links, directed) {
     links = x;
     return graph;
   };
-  graph.links_indices = function () {
-    return links.map(function (l) {
+  graph.links_indices = () => {
+    return links.map((l) => {
       return { source: l.source.index, target: l.target.index };
     });
   };
@@ -50,10 +50,10 @@ export function graph(nodes, links, directed) {
   };
 
   function init() {
-    var i,
-      o,
-      n = nodes.length,
-      m = links.length;
+    let i;
+    let o;
+    const n = nodes.length;
+    const m = links.length;
 
     components = undefined;
     for (i = 0; i < n; ++i) {
@@ -104,7 +104,7 @@ export function graph(nodes, links, directed) {
 
   graph.init = init;
 
-  graph.edges = function (node) {
+  graph.edges = (node) => {
     if (typeof node != 'number') {
       node = node.index;
       if (debug) {
@@ -114,34 +114,34 @@ export function graph(nodes, links, directed) {
     return edges[node];
   };
 
-  graph.degree = function (node) {
+  graph.degree = (node) => {
     if (typeof node != 'number') node = node.index;
     return edges[node].length;
   };
 
-  graph.inEdges = function (node) {
+  graph.inEdges = (node) => {
     if (typeof node != 'number') node = node.index;
     return inEdges[node];
   };
 
-  graph.inDegree = function (node) {
+  graph.inDegree = (node) => {
     if (typeof node != 'number') node = node.index;
     return inEdges[node].length;
   };
 
-  graph.outEdges = function (node) {
+  graph.outEdges = (node) => {
     if (typeof node != 'number') node = node.index;
     return outEdges[node];
   };
 
-  graph.outDegree = function (node) {
+  graph.outDegree = (node) => {
     if (typeof node != 'number') node = node.index;
     return outEdges[node].length;
   };
 
-  graph.sinks = function () {
-    var sinks = [],
-      i;
+  graph.sinks = () => {
+    const sinks = [];
+    let i;
 
     for (i = 0; i < nodes.length; i++) {
       if (graph.outEdges(i).length === 0) sinks.push(i);
@@ -149,9 +149,9 @@ export function graph(nodes, links, directed) {
     return sinks;
   };
 
-  graph.sources = function () {
-    var sources = [],
-      i;
+  graph.sources = () => {
+    const sources = [];
+    let i;
 
     for (i = 0; i < nodes.length; i++) {
       if (graph.inEdges(i).length === 0) sources.push(i);
@@ -165,10 +165,10 @@ export function graph(nodes, links, directed) {
   graph.distance = distance;
 
   function neighbors(node) {
-    var e = edges[node],
+    const e = edges[node],
       ret = [];
-    for (var i = 0; i < e.length; ++i) {
-      var o = e[i];
+    for (let i = 0; i < e.length; ++i) {
+      const o = e[i];
       if (o.source.index == node) ret.push(o.target);
       else ret.push(o.source);
     }
@@ -176,24 +176,24 @@ export function graph(nodes, links, directed) {
   }
   graph.neighbors = neighbors;
 
-  graph.other = function (o, node) {
+  graph.other = (o, node) => {
     if (typeof o == 'number') o = links[o];
     if (o.source.index == node) return o.target;
     else return o.source;
   };
 
   function compute_components() {
-    var stack = [],
-      comp = 0,
-      comps = [],
-      ccomp,
-      n = nodes.length,
-      i,
-      j,
-      v,
-      l,
-      o,
-      e;
+    const stack = [];
+    let comp = 0;
+    const comps = [];
+    let ccomp;
+    const n = nodes.length;
+    let i;
+    let j;
+    let v;
+    let l;
+    let o;
+    let e;
 
     for (i = 0; i < n; i++) nodes[i].comp = 0;
 
@@ -226,13 +226,13 @@ export function graph(nodes, links, directed) {
         comps.push(ccomp);
       }
     }
-    comps.sort(function (a, b) {
+    comps.sort((a, b) => {
       return b.length - a.length;
     });
     return comps;
   }
 
-  graph.components = function () {
+  graph.components = () => {
     if (!components) components = compute_components();
     return components;
   };

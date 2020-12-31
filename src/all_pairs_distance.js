@@ -11,10 +11,10 @@ import { inverse_permutation } from './permutation';
  * nodes in the list of connected components.
  */
 export function all_pairs_distance(graph, comps) {
-  var distances = [];
+  const distances = [];
   if (!comps) comps = graph.components();
 
-  for (var i = 0; i < comps.length; i++)
+  for (let i = 0; i < comps.length; i++)
     distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
   return distances;
 }
@@ -28,11 +28,11 @@ export function all_pairs_distance(graph, comps) {
  * nodes in the list of connected components.
  */
 export function all_pairs_distance_floyd_warshall(graph, comp) {
-  var dist = infinities(comp.length, comp.length),
-    i,
-    j,
-    k,
-    inv;
+  const dist = infinities(comp.length, comp.length);
+  let i;
+  let j;
+  let k;
+  let inv;
   // Floyd Warshall,
   // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
   // O(n^3) unfortunately
@@ -41,10 +41,10 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
 
   for (i = 0; i < comp.length; i++) dist[i][i] = 0;
 
-  var build_dist = function (e) {
+  const build_dist = (e) => {
     if (e.source == e.target) return;
     if (!(e.source.index in inv) || !(e.target.index in inv)) return; // ignore edges outside of comp
-    var u = inv[e.source.index],
+    const u = inv[e.source.index],
       v = inv[e.target.index];
     dist[v][u] = dist[u][v] = graph.distance(e.index);
   };
@@ -80,13 +80,13 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
 export function floyd_warshall_with_path(graph, comp) {
   if (!comp) comp = graph.components()[0];
 
-  var dist = infinities(comp.length, comp.length),
-    next = Array(comp.length),
-    directed = graph.directed(),
-    i,
-    j,
-    k,
-    inv;
+  const dist = infinities(comp.length, comp.length);
+  const next = Array(comp.length);
+  const directed = graph.directed();
+  let i;
+  let j;
+  let k;
+  let inv;
   // Floyd Warshall,
   // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
   // O(n^3) unfortunately
@@ -98,9 +98,9 @@ export function floyd_warshall_with_path(graph, comp) {
     next[i] = Array(comp.length);
   }
 
-  var build_dist = function (e) {
+  const build_dist = (e) => {
     if (e.source == e.target) return;
-    var u = inv[e.source.index],
+    const u = inv[e.source.index],
       v = inv[e.target.index];
     dist[u][v] = graph.distance(e);
     next[u][v] = v;
@@ -141,7 +141,7 @@ export function floyd_warshall_with_path(graph, comp) {
  */
 export function floyd_warshall_path(next, u, v) {
   if (next[u][v] === undefined) return [];
-  var path = [u];
+  const path = [u];
   while (u != v) {
     u = next[u][v];
     path.push(u);

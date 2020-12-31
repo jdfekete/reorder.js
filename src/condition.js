@@ -1,12 +1,12 @@
 export function condition(matrix) {
-  var i,
-    j,
-    min,
-    max,
-    v,
-    s,
-    row,
-    ret = [];
+  let i;
+  let j;
+  let min;
+  let max;
+  let v;
+  let s;
+  let row;
+  const ret = [];
 
   for (i = 0; 0 < matrix.length; i++) {
     row = matrix[i].slice();

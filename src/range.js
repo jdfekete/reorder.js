@@ -6,8 +6,8 @@ export function range(start, stop, step) {
       start = 0;
     }
   }
-  var range = [],
-    i = start;
+  const range = [];
+  let i = start;
   if (step < 0) for (; i > stop; i += step) range.push(i);
   else for (; i < stop; i += step) range.push(i);
   return range;

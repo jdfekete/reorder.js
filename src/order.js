@@ -7,15 +7,15 @@ import { range } from './range';
 import { permutation } from './permutation';
 
 export function order() {
-  var distance = distances.euclidean,
-    ordering = optimal_leaf_order,
-    linkage = 'complete',
-    distanceMatrix = null,
-    vector,
-    except = [],
-    debug = 0,
-    i = 0,
-    j = Infinity;
+  let distance = distances.euclidean;
+  let ordering = optimal_leaf_order;
+  let linkage = 'complete';
+  let distanceMatrix = null;
+  let vector;
+  let except = [];
+  const debug = 0;
+  let i = 0;
+  let j = Infinity;
 
   function _reset() {
     distance = distances.euclidean;
@@ -31,7 +31,7 @@ export function order() {
   function order(v) {
     vector = v;
     j = Math.min(j, v.length);
-    var i0 = i > 0 ? i - 1 : 0,
+    let i0 = i > 0 ? i - 1 : 0,
       j0 = j < vector.length ? j + 1 : j,
       k,
       low,
@@ -65,16 +65,16 @@ export function order() {
   }
 
   function _order_limits(i0, j0) {
-    var orig = vector,
-      perm,
-      row,
-      k,
-      l;
+    const orig = vector;
+    let perm;
+    let row;
+    let k;
+    let l;
 
     vector = vector.slice(i0, j0); // always make a copy
     if (i === 0 && j == vector.length) return _order_except();
 
-    if (debug) console.log('i0=' + i0 + ' j0=' + j0);
+    if (debug) console.log(`i0=${i0} j0=${j0}`);
 
     if (distanceMatrix !== null) {
       if (j0 !== vector.length) dist_remove(distanceMatrix, j0, vector.length);
@@ -84,7 +84,7 @@ export function order() {
     }
     // Apply constraints on the min/max indices
 
-    var max = distmax(distanceMatrix);
+    let max = distmax(distanceMatrix);
     if (i0 < i) {
       // row i0 should be far away from each rows so move it away
       // by changing the distance matrix, adding "max" to each
@@ -133,7 +133,7 @@ export function order() {
     }
     if (i0 !== 0) {
       perm = permutation(i0).concat(
-        perm.map(function (v) {
+        perm.map((v) => {
           return v + i0;
         })
       );
@@ -145,7 +145,7 @@ export function order() {
   }
 
   function _order_except() {
-    var perm, k, l, low, high, pos;
+    let perm, k, l, low, high, pos;
 
     if (except.length === 0) return _order_equiv();
 
@@ -160,7 +160,7 @@ export function order() {
       high = except[k];
       distanceMatrix = dist_remove(distanceMatrix, low + 1, high - 1);
       vector.splice(low + 1, high - low - 2);
-      if (debug) console.log('Except[' + low + ', ' + high + ']');
+      if (debug) console.log(`Except[${low}, ${high}]`);
       if (distanceMatrix[low][low + 1] !== 0) {
         // boundaries are equal, they will survive
         distanceMatrix[low][low + 1] = distanceMatrix[low + 1][low] = -1;
@@ -199,17 +199,17 @@ export function order() {
   }
 
   function _order_equiv() {
-    var perm,
-      row,
-      e,
-      j,
-      k,
-      l,
-      m,
-      n,
-      has_1 = false,
-      equiv = [],
-      fix_except = {};
+    let perm;
+    let row;
+    let e;
+    let j;
+    let k;
+    let l;
+    let m;
+    let n;
+    let has_1 = false;
+    const equiv = [];
+    const fix_except = {};
 
     _compute_dist();
 
@@ -286,7 +286,7 @@ export function order() {
   }
 
   function _fix_exception(perm, l, m, next, len) {
-    var i, j, k;
+    let i, j, k;
 
     // for (k = 0; k < except.length; k += 2) {
     //     if (m == except[k]) {
@@ -314,7 +314,7 @@ export function order() {
 
   function _swap(perm, a, b) {
     if (a == b) return;
-    var c = perm[a];
+    const c = perm[a];
     perm[a] = perm[b];
     perm[b] = c;
   }
@@ -323,16 +323,16 @@ export function order() {
     if (debug > 1) printmat(distanceMatrix);
     if (debug > 2) printmat(vector);
 
-    var perm = ordering().linkage(linkage).distanceMatrix(distanceMatrix)(
+    const perm = ordering().linkage(linkage).distanceMatrix(distanceMatrix)(
       vector
     );
-    if (debug) console.log('Permutation: ' + perm);
+    if (debug) console.log(`Permutation: ${perm}`);
 
     return perm;
   }
 
   function _perm_insert(perm, i, nv) {
-    perm = perm.map(function (v) {
+    perm = perm.map((v) => {
       return v < nv ? v : v + 1;
     });
     perm.splice(i, 0, nv);
@@ -365,7 +365,7 @@ export function order() {
   };
 
   order.except = function (list) {
-    var i;
+    let i;
     if (!arguments.length) return except.slice(0);
     for (i = 1; i < list.length; i++)
       if (list[i - 1] >= list[i]) throw 'Invalid list, indices not sorted';
@@ -374,8 +374,8 @@ export function order() {
   };
 
   function _orderExcept(vector, i, j) {
-    var distanceMatrix = dist().distance(distance)(vector);
-    var row,
+    const distanceMatrix = dist().distance(distance)(vector);
+    let row,
       k,
       l,
       rev = false,
@@ -386,7 +386,7 @@ export function order() {
     // TODO: check if no other pair is also ==0
     distanceMatrix[i][i + 1] = 0;
     distanceMatrix[i + 1][i] = 0;
-    var perm = ordering().distanceMatrix(distanceMatrix)(vector);
+    const perm = ordering().distanceMatrix(distanceMatrix)(vector);
     pos = perm.indexOf(i);
     for (k = 0; k < perm.length; k++) {
       l = perm[k];

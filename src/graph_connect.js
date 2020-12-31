@@ -1,7 +1,7 @@
 export function graph_connect(graph, comps) {
-  var i,
-    j,
-    links = graph.links();
+  let i;
+  let j;
+  const links = graph.links();
 
   if (!comps) comps = graph.components();
 

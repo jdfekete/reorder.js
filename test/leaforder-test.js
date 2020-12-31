@@ -1,28 +1,28 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.optimal_leaf_order');
+const suite = vows.describe('reorder.optimal_leaf_order');
 
 function eucl(a, b) {
-  var x = b - a;
+  const x = b - a;
   return x * x;
 }
 
 function remove_equal_dist(dm) {
-  var i,
-    j,
-    v,
-    row,
-    values = {};
+  let i;
+  let j;
+  let v;
+  let row;
+  const values = {};
 
   for (i = 0; i < dm.length; i++) {
     row = dm[i];
     for (j = i + 1; j < dm.length; j++) {
       v = row[j];
       if (values[v]) {
-        console.log('Duplicate dist ' + v + ' at [' + i + ',' + j + ']');
+        console.log(`Duplicate dist ${v} at [${i},${j}]`);
         v += Math.random() / 1000;
         row[j] = v;
         dm[j][i] = v;
@@ -47,35 +47,35 @@ function clusterEqual(h1, h2) {
 
 suite.addBatch({
   leaforder: {
-    simple: function () {
-      var data = [2, 1, 4, 3],
+    simple() {
+      const data = [2, 1, 4, 3],
         expect = [1, 2, 3, 4];
-      var x = reorder.optimal_leaf_order().distance(eucl)(data);
+      let x = reorder.optimal_leaf_order().distance(eucl)(data);
       assert.deepEqual(reorder.stablepermute(data, x), expect);
 
       x = reorder.optimal_leaf_order()(expect);
       assert.deepEqual(reorder.stablepermute(expect, x), expect);
     },
-    lesssimple: function () {
-      var prev = 0,
-        data = [prev],
-        next;
-      for (var i = 0; i < 30; i++) {
+    lesssimple() {
+      let prev = 0;
+      const data = [prev];
+      let next;
+      for (let i = 0; i < 30; i++) {
         next = Math.random() + prev;
         data.push(next);
         prev = next;
       }
-      var randata = reorder.randomPermute(data.slice());
-      var x = reorder.optimal_leaf_order().distance(eucl)(randata);
+      const randata = reorder.randomPermute(data.slice());
+      const x = reorder.optimal_leaf_order().distance(eucl)(randata);
       assert.deepEqual(reorder.stablepermute(randata.slice(), x), data);
     },
-    evenharder: function () {
-      var rows = 30,
-        cols = 20,
-        array = [],
-        i,
-        j,
-        row;
+    evenharder() {
+      const rows = 30;
+      const cols = 20;
+      const array = [];
+      let i;
+      let j;
+      let row;
 
       for (i = 0; i < rows; i++) {
         row = [];
@@ -84,34 +84,36 @@ suite.addBatch({
           row.push(Math.random());
         }
       }
-      var order = reorder.optimal_leaf_order(),
-        perm = order(array);
+      const order = reorder.optimal_leaf_order();
+      let perm = order(array);
       // Check determinism
       for (i = 0; i < 3; i++) {
-        var p2 = order(array);
+        const p2 = order(array);
         assert.deepEqual(perm, p2);
       }
       // Disambiguate distance matrix to have a
       // deterministic hcluster
-      var dm = reorder.dist()(array);
+      let dm = reorder.dist()(array);
 
       remove_equal_dist(dm);
       //reorder.printmat(dm);
-      var h1 = reorder.hcluster().linkage('complete').distanceMatrix(dm)(array);
+      const h1 = reorder.hcluster().linkage('complete').distanceMatrix(dm)(
+        array
+      );
 
       perm = reorder.optimal_leaf_order().distanceMatrix(dm)(array);
-      var a2 = reorder.permute(array, perm),
+      const a2 = reorder.permute(array, perm),
         d2 = reorder.dist()(a2);
       dm = reorder.permute(dm, perm);
       dm = reorder.permutetranspose(dm, perm);
 
       assert.deepEqual(d2, dm);
 
-      var h2 = reorder.hcluster().linkage('complete').distanceMatrix(d2)(a2);
+      const h2 = reorder.hcluster().linkage('complete').distanceMatrix(d2)(a2);
 
       assert.isTrue(clusterEqual(h1, h2), 'Clusters are not equal');
 
-      var p3 = order.distanceMatrix(d2)(a2);
+      const p3 = order.distanceMatrix(d2)(a2);
 
       assert.deepEqual(p3, reorder.range(0, p3.length));
     },

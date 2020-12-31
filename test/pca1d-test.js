@@ -1,14 +1,14 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.pca1d');
+const suite = vows.describe('reorder.pca1d');
 
 suite.addBatch({
   pca1d: {
-    simple: function () {
-      var mat = [
+    simple() {
+      const mat = [
           [2.5, 2.4],
           [0.5, 0.7],
           [2.2, 2.9],
@@ -26,8 +26,8 @@ suite.addBatch({
 
       assert.deepEqual(reorder.sort_order(pca), [0, 1]);
     },
-    lesssimple: function () {
-      var data = [
+    lesssimple() {
+      const data = [
           [80, 27, 89, 42],
           [80, 27, 88, 37],
           [75, 25, 90, 37],

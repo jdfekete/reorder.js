@@ -5,11 +5,11 @@ export function transposeSlice(a, start, end) {
       start = 0;
     }
   }
-  var m = a.length,
-    n = end,
-    i = start - 1,
-    j,
-    b = new Array(end - start);
+  const m = a.length;
+  const n = end;
+  let i = start - 1;
+  let j;
+  const b = new Array(end - start);
   while (++i < n) {
     b[i] = new Array(m);
     j = -1;

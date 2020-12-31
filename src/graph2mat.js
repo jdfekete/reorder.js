@@ -1,16 +1,16 @@
 import { zeroes } from './aliases';
 
 export function graph2mat(graph, directed) {
-  var nodes = graph.nodes(),
-    links = graph.links(),
-    n = nodes.length,
-    i,
-    l,
-    mat;
+  const nodes = graph.nodes();
+  const links = graph.links();
+  const n = nodes.length;
+  let i;
+  let l;
+  let mat;
 
   if (!directed) directed = graph.directed();
   if (directed) {
-    var rows = n,
+    let rows = n,
       cols = n;
 
     for (i = n - 1; i >= 0; i--) {

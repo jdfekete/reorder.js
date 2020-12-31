@@ -4,8 +4,8 @@ import { random_array } from './random';
 import { debug } from './core';
 
 function normalize(v) {
-  var norm = length(v),
-    i = v.length;
+  const norm = length(v);
+  let i = v.length;
   if (norm === 0 || Math.abs(norm - 1) < 1e-9) return 1;
   while (i-- > 0) v[i] /= norm;
   return norm;
@@ -14,14 +14,14 @@ function normalize(v) {
 export function poweriteration(v, eps, init) {
   if (!eps) eps = 1e-9;
 
-  var n = v.length,
-    b,
-    i,
-    j,
-    tmp = Array(n),
-    norm,
-    s = 100,
-    e;
+  const n = v.length;
+  let b;
+  let i;
+  let j;
+  let tmp = Array(n);
+  let norm;
+  let s = 100;
+  let e;
 
   assert(n == v[0].length, 'poweriteration needs a square matrix');
   if (!init) {
@@ -35,7 +35,7 @@ export function poweriteration(v, eps, init) {
     }
     normalize(tmp);
     if (dot(tmp, b) > 1.0 - eps) break;
-    var t = tmp;
+    const t = tmp;
     tmp = b;
     b = t; // swap b/tmp
   }
@@ -45,18 +45,18 @@ export function poweriteration(v, eps, init) {
 export function poweriteration_n(v, p, init, eps, start) {
   if (!eps) eps = 1e-9;
 
-  var n = v.length,
-    b = Array(p),
-    i,
-    j,
-    k,
-    l,
-    bk,
-    d,
-    row,
-    tmp = Array(n),
-    s = 100,
-    eigenvalue = Array(p);
+  const n = v.length;
+  const b = Array(p);
+  let i;
+  let j;
+  let k;
+  let l;
+  let bk;
+  let d;
+  let row;
+  let tmp = Array(n);
+  let s = 100;
+  const eigenvalue = Array(p);
 
   assert(n == v[0].length, 'poweriteration needs a square matrix');
   if (!init) {

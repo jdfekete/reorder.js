@@ -1,14 +1,14 @@
 import { graph } from './graph';
 
 export function mat2graph(mat, directed) {
-  var n = mat.length,
-    nodes = [],
-    links = [],
-    max_value = Number.NEGATIVE_INFINITY,
-    i,
-    j,
-    v,
-    m;
+  const n = mat.length;
+  const nodes = [];
+  const links = [];
+  let max_value = Number.NEGATIVE_INFINITY;
+  let i;
+  let j;
+  let v;
+  let m;
 
   for (i = 0; i < n; i++) nodes.push({ id: i });
 
@@ -25,7 +25,7 @@ export function mat2graph(mat, directed) {
     }
   }
   return graph(nodes, links, directed)
-    .linkDistance(function (l, i) {
+    .linkDistance((l, i) => {
       return 1 + max_value - l.value;
     })
     .init();

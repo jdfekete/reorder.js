@@ -1,7 +1,7 @@
 export function intersect_sorted_ints(array1, array2) {
-  var ai = 0,
+  let ai = 0,
     bi = 0;
-  var result = [];
+  const result = [];
 
   while (ai < a.length && bi < b.length) {
     if (a[ai] < b[bi]) {

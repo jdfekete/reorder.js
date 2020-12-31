@@ -1,16 +1,16 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
-var seedrandom = require('seedrandom');
+const seedrandom = require('seedrandom');
 Math.seedrandom('reorder');
 
-var suite = vows.describe('reorder.graph2distmat');
+const suite = vows.describe('reorder.graph2distmat');
 
 suite.addBatch({
   graph2distmat: {
-    simple: function () {
-      var mat = [
+    simple() {
+      const mat = [
           [0, 1, 0],
           [1, 0, 1],
           [0, 1, 0],
@@ -20,12 +20,12 @@ suite.addBatch({
           [1, 0, 1],
           [2, 1, 0],
         ];
-      var graph = reorder.mat2graph(mat);
+      const graph = reorder.mat2graph(mat);
       assert.equal(graph.nodes().length, 3);
       assert.equal(graph.links().length, 2);
-      var dists = reorder.all_pairs_distance(graph);
+      const dists = reorder.all_pairs_distance(graph);
       assert.deepEqual(dists[0], dist);
-      var valuemat = reorder.distmat2valuemat(dist);
+      const valuemat = reorder.distmat2valuemat(dist);
       assert.deepEqual(valuemat, [
         [3, 2, 1],
         [2, 3, 2],

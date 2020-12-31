@@ -4,7 +4,7 @@ import { sort_order } from './sort_order';
 import { permute } from './permute';
 
 export function spectral_order(graph, comps) {
-  var i,
+  let i,
     vec,
     comp,
     perm,

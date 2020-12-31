@@ -15,12 +15,12 @@ import { random_array } from './random';
 // Also, the smallest eigenvector is 1^n
 
 function gershgorin_bound(B) {
-  var i,
-    j,
-    max = 0,
-    n = B.length,
-    t,
-    row;
+  let i;
+  let j;
+  let max = 0;
+  const n = B.length;
+  let t;
+  let row;
   for (i = 0; i < n; i++) {
     row = B[i];
     t = row[i];
@@ -34,15 +34,17 @@ function gershgorin_bound(B) {
 }
 
 export function fiedler_vector(B, eps) {
-  var g = gershgorin_bound(B),
-    n = B.length,
-    // Copy B
-    Bhat = B.map(function (row) {
+  const g = gershgorin_bound(B);
+  const n = B.length;
+
+  const // Copy B
+    Bhat = B.map((row) => {
       return row.slice();
-    }),
-    i,
-    j,
-    row;
+    });
+
+  let i;
+  let j;
+  let row;
   for (i = 0; i < n; i++) {
     row = Bhat[i];
     for (j = 0; j < n; j++) {
@@ -50,7 +52,7 @@ export function fiedler_vector(B, eps) {
       else row[j] = -row[j];
     }
   }
-  var init = [array1d(n, 1), random_array(n)],
+  const init = [array1d(n, 1), random_array(n)],
     eig = poweriteration_n(Bhat, 2, init, eps, 1);
   return eig[0][1];
 }

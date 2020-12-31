@@ -7,7 +7,7 @@ import { zeroes } from './aliases';
 // J. Graph Algorithms Appl. 8(2): 179-194 (2004)
 /*jshint loopfunc:true */
 export function count_crossings(graph, north, south) {
-  var i,
+  let i,
     j,
     n,
     firstIndex,
@@ -18,35 +18,35 @@ export function count_crossings(graph, north, south) {
     invert = false,
     crosscount;
 
-  var comp = permutation(graph.nodes().length);
+  const comp = permutation(graph.nodes().length);
 
   if (north === undefined) {
-    north = comp.filter(function (n) {
+    north = comp.filter((n) => {
       return graph.outDegree(n) !== 0;
     });
-    south = comp.filter(function (n) {
+    south = comp.filter((n) => {
       return graph.inDegree(n) !== 0;
     });
   }
 
   // Choose the smaller axis
   if (north.length < south.length) {
-    var tmp = north;
+    const tmp = north;
     north = south;
     south = tmp;
     invert = true;
   }
 
-  var south_inv = inverse_permutation(south),
-    southsequence = [];
+  const south_inv = inverse_permutation(south);
+  let southsequence = [];
 
   for (i = 0; i < north.length; i++) {
     if (invert) {
-      n = graph.inEdges(north[i]).map(function (e) {
+      n = graph.inEdges(north[i]).map((e) => {
         return south_inv[e.target.index];
       });
     } else {
-      n = graph.outEdges(north[i]).map(function (e) {
+      n = graph.outEdges(north[i]).map((e) => {
         return south_inv[e.source.index];
       });
     }

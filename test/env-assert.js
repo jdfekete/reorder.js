@@ -1,12 +1,11 @@
-var assert = require('assert');
+const assert = require('assert');
 
-assert.inDelta = function (actual, expected, delta, message) {
+assert.inDelta = (actual, expected, delta, message) => {
   if (!inDelta(actual, expected, delta)) {
     assert.fail(
       actual,
       expected,
-      message ||
-        'expected {actual} to be in within *' + delta + '* of {expected}',
+      message || `expected {actual} to be in within *${delta}* of {expected}`,
       null,
       assert.inDelta
     );
@@ -22,8 +21,8 @@ function inDelta(actual, expected, delta) {
 }
 
 function inDeltaArray(actual, expected, delta) {
-  var n = expected.length,
-    i = -1;
+  const n = expected.length;
+  let i = -1;
   if (actual.length !== n) return false;
   while (++i < n) {
     if (Array.isArray(actual[i])) {
@@ -36,34 +35,34 @@ function inDeltaArray(actual, expected, delta) {
 }
 
 function inDeltaNumber(actual, expected, delta) {
-  var d = Math.abs(actual - expected);
+  const d = Math.abs(actual - expected);
   return d < delta;
 }
 
-assert.inDeltaArray = function (actual, expected, delta, message) {
+assert.inDeltaArray = (actual, expected, delta, message) => {
   if (!inDeltaArray(actual, expected, delta))
     assert.fail(
       actual,
       expected,
-      message || 'expected {actual} to equal to {expected} within ' + delta
+      message || `expected {actual} to equal to {expected} within ${delta}`
     );
   return true;
 };
 
 function inDeltaAbs(actual, expected, delta) {
-  var d = Math.abs(Math.abs(actual) - Math.abs(expected));
+  const d = Math.abs(Math.abs(actual) - Math.abs(expected));
   return d < delta;
 }
 
-assert.inDeltaArrayAbs = function (actual, expected, delta, message) {
-  var n = expected.length,
-    i = -1;
+assert.inDeltaArrayAbs = (actual, expected, delta, message) => {
+  const n = expected.length;
+  let i = -1;
   if (actual.length !== n) {
     assert.fail(
       actual,
       expected,
       message ||
-        'expected {actual} to have the same length *' + n + '* as {expected}',
+        `expected {actual} to have the same length *${n}* as {expected}`,
       null,
       assert.inDeltaArrayAbs
     );
@@ -73,8 +72,7 @@ assert.inDeltaArrayAbs = function (actual, expected, delta, message) {
       assert.fail(
         actual,
         expected,
-        message ||
-          'expected {actual} to be in within *' + delta + '* of {expected}',
+        message || `expected {actual} to be in within *${delta}* of {expected}`,
         null,
         assert.inDeltaArrayAbs
       );
@@ -82,12 +80,12 @@ assert.inDeltaArrayAbs = function (actual, expected, delta, message) {
 };
 
 function neg(a) {
-  return a.map(function (x) {
+  return a.map((x) => {
     return -x;
   });
 }
 
-assert.inDeltaArrayOrNeg = function (actual, expected, delta, message) {
+assert.inDeltaArrayOrNeg = (actual, expected, delta, message) => {
   if (
     !inDeltaArray(actual, expected, delta) &&
     !inDeltaArray(neg(actual), expected, delta)
@@ -95,13 +93,13 @@ assert.inDeltaArrayOrNeg = function (actual, expected, delta, message) {
     assert.fail(
       actual,
       expected,
-      message || 'expected {actual} to equal to {expected} within ' + delta
+      message || `expected {actual} to equal to {expected} within ${delta}`
     );
   return true;
 };
 
 function permutationEqual(actual, expected) {
-  var n;
+  let n;
   if (!(Array.isArray(actual) && Array.isArray(expected))) return false;
   n = actual.length;
   if (n != expected.length) return false;
@@ -110,7 +108,7 @@ function permutationEqual(actual, expected) {
 }
 
 function permutationInverted(actual, expected) {
-  var n, i;
+  let n, i;
   if (!(isArray(actual) && isArray(expected))) return false;
   n = actual.length;
   if (n != expected.length) return false;
@@ -119,7 +117,7 @@ function permutationInverted(actual, expected) {
   return true;
 }
 
-assert.permutationEqual = function (actual, expected, message) {
+assert.permutationEqual = (actual, expected, message) => {
   if (
     !permutationEqual(actual, expected) &&
     !permutationInverted(actual, expected)
