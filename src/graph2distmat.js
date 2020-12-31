@@ -9,34 +9,34 @@ import { flatten } from './utils';
 // Optimal Leaf Ordering.
 
 export function distmat2valuemat(distmat) {
-    var n = distmat.length,
-	valuemat = zeroes(n, n),
-	max_dist = distmax(distmat),
-	i, j;
+  var n = distmat.length,
+    valuemat = zeroes(n, n),
+    max_dist = distmax(distmat),
+    i,
+    j;
 
-    for (i = 0; i < n; i++) {
-	for (j = i; j < n; j++) {	    
-	    valuemat[j][i] = valuemat[i][j] = 1+max_dist - distmat[i][j];
-	}
+  for (i = 0; i < n; i++) {
+    for (j = i; j < n; j++) {
+      valuemat[j][i] = valuemat[i][j] = 1 + max_dist - distmat[i][j];
     }
-    return valuemat;
+  }
+  return valuemat;
 }
 
 export function graph2valuemats(graph, comps) {
-    if (! comps)
-	comps = graph.components();
+  if (!comps) comps = graph.components();
 
-    var	dists = all_pairs_distance(graph, comps);
-    return dists.map(distmat2valuemat);
+  var dists = all_pairs_distance(graph, comps);
+  return dists.map(distmat2valuemat);
 }
 
 export function valuemats_reorder(valuemats, leaforder, comps) {
-    var orders = valuemats.map(leaforder);
+  var orders = valuemats.map(leaforder);
 
-    if (comps) {
-	orders = orders.map(function(d, i) {
-	    return permute(comps[i], d);
-	});
-    }
-    return orders.reduce(flatten);
+  if (comps) {
+    orders = orders.map(function (d, i) {
+      return permute(comps[i], d);
+    });
+  }
+  return orders.reduce(flatten);
 }

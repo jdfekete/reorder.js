@@ -12,42 +12,45 @@ import { random_array } from './random';
 // Transform the matrix B to reverse the order of the eigenvectors.
 // B' = g . (I - B) where g is the Gershgorin bound, an upper bound
 // for (the absolute value of) the largest eigenvalue of a matrix.
-// Also, the smallest eigenvector is 1^n 
+// Also, the smallest eigenvector is 1^n
 
 function gershgorin_bound(B) {
-    var i, j, max = 0, n = B.length, 
-	t, row;
-    for (i = 0; i < n; i++) {
-	row = B[i];
-	t = row[i];
-	for (j = 0; j < n; j++)
-	    if (j != i)
-		t += Math.abs(row[j]);
-	if (t > max)
-	    max = t;
-    }
-    if (debug) {
-	console.log('gershgorin_bound=%d', max);
-    }
-    return max;
+  var i,
+    j,
+    max = 0,
+    n = B.length,
+    t,
+    row;
+  for (i = 0; i < n; i++) {
+    row = B[i];
+    t = row[i];
+    for (j = 0; j < n; j++) if (j != i) t += Math.abs(row[j]);
+    if (t > max) max = t;
+  }
+  if (debug) {
+    console.log('gershgorin_bound=%d', max);
+  }
+  return max;
 }
 
 export function fiedler_vector(B, eps) {
-    var g = gershgorin_bound(B),
-	n = B.length,
-	// Copy B
-	Bhat = B.map(function(row) { return row.slice(); }),
-	i, j, row;
-    for (i = 0; i < n; i++) {
-	row = Bhat[i];
-	for (j = 0; j < n; j++) {
-	    if (i == j)
-		row[j] = g - row[j];
-	    else
-		row[j] = - row[j];
-	}
+  var g = gershgorin_bound(B),
+    n = B.length,
+    // Copy B
+    Bhat = B.map(function (row) {
+      return row.slice();
+    }),
+    i,
+    j,
+    row;
+  for (i = 0; i < n; i++) {
+    row = Bhat[i];
+    for (j = 0; j < n; j++) {
+      if (i == j) row[j] = g - row[j];
+      else row[j] = -row[j];
     }
-    var init = [ array1d(n, 1), random_array(n) ],
-	eig = poweriteration_n(Bhat, 2, init, eps, 1);
-    return eig[0][1];
+  }
+  var init = [array1d(n, 1), random_array(n)],
+    eig = poweriteration_n(Bhat, 2, init, eps, 1);
+  return eig[0][1];
 }
