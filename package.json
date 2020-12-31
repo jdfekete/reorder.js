@@ -29,7 +29,7 @@
       "pretest": "npm run build",
       "test": "vows --nocolor; echo",
       "clean": "rm -rf node_modules",
-      "prettier": "prettier --single-quote --write 'src/**/*.js'"
+      "prettier": "prettier --single-quote --write '{src,test}/**/*.js'"
    },
    "files": [
       "dist"
