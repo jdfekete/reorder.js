@@ -11,12 +11,12 @@ import { inverse_permutation } from './permutation';
 // typically provides an additional 20-50% reduction in edge crossings.
 
 function count_in_crossings(graph, v, w, inv) {
-  var v_edges = graph.inEdges(v),
-    w_edges = graph.inEdges(w),
-    iv,
-    iw,
-    p0,
-    cross = 0;
+  const v_edges = graph.inEdges(v);
+  const w_edges = graph.inEdges(w);
+  let iv;
+  let iw;
+  let p0;
+  let cross = 0;
 
   for (iw = 0; iw < w_edges.length; iw++) {
     p0 = inv[w_edges[iw].target.index];
@@ -28,12 +28,12 @@ function count_in_crossings(graph, v, w, inv) {
 }
 
 function count_out_crossings(graph, v, w, inv) {
-  var v_edges = graph.outEdges(v),
-    w_edges = graph.outEdges(w),
-    iv,
-    iw,
-    p0,
-    cross = 0;
+  const v_edges = graph.outEdges(v);
+  const w_edges = graph.outEdges(w);
+  let iv;
+  let iw;
+  let p0;
+  let cross = 0;
 
   for (iw = 0; iw < w_edges.length; iw++) {
     p0 = inv[w_edges[iw].source.index];
@@ -55,15 +55,15 @@ function count_out_crossings(graph, v, w, inv) {
 export function adjacent_exchange(graph, layer1, layer2) {
   layer1 = layer1.slice();
   layer2 = layer2.slice();
-  var i,
-    v,
-    w,
-    c0,
-    c1,
-    inv_layer1 = inverse_permutation(layer1),
-    inv_layer2 = inverse_permutation(layer2),
-    swapped = true,
-    improved = 0;
+  let i;
+  let v;
+  let w;
+  let c0;
+  let c1;
+  const inv_layer1 = inverse_permutation(layer1);
+  const inv_layer2 = inverse_permutation(layer2);
+  let swapped = true;
+  let improved = 0;
 
   while (swapped) {
     swapped = false;

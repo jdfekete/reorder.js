@@ -3,12 +3,12 @@ import { range } from './range';
 export function edgesum(graph, order) {
   if (!order) order = range(graph.nodes().length);
 
-  var inv = inverse_permutation(order),
-    links = graph.links(),
-    i,
-    e,
-    d,
-    sum = 0;
+  const inv = inverse_permutation(order);
+  const links = graph.links();
+  let i;
+  let e;
+  let d;
+  let sum = 0;
 
   for (i = 0; i < links.length; i++) {
     e = links[i];

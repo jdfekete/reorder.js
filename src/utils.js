@@ -16,8 +16,8 @@ export function flatten(a, b) {
 
 // Constructs a multi-dimensional array filled with Infinity.
 export function infinities(n) {
-  var i = -1,
-    a = [];
+  let i = -1;
+  const a = [];
   if (arguments.length === 1) while (++i < n) a[i] = Infinity;
   else
     while (++i < n)
@@ -26,19 +26,19 @@ export function infinities(n) {
 }
 
 export function array1d(n, v) {
-  var i = -1,
-    a = Array(n);
+  let i = -1;
+  const a = Array(n);
   while (++i < n) a[i] = v;
   return a;
 }
 
 export function check_distance_matrix(mat, tol) {
-  var i,
-    j,
-    v1,
-    v2,
-    n = mat.length,
-    row;
+  let i;
+  let j;
+  let v1;
+  let v2;
+  const n = mat.length;
+  let row;
   if (!tol) tol = 1e-10;
 
   if (n != mat[0].length) return 'Inconsistent dimensions';
@@ -46,44 +46,44 @@ export function check_distance_matrix(mat, tol) {
   for (i = 0; i < n - 1; i++) {
     row = mat[i];
     v1 = row[i];
-    if (v1 < 0) return 'Negative value at diagonal ' + i;
-    if (v1 > tol) return 'Diagonal not zero at ' + i;
+    if (v1 < 0) return `Negative value at diagonal ${i}`;
+    if (v1 > tol) return `Diagonal not zero at ${i}`;
     for (j = 1; j < n; j++) {
       v1 = row[j];
       v2 = mat[j][i];
-      if (Math.abs(v1 - v2) > tol) return 'Inconsistency at ' + i + ',' + j;
-      if (v1 < 0) return 'Negative value at ' + i + ',' + j;
-      if (v2 < 0) return 'Negative value at ' + j + ',' + i;
+      if (Math.abs(v1 - v2) > tol) return `Inconsistency at ${i},${j}`;
+      if (v1 < 0) return `Negative value at ${i},${j}`;
+      if (v2 < 0) return `Negative value at ${j},${i}`;
     }
   }
   return false;
 }
 
 export function fix_distance_matrix(mat, tol) {
-  var i,
-    j,
-    v1,
-    v2,
-    n = mat.length,
-    row;
+  let i;
+  let j;
+  let v1;
+  let v2;
+  const n = mat.length;
+  let row;
   if (!tol) tol = 1e-10;
 
   if (n != mat[0].length)
-    throw 'Inconsistent dimensions ' + n + ' != ' + mat[0].length;
+    throw `Inconsistent dimensions ${n} != ${mat[0].length}`;
 
   for (i = 0; i < n - 1; i++) {
     row = mat[i];
     v1 = row[i];
     if (v1 < 0) {
-      if (-v1 > tol) throw 'Negative value at diagonal' + i;
+      if (-v1 > tol) throw `Negative value at diagonal${i}`;
       v1 = row[i] = 0;
     } else if (v1 > tol) {
-      throw 'Diagonal not zero at ' + i;
+      throw `Diagonal not zero at ${i}`;
     }
     for (j = 1; j < n; j++) {
       v1 = row[j];
       v2 = mat[j][i];
-      if (Math.abs(v1 - v2) > tol) throw 'Inconsistency at ' + i + ',' + j;
+      if (Math.abs(v1 - v2) > tol) throw `Inconsistency at ${i},${j}`;
       if (v1 < 0) v1 = 0;
       if (v2 < 0) v2 = 0;
       if (v1 != v2) {

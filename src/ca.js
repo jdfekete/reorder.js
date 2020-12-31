@@ -6,13 +6,13 @@ import { sort_order } from './sort_order';
 // see http://en.wikipedia.org/wiki/Correspondence_analysis
 
 function sumrows(v) {
-  var n = v.length,
-    o = v[0].length,
-    sumrow = Array(n),
-    i,
-    j,
-    row,
-    s;
+  const n = v.length;
+  const o = v[0].length;
+  const sumrow = Array(n);
+  let i;
+  let j;
+  let row;
+  let s;
 
   for (i = 0; i < n; i++) {
     row = v[i];
@@ -24,12 +24,12 @@ function sumrows(v) {
 }
 
 function sumcols(v) {
-  var n = v.length,
-    o = v[0].length,
-    sumcol = zeroes(o),
-    i,
-    j,
-    row;
+  const n = v.length;
+  const o = v[0].length;
+  const sumcol = zeroes(o);
+  let i;
+  let j;
+  let row;
 
   for (i = 0; i < n; i++) {
     row = v[i];
@@ -49,16 +49,18 @@ function sumcols(v) {
 // https://cran.r-project.org/web/packages/vegan/index.html
 
 function decorana(dat) {
-  var ZEROEIG = 1e-7, // consider as zero eigenvalue
-    x,
-    y,
-    aidot,
-    adotj,
-    mi,
-    n,
-    s1,
-    nr = dat.length,
-    nc = dat[0].length;
+  const // consider as zero eigenvalue
+    ZEROEIG = 1e-7;
+
+  let x;
+  let y;
+  let aidot;
+  let adotj;
+  let mi;
+  let n;
+  let s1;
+  const nr = dat.length;
+  const nc = dat[0].length;
 
   adotj = sumcols(dat);
   aidot = sumrows(dat);
@@ -73,14 +75,14 @@ function decorana(dat) {
     x = s1.rows;
     y = s1.cols;
     yxmult(y, x, nr, nc, dat);
-    for (var i = 0; i < nr; i++) x[i] /= aidot[i];
+    for (let i = 0; i < nr; i++) x[i] /= aidot[i];
   }
   return s1;
 }
 
 function trans(y, yy, x, aidot, mi, n, dat, prt) {
-  var i, j, a1;
-  if (prt) console.log('TRANS ' + prt);
+  let i, j, a1;
+  if (prt) console.log(`TRANS ${prt}`);
   yxmult(y, x, mi, n, dat, prt);
   for (i = 0; i < mi; i++) {
     x[i] = x[i] / aidot[i]; // 10
@@ -97,13 +99,13 @@ function trans(y, yy, x, aidot, mi, n, dat, prt) {
 
 function printvec(y) {
   console.log('');
-  for (var i = 0; i < y.length; i++) {
-    console.log('i:' + (i + 1) + ' v:  ' + y[i].toFixed(5));
+  for (let i = 0; i < y.length; i++) {
+    console.log(`i:${i + 1} v:  ${y[i].toFixed(5)}`);
   }
 }
 
 function xymult(x, y, mi, n, dat, prt) {
-  var i, j, ax, row;
+  let i, j, ax, row;
 
   if (prt) {
     console.log('xymult');
@@ -122,7 +124,7 @@ function xymult(x, y, mi, n, dat, prt) {
 }
 
 function yxmult(y, x, mi, n, dat, prt) {
-  var i, j, ax, row;
+  let i, j, ax, row;
   if (prt) {
     console.log('yxmult');
     printvec(x, 5, null, 'x=');
@@ -142,34 +144,34 @@ function yxmult(y, x, mi, n, dat, prt) {
 }
 
 function eigy(x, y, mi, n, dat, aidot, adotj) {
-  var i,
-    j,
-    tot,
-    icount,
-    a,
-    ay,
-    ex,
-    a11,
-    a12,
-    a22,
-    a23,
-    a33,
-    a34,
-    a44,
-    res,
-    ax1,
-    ax2,
-    ax3,
-    ax4,
-    b13,
-    b14,
-    b24,
-    row,
-    y2 = zeroes(n),
-    y3 = zeroes(n),
-    y4 = zeroes(n),
-    y5 = zeroes(n),
-    tol;
+  let i;
+  let j;
+  let tot;
+  let icount;
+  let a;
+  let ay;
+  let ex;
+  let a11;
+  let a12;
+  let a22;
+  let a23;
+  let a33;
+  let a34;
+  let a44;
+  let res;
+  let ax1;
+  let ax2;
+  let ax3;
+  let ax4;
+  let b13;
+  let b14;
+  let b24;
+  let row;
+  const y2 = zeroes(n);
+  const y3 = zeroes(n);
+  const y4 = zeroes(n);
+  const y5 = zeroes(n);
+  let tol;
 
   tot = 0.0;
   for (j = 0; j < n; j++) {
@@ -293,9 +295,9 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   if (a12 > tol && debug > 0) {
     console.log('residual bigger than tolerance on axis 1');
   }
-  var aymax = y[0],
-    aymin = y[0],
-    sign = 1;
+  let aymax = y[0];
+  let aymin = y[0];
+  const sign = 1;
   for (j = 1; j < n; j++) {
     a = y[j];
     if (a < aymin) aymin = a;
@@ -312,12 +314,12 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   yxmult(y, x, mi, n, dat); //,true);
   for (i = 0; i < mi; i++) x[i] /= aidot[i]; // 220
   // 225
-  var axlong = 0.0;
+  let axlong = 0.0;
   for (i = 0; i < mi; i++) axlong += aidot[i] * sqr(x[i]); // 230
   axlong = Math.sqrt(axlong);
   for (i = 0; i < mi; i++) x[i] /= axlong; // 240
   for (j = 0; j < n; j++) y[j] /= axlong; // 250
-  var sumsq = 0.0,
+  let sumsq = 0.0,
     ax;
   for (i = 0; i < mi; i++) {
     ax = x[i];
@@ -327,10 +329,10 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
     }
     // 260
   }
-  var sd = Math.sqrt(sumsq / tot);
+  let sd = Math.sqrt(sumsq / tot);
   if (a11 >= 0.999) {
     sd = aymax / axlong;
-    var sd1 = -aymin / axlong;
+    const sd1 = -aymin / axlong;
     if (sd1 > sd) sd = sd1;
   }
   // 265
@@ -346,7 +348,8 @@ function sqr(x) {
 }
 
 function solve_tridiag(tol, a11, a12, a22, a23, a33, a34, a44) {
-  var ax1 = 1.0, // 160
+  let // 160
+    ax1 = 1.0,
     ax2 = 0.1,
     ax3 = 0.01,
     ax4 = 0.001,
@@ -394,7 +397,7 @@ export const ca_decorana = decorana;
 export const ca = decorana;
 
 export function ca_order(dat) {
-  var res = ca(dat);
+  const res = ca(dat);
   return {
     rows: sort_order(res.rows),
     cols: sort_order(res.cols),

@@ -1,20 +1,20 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.pearson');
+const suite = vows.describe('reorder.pearson');
 
 suite.addBatch({
   pearson: {
-    simple: function () {
-      var a = [1, 2, 3, 4, 5],
+    simple() {
+      const a = [1, 2, 3, 4, 5],
         b = [5, 4, 3, 2, 1];
 
       assert.equal(reorder.correlation.pearson(a, b), -1);
     },
-    harder: function () {
-      var a = [
+    harder() {
+      const a = [
           0.38906616,
           0.5773394,
           0.17349286,
@@ -43,8 +43,8 @@ suite.addBatch({
       //console.log('y = '+y+', e='+e);
       assert.inDelta(y, e, 0.00001);
     },
-    hard: function () {
-      var X = [
+    hard() {
+      const X = [
           [0.6813319, 0.90478228, 0.11681552, 0.2879309, 0.91980914],
           [0.86943635, 0.63710069, 0.3685353, 0.39660358, 0.58182883],
           [0.7097419, 0.25265316, 0.2377928, 0.1065309, 0.00203621],

@@ -4,17 +4,17 @@ import { inverse_permutation } from './permutation';
 export function cuthill_mckee(graph, comp) {
   if (comp.length < 3) return comp;
 
-  var nodes = graph.nodes(),
-    start = comp[0],
-    min_deg = graph.degree(start),
-    i,
-    n,
-    edges,
-    e,
-    visited = {},
-    queue = new Queue(),
-    inv = inverse_permutation(comp),
-    perm = [];
+  const nodes = graph.nodes();
+  let start = comp[0];
+  let min_deg = graph.degree(start);
+  let i;
+  let n;
+  let edges;
+  let e;
+  const visited = {};
+  const queue = new Queue();
+  const inv = inverse_permutation(comp);
+  const perm = [];
 
   for (i = 0; i < comp.length; i++) {
     n = comp[i];
@@ -32,13 +32,13 @@ export function cuthill_mckee(graph, comp) {
     perm.push(n);
     e = graph
       .edges(n)
-      .map(function (edge) {
+      .map((edge) => {
         return graph.other(edge, n).index;
       })
-      .filter(function (n) {
+      .filter((n) => {
         return !visited[n] && n in inv;
       })
-      .sort(function (a, b) {
+      .sort((a, b) => {
         // ascending by degree
         return graph.degree(a) - graph.degree(b);
       });
@@ -53,7 +53,7 @@ export function reverse_cuthill_mckee(graph, comp) {
 }
 
 export function cuthill_mckee_order(graph, comps) {
-  var i,
+  let i,
     comp,
     order = [];
   if (!comps) {
@@ -67,7 +67,7 @@ export function cuthill_mckee_order(graph, comps) {
 }
 
 export function reverse_cuthill_mckee_order(graph, comps) {
-  var i,
+  let i,
     comp,
     order = [];
   if (!comps) {

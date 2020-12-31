@@ -1,12 +1,12 @@
 import { flatten, cmp_number } from './utils';
 
 export function bfs(graph, v, fn) {
-  var q = new Queue(),
-    discovered = {},
-    i,
-    e,
-    v2,
-    edges;
+  const q = new Queue();
+  const discovered = {};
+  let i;
+  let e;
+  let v2;
+  let edges;
   q.push(v);
   discovered[v] = true;
   fn(v, undefined);
@@ -28,9 +28,9 @@ export function bfs(graph, v, fn) {
 }
 
 export function bfs_distances(graph, v) {
-  var dist = {};
+  const dist = {};
   dist[v] = 0;
-  bfs(graph, v, function (v, c) {
+  bfs(graph, v, (v, c) => {
     if (c >= 0 && v != c) dist[c] = dist[v] + 1;
   });
   return dist;
@@ -38,11 +38,11 @@ export function bfs_distances(graph, v) {
 
 export function all_pairs_distance_bfs(graph, comps) {
   if (!comps) comps = [graph.nodes_indices()];
-  var nodes = comps.reduce(flatten).sort(cmp_number),
-    mat = Array(nodes.length),
-    i,
-    j,
-    dist;
+  const nodes = comps.reduce(flatten).sort(cmp_number);
+  const mat = Array(nodes.length);
+  let i;
+  let j;
+  let dist;
 
   for (i = 0; i < nodes.length; i++) mat[i] = Array(nodes.length);
 

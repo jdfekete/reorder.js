@@ -3,25 +3,28 @@ import { distance as distances } from './distance';
 // This is a modified implementation of hcluster derived from:
 // https://github.com/jasondavies/science.js/blob/master/src/stats/hcluster.js
 export function hcluster() {
-  var distance = distances.euclidean,
-    linkage = 'single', // single, complete or average
+  let distance = distances.euclidean,
+    // single, complete or average
+    linkage = 'single',
     distMatrix = null;
 
   function hcluster(vectors) {
-    var n = vectors.length,
-      dMin = [],
-      cSize = [],
-      //        distMatrix = [],
-      clusters = [],
-      c1,
-      c2,
-      c1Cluster,
-      c2Cluster,
-      p,
-      root,
-      i,
-      j,
-      id = 0;
+    const n = vectors.length;
+    const dMin = [];
+    const cSize = [];
+
+    const //        distMatrix = [],
+      clusters = [];
+
+    let c1;
+    let c2;
+    let c1Cluster;
+    let c2Cluster;
+    let p;
+    let root;
+    let i;
+    let j;
+    let id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
     if (distMatrix === null) {
@@ -40,11 +43,7 @@ export function hcluster() {
     } else {
       if (distMatrix.length < n || distMatrix[0].length < n)
         throw {
-          error:
-            'Provided distance matrix length ' +
-            distMatrix.length +
-            ' instead of ' +
-            n,
+          error: `Provided distance matrix length ${distMatrix.length} instead of ${n}`,
         };
       i = -1;
       while (++i < n) {
@@ -86,7 +85,7 @@ export function hcluster() {
       c1Cluster = clusters[c1][0];
       c2Cluster = clusters[c2][0];
 
-      var newCluster = {
+      const newCluster = {
         left: c1Cluster,
         right: c2Cluster,
         dist: distMatrix[c1][c2],
@@ -152,7 +151,7 @@ export function hcluster() {
 
   hcluster.distanceMatrix = function (x) {
     if (!arguments.length) return distMatrix;
-    distMatrix = x.map(function (y) {
+    distMatrix = x.map((y) => {
       return y.slice(0);
     });
     return hcluster;
@@ -162,10 +161,10 @@ export function hcluster() {
 }
 
 function calculateCentroid(c1Size, c1Centroid, c2Size, c2Centroid) {
-  var newCentroid = [],
-    newSize = c1Size + c2Size,
-    n = c1Centroid.length,
-    i = -1;
+  const newCentroid = [];
+  const newSize = c1Size + c2Size;
+  const n = c1Centroid.length;
+  let i = -1;
   while (++i < n) {
     newCentroid[i] =
       (c1Size * c1Centroid[i] + c2Size * c2Centroid[i]) / newSize;

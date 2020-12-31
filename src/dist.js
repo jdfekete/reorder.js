@@ -1,16 +1,16 @@
 import { distance as distances } from './distance';
 
 export function dist() {
-  var distance = distances.euclidean;
+  let distance = distances.euclidean;
 
   function dist(vectors) {
-    var n = vectors.length,
+    const n = vectors.length,
       distMatrix = [];
 
-    for (var i = 0; i < n; i++) {
-      var d = [];
+    for (let i = 0; i < n; i++) {
+      const d = [];
       distMatrix[i] = d;
-      for (var j = 0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         if (j < i) {
           d.push(distMatrix[j][i]);
         } else if (i === j) {
@@ -33,11 +33,11 @@ export function dist() {
 }
 
 export function distmax(distMatrix) {
-  var max = 0,
-    n = distMatrix.length,
-    i,
-    j,
-    row;
+  let max = 0;
+  const n = distMatrix.length;
+  let i;
+  let j;
+  let row;
 
   for (i = 0; i < n; i++) {
     row = distMatrix[i];
@@ -47,11 +47,11 @@ export function distmax(distMatrix) {
 }
 
 export function distmin(distMatrix) {
-  var min = Infinity,
-    n = distMatrix.length,
-    i,
-    j,
-    row;
+  let min = Infinity;
+  const n = distMatrix.length;
+  let i;
+  let j;
+  let row;
 
   for (i = 0; i < n; i++) {
     row = distMatrix[i];
@@ -62,7 +62,7 @@ export function distmin(distMatrix) {
 
 export function dist_remove(dist, n, m) {
   if (arguments.length < 3) m = n + 1;
-  var i;
+  let i;
   dist.splice(n, m - n);
   for (i = dist.length; i-- > 0; ) dist[i].splice(n, m - n);
   return dist;

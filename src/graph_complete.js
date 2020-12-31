@@ -1,10 +1,10 @@
 import { graph } from './graph';
 
 export function complete_graph(n, directed) {
-  var nodes = graph_empty_nodes(n),
-    links = [],
-    i,
-    j;
+  const nodes = graph_empty_nodes(n);
+  const links = [];
+  let i;
+  let j;
 
   if (directed) {
     for (i = 0; i < n; i++) {

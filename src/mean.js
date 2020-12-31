@@ -1,10 +1,10 @@
 export function meantranspose(v, j) {
-  var n = v.length;
+  const n = v.length;
   if (n === 0) return NaN;
-  var o = v[0].length,
-    m = 0,
-    i = -1,
-    row;
+  const o = v[0].length;
+  let m = 0;
+  let i = -1;
+  let row;
 
   while (++i < n) m += (v[i][j] - m) / (i + 1);
 
@@ -12,13 +12,13 @@ export function meantranspose(v, j) {
 }
 
 export function meancolumns(v) {
-  var n = v.length;
+  const n = v.length;
   if (n === 0) return NaN;
-  var o = v[0].length,
-    m = v[0].slice(0),
-    i = 0,
-    j,
-    row;
+  const o = v[0].length;
+  const m = v[0].slice(0);
+  let i = 0;
+  let j;
+  let row;
 
   while (++i < n) {
     row = v[i];

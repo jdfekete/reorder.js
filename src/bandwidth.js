@@ -4,12 +4,12 @@ import { inverse_permutation } from './permutation';
 export function bandwidth(graph, order) {
   if (!order) order = range(graph.nodes().length);
 
-  var inv = inverse_permutation(order),
-    links = graph.links(),
-    i,
-    e,
-    d,
-    max = 0;
+  const inv = inverse_permutation(order);
+  const links = graph.links();
+  let i;
+  let e;
+  let d;
+  let max = 0;
 
   for (i = 0; i < links.length; i++) {
     e = links[i];

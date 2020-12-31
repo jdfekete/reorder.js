@@ -3,18 +3,18 @@ import { assert } from './debug';
 import { inverse_permutation } from './permutation';
 
 export function laplacian(graph, comp) {
-  var n = comp.length,
-    lap = zeroes(n, n),
-    inv = inverse_permutation(comp),
-    i,
-    j,
-    k,
-    row,
-    sum,
-    edges,
-    v,
-    e,
-    other;
+  const n = comp.length;
+  const lap = zeroes(n, n);
+  const inv = inverse_permutation(comp);
+  let i;
+  let j;
+  let k;
+  let row;
+  let sum;
+  let edges;
+  let v;
+  let e;
+  let other;
 
   assert(!graph.directed(), 'Laplacian only for undirected graphs');
   for (i = 0; i < n; i++) {

@@ -1,16 +1,16 @@
-var reorder = require('../dist/reorder.cjs');
-var seedrandom = require('seedrandom');
+const reorder = require('../dist/reorder.cjs');
+const seedrandom = require('seedrandom');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.order');
+const suite = vows.describe('reorder.order');
 
 Math.seedrandom('reorder');
 
-assert.ORdeepEqual = function (actual, expected_list) {
-  for (var i = 0; i < expected_list.length; i++) {
-    var expected = expected_list[i];
+assert.ORdeepEqual = (actual, expected_list) => {
+  for (let i = 0; i < expected_list.length; i++) {
+    const expected = expected_list[i];
     if (deepEqual(actual, expected)) {
       assert.ok(actual, 'Assert OK');
       return true;
@@ -21,7 +21,7 @@ assert.ORdeepEqual = function (actual, expected_list) {
 };
 
 function eucl(a, b) {
-  var x = b - a;
+  const x = b - a;
   return x * x;
 }
 
@@ -30,10 +30,10 @@ function fortytwo(a) {
 }
 
 function lesssimple() {
-  var prefix = reorder.range(0, 10),
-    suffix;
+  const prefix = reorder.range(0, 10);
+  let suffix;
 
-  var prev = 10,
+  let prev = 10,
     data = [prev],
     next,
     i,
@@ -49,15 +49,15 @@ function lesssimple() {
   j = i + data.length;
   data = prefix.concat(data).concat(suffix);
   //console.log("Original   : "+data);
-  var randata = reorder.randomPermute(data.slice(0), i, j);
+  const randata = reorder.randomPermute(data.slice(0), i, j);
   //console.log("Shuffled   : "+randata);
-  var x = reorder.order().distance(eucl).limits(i, j)(randata);
+  const x = reorder.order().distance(eucl).limits(i, j)(randata);
   //console.log("Permutation: "+randata);
   assert.deepEqual(reorder.stablepermute(randata, x), data);
 }
 
 function insert_simple(v, i, j) {
-  var x = reorder.order().distance(eucl).except([i, j])(v);
+  const x = reorder.order().distance(eucl).except([i, j])(v);
   assert.deepEqual(
     reorder.stablepermute(v, x),
     reorder.range(42, 42 + v.length)
@@ -65,18 +65,18 @@ function insert_simple(v, i, j) {
 }
 
 function insert_lesssimple() {
-  var plen = Math.round(Math.random() * 20),
+  const plen = Math.round(Math.random() * 20),
     mlen = Math.round(Math.random() * 20) + 2,
     slen = Math.round(Math.random() * 20),
     cut = Math.round(Math.random() * (plen + slen));
-  var prefix = reorder.range(42, 42 + plen),
-    middle = reorder.range(42 + plen, 42 + plen + mlen),
-    suffix = reorder.range(42 + plen + mlen, 42 + plen + mlen + slen),
-    shuffled = reorder.randomPermute(prefix.concat(suffix));
+  const prefix = reorder.range(42, 42 + plen);
+  const middle = reorder.range(42 + plen, 42 + plen + mlen);
+  const suffix = reorder.range(42 + plen + mlen, 42 + plen + mlen + slen);
+  let shuffled = reorder.randomPermute(prefix.concat(suffix));
 
   shuffled = shuffled.slice(0, cut).concat(middle).concat(shuffled.slice(cut));
   //console.log("i="+cut+", j="+(cut+middle.length));
-  var x = reorder
+  const x = reorder
     .order()
     .distance(eucl)
     .except([cut, cut + middle.length])(shuffled);
@@ -88,9 +88,9 @@ function insert_lesssimple() {
 
 suite.addBatch({
   order: {
-    simple: function () {
-      var data = [-1, -2, 0, 2, 1, 4, 3, 10, 11, 12];
-      var x = reorder.order().distance(eucl).limits(3, 7)(data);
+    simple() {
+      const data = [-1, -2, 0, 2, 1, 4, 3, 10, 11, 12];
+      const x = reorder.order().distance(eucl).limits(3, 7)(data);
       assert.deepEqual(reorder.stablepermute(data, x), [
         -1,
         -2,
@@ -104,19 +104,19 @@ suite.addBatch({
         12,
       ]);
     },
-    lesssimple: lesssimple,
-    evenharder: function () {
+    lesssimple,
+    evenharder() {
       for (n = 10; n-- > 0; ) lesssimple();
     },
     'equiv-simple': function () {
-      var data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo),
+      const data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo),
         shuffled = reorder.randomPermute(data.slice(0));
 
-      var x = reorder.order().distance(eucl)(shuffled);
+      const x = reorder.order().distance(eucl)(shuffled);
       assert.deepEqual(reorder.stablepermute(shuffled, x), data);
     },
     'equiv-simple2': function () {
-      var data = [
+      const data = [
         [1, 1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 1, 1, 1],
         [0, 0, 0, 0, 0, 0, 1, 1, 0],
@@ -125,7 +125,7 @@ suite.addBatch({
         [0, 0, 1, 1, 1, 1, 0, 0, 0],
       ];
 
-      var x = reorder
+      const x = reorder
         .order()
         //		    .distance(reorder.distance.manhattan)
         .linkage('single')(data);
@@ -157,13 +157,13 @@ suite.addBatch({
 	},
 */
     'insert-simple': function () {
-      var prefix = [0, 1, 2, 3].map(fortytwo),
-        middle = [4, 5, 6, 7, 8].map(fortytwo),
-        suffix = [9, 10, 11, 12].map(fortytwo),
-        shuffled = reorder.randomPermute(prefix.concat(suffix));
+      const prefix = [0, 1, 2, 3].map(fortytwo);
+      const middle = [4, 5, 6, 7, 8].map(fortytwo);
+      const suffix = [9, 10, 11, 12].map(fortytwo);
+      let shuffled = reorder.randomPermute(prefix.concat(suffix));
 
       shuffled = shuffled.slice(0, 5).concat(middle).concat(shuffled.slice(5));
-      var x = reorder
+      const x = reorder
         .order()
         .distance(eucl)
         .except([5, 5 + middle.length])(shuffled);
@@ -257,7 +257,7 @@ suite.addBatch({
       );
     },
     'insert-3': function () {
-      var data = [
+      const data = [
         [1, 1, 0],
         [0, 0, 1],
         [1, 1, 0],
@@ -270,7 +270,7 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      var x = reorder.order().limits(1, 10).except([5, 10])(data);
+      const x = reorder.order().limits(1, 10).except([5, 10])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       assert.ORdeepEqual(x, [
@@ -281,7 +281,7 @@ suite.addBatch({
       ]);
     },
     'insert-4': function () {
-      var data = [
+      const data = [
         [1, 1, 0],
         [0, 0, 1],
         [1, 1, 0],
@@ -294,13 +294,13 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      var x = reorder.order().limits(1, 11).except([3, 8])(data);
+      const x = reorder.order().limits(1, 11).except([3, 8])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
     },
     'insert-5': function () {
-      var data = [
+      const data = [
         [NaN, NaN, NaN],
         [1, 1, 0],
         [0, 0, 1],
@@ -314,13 +314,13 @@ suite.addBatch({
         [0, 1, 0],
         [0, 1, 0],
       ];
-      var x = reorder.order().limits(1, 12).except([2, 4, 7, 12])(data);
+      const x = reorder.order().limits(1, 12).except([2, 4, 7, 12])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
     },
     'insert-6': function () {
-      var data = [
+      const data = [
         [1, 1, 0],
         [0, 0, 1],
         [1, 1, 0],
@@ -333,13 +333,13 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      var x = reorder.order().limits(1, 11).except([1, 6])(data);
+      const x = reorder.order().limits(1, 11).except([1, 6])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
     },
     'insert-7': function () {
-      var data = [
+      const data = [
         [0, 0, 1],
         [1, 1, 0],
         [1, 1, 0],
@@ -351,14 +351,14 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      var x = reorder.order().limits(1, 10).except([5, 9])(data);
+      const x = reorder.order().limits(1, 10).except([5, 9])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
     },
     'insert-lesssimple': insert_lesssimple,
     'insert-evenharder': function () {
-      for (var i = 0; i < 20; i++) {
+      for (let i = 0; i < 20; i++) {
         //console.log("Loop "+i);
         insert_lesssimple();
       }
@@ -430,13 +430,13 @@ function objEquiv(a, b) {
 }
 
 function toNum(a) {
-  return a.map(function (l) {
+  return a.map((l) => {
     return l.charCodeAt(0) - 97;
   });
 }
 
 function toLetter(a) {
-  return a.map(function (l) {
+  return a.map((l) => {
     return String.fromCharCode(97 + l);
   });
 }

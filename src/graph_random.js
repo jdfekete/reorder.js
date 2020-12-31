@@ -6,13 +6,13 @@ export function graph_random_erdos_renyi(n, p, directed) {
   if (p <= 0) return graph_empty(n, directed);
   else if (p >= 1) return complete_graph(n, directed);
 
-  var nodes = graph_empty_nodes(n),
-    links = [],
-    v,
-    w,
-    i,
-    lr,
-    lp;
+  const nodes = graph_empty_nodes(n);
+  const links = [];
+  let v;
+  let w;
+  let i;
+  let lr;
+  let lp;
 
   w = -1;
   lp = Math.log(1.0 - p);

@@ -4,13 +4,13 @@ import { debug } from './core';
 import { count_crossings } from './count_crossings';
 
 export function barycenter_order(graph, comps, max_iter) {
-  var orders = [[], [], 0];
+  let orders = [[], [], 0];
   // Compute the barycenter heuristic on each connected component
   if (!comps) {
     comps = graph.components();
   }
-  for (var i = 0; i < comps.length; i++) {
-    var o = barycenter(graph, comps[i], max_iter);
+  for (let i = 0; i < comps.length; i++) {
+    const o = barycenter(graph, comps[i], max_iter);
     orders = [orders[0].concat(o[0]), orders[1].concat(o[1]), orders[2] + o[2]];
   }
   return orders;
@@ -25,7 +25,7 @@ function median(neighbors) {
   if (neighbors.length === 2) return (neighbors[0] + neighbors[1]) / 2;
   neighbors.sort(cmp_number);
   if (neighbors.length % 2) return neighbors[(neighbors.length - 1) / 2];
-  var rm = neighbors.length / 2,
+  const rm = neighbors.length / 2,
     lm = rm - 1,
     rspan = neighbors[neighbors.length - 1] - neighbors[rm],
     lspan = neighbors[lm] - neighbors[0];
@@ -34,26 +34,26 @@ function median(neighbors) {
 }
 
 export function barycenter(graph, comp, max_iter) {
-  var nodes = graph.nodes(),
-    layer1,
-    layer2,
-    crossings,
-    iter,
-    best_layer1,
-    best_layer2,
-    best_crossings,
-    best_iter,
-    layer,
-    inv_layer = {},
-    i,
-    v,
-    neighbors,
-    med;
+  const nodes = graph.nodes();
+  let layer1;
+  let layer2;
+  let crossings;
+  let iter;
+  let best_layer1;
+  let best_layer2;
+  let best_crossings;
+  let best_iter;
+  let layer;
+  let inv_layer = {};
+  let i;
+  let v;
+  let neighbors;
+  let med;
 
-  layer1 = comp.filter(function (n) {
+  layer1 = comp.filter((n) => {
     return graph.outDegree(n) !== 0;
   });
-  layer2 = comp.filter(function (n) {
+  layer2 = comp.filter((n) => {
     return graph.inDegree(n) !== 0;
   });
   if (comp.length < 3) {
@@ -69,12 +69,12 @@ export function barycenter(graph, comp, max_iter) {
   best_layer1 = layer1.slice();
   best_layer2 = layer2.slice();
   best_iter = 0;
-  var inv_neighbor = function (e) {
-      var n = e.source == v ? e.target : e.source;
+  const inv_neighbor = (e) => {
+      const n = e.source == v ? e.target : e.source;
       return inv_layer[n.index];
     },
-    barycenter_sort = function (a, b) {
-      var d = med[a] - med[b];
+    barycenter_sort = (a, b) => {
+      let d = med[a] - med[b];
       if (d === 0) {
         // If both values are equal,
         // place the odd degree vertex on the left of the even
@@ -114,7 +114,7 @@ export function barycenter(graph, comp, max_iter) {
     }
   }
   if (debug) {
-    console.log('Best iter: ' + best_iter);
+    console.log(`Best iter: ${best_iter}`);
   }
 
   return [best_layer1, best_layer2, best_crossings];

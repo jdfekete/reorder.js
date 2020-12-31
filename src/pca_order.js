@@ -6,16 +6,16 @@ import { sort_order } from './sort_order';
 // Takes a matrix, substract the mean of each row
 // so that the mean is 0
 function center(v) {
-  var n = v.length;
+  const n = v.length;
 
   if (n === 0) return null;
 
-  var mean = meancolumns(v),
-    o = mean.length,
-    v1 = Array(n),
-    i,
-    j,
-    row;
+  const mean = meancolumns(v);
+  const o = mean.length;
+  const v1 = Array(n);
+  let i;
+  let j;
+  let row;
 
   for (i = 0; i < n; i++) {
     row = v[i].slice(0);
@@ -29,12 +29,12 @@ function center(v) {
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 export function pca1d(v, eps) {
-  var n = v.length;
+  const n = v.length;
 
   if (v.length === 0) return null;
 
   v = center(v);
-  var cov = variancecovariance(v);
+  const cov = variancecovariance(v);
   return poweriteration(cov, eps);
 }
 

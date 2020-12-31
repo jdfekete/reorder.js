@@ -1,6 +1,6 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert'),
   seedrandom = require('seedrandom'),
   numeric = require('numeric');
@@ -8,11 +8,11 @@ require('./env-assert');
 
 Math.seedrandom('reorder');
 
-var suite = vows.describe('reorder.ca');
+const suite = vows.describe('reorder.ca');
 
 function compare_order(row_order1, row_order2, msg) {
-  var tmp = Array(row_order1.length),
-    i;
+  const tmp = Array(row_order1.length);
+  let i;
   assert.equal(row_order1.length, row_order2.length);
   for (i = 0; i < row_order1.length; i++) {
     if (Math.abs(row_order2) < 1e-9) tmp[i] = NaN;
@@ -23,13 +23,13 @@ function compare_order(row_order1, row_order2, msg) {
 
 suite.addBatch({
   ca: {
-    simple: function () {
+    simple() {
       // Ground truth with R, package "ca":
       // library(ca)
       // res=ca(mat)
       // erows = res$rowcoord[,1]
       // ecols = res$colcoord[,1]
-      var mat = [
+      const mat = [
           [1, 0, 0, 1, 1, 0, 0, 1],
           [0, 1, 1, 0, 0, 1, 0, 1],
           [1, 1, 0, 0, 0, 1, 1, 0],
@@ -94,8 +94,8 @@ suite.addBatch({
     //     reorder.printmat(mat);
     //     reorder.printmat(mat, col_order, row_order);
     // },
-    harder: function () {
-      var mat = [
+    harder() {
+      const mat = [
           [45, 126, 24, 5],
           [87, 93, 19, 1],
           [0, 0, 52, 148],

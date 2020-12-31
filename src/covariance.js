@@ -3,9 +3,9 @@ import { dot } from './aliases';
 export const covariance = dot;
 
 export function covariancetranspose(v, a, b) {
-  var n = v.length,
-    cov = 0,
-    i;
+  const n = v.length;
+  let cov = 0;
+  let i;
   for (i = 0; i < n; i++) {
     cov += v[i][a] * v[i][b];
   }
@@ -13,10 +13,10 @@ export function covariancetranspose(v, a, b) {
 }
 
 export function variancecovariance(v) {
-  var o = v[0].length,
-    cov = Array(o),
-    i,
-    j;
+  const o = v[0].length;
+  const cov = Array(o);
+  let i;
+  let j;
 
   for (i = 0; i < o; i++) {
     cov[i] = Array(o);

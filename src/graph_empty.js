@@ -1,6 +1,6 @@
 export function graph_empty_nodes(n) {
-  var nodes = Array(n),
-    i;
+  const nodes = Array(n);
+  let i;
   for (i = 0; i < n; i++) nodes[i] = { id: i };
   return nodes;
 }

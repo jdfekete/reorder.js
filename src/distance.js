@@ -2,8 +2,8 @@ function isNum(a, b) {
   return !(isNaN(a) || isNaN(b) || a == Infinity || b == Infinity);
 }
 export const distance = {
-  euclidean: function (a, b) {
-    var i = a.length,
+  euclidean(a, b) {
+    let i = a.length,
       s = 0,
       x;
     while (i-- > 0) {
@@ -14,8 +14,8 @@ export const distance = {
     }
     return Math.sqrt(s);
   },
-  manhattan: function (a, b) {
-    var i = a.length,
+  manhattan(a, b) {
+    let i = a.length,
       s = 0;
     while (i-- > 0) {
       if (isNum(a[i], b[i])) {
@@ -24,9 +24,9 @@ export const distance = {
     }
     return s;
   },
-  minkowski: function (p) {
-    return function (a, b) {
-      var i = a.length,
+  minkowski(p) {
+    return (a, b) => {
+      let i = a.length,
         s = 0;
       while (i-- > 0) {
         if (isNum(a[i], b[i])) {
@@ -36,8 +36,8 @@ export const distance = {
       return Math.pow(s, 1 / p);
     };
   },
-  chebyshev: function (a, b) {
-    var i = a.length,
+  chebyshev(a, b) {
+    let i = a.length,
       max = 0,
       x;
     while (i-- > 0) {
@@ -48,8 +48,8 @@ export const distance = {
     }
     return max;
   },
-  hamming: function (a, b) {
-    var i = a.length,
+  hamming(a, b) {
+    let i = a.length,
       d = 0;
     while (i-- > 0) {
       if (isNum(a[i], b[i])) {
@@ -58,8 +58,8 @@ export const distance = {
     }
     return d;
   },
-  jaccard: function (a, b) {
-    var n = 0,
+  jaccard(a, b) {
+    let n = 0,
       i = a.length,
       s = 0;
     while (i-- > 0) {
@@ -71,8 +71,8 @@ export const distance = {
     if (n === 0) return 0;
     return s / n;
   },
-  braycurtis: function (a, b) {
-    var i = a.length,
+  braycurtis(a, b) {
+    let i = a.length,
       s0 = 0,
       s1 = 0,
       ai,

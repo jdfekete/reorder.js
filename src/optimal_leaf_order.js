@@ -20,7 +20,7 @@ import { dist } from './dist';
  */
 
 export function optimal_leaf_order() {
-  var distanceMatrix = null,
+  let distanceMatrix = null,
     distance = distances.euclidean,
     linkage = 'complete',
     leavesMap = {},
@@ -43,7 +43,7 @@ export function optimal_leaf_order() {
   }
 
   function order(v, i, j) {
-    var key = 'k' + v.id + '-' + i + '-' + j; // ugly key
+    const key = `k${v.id}-${i}-${j}`; // ugly key
     if (key in orderMap) return orderMap[key];
     return (orderMap[key] = _order(v, i, j));
   }
@@ -52,37 +52,37 @@ export function optimal_leaf_order() {
     if (v.depth === 0)
       //isLeaf(v))
       return [0, [v.id]];
-    var l = v.left,
+    const l = v.left,
       r = v.right;
-    var L = leaves(l),
+    const L = leaves(l),
       R = leaves(r);
 
-    var w, x;
-    if (L.indexOf(i) !== -1 && R.indexOf(j) !== -1) {
+    let w, x;
+    if (L.includes(i) && R.includes(j)) {
       w = l;
       x = r;
-    } else if (R.indexOf(i) !== -1 && L.indexOf(j) !== -1) {
+    } else if (R.includes(i) && L.includes(j)) {
       w = r;
       x = l;
-    } else throw { error: 'Node is not common ancestor of ' + i + ', ' + j };
-    var Wl = leaves(w.left),
+    } else throw { error: `Node is not common ancestor of ${i}, ${j}` };
+    const Wl = leaves(w.left),
       Wr = leaves(w.right);
-    var Ks = Wr.indexOf(i) != -1 ? Wl : Wr;
+    let Ks = Wr.includes(i) ? Wl : Wr;
     if (Ks.length === 0) Ks = [i];
 
-    var Xl = leaves(x.left),
+    const Xl = leaves(x.left),
       Xr = leaves(x.right);
-    var Ls = Xr.indexOf(j) != -1 ? Xl : Xr;
+    let Ls = Xr.includes(j) ? Xl : Xr;
     if (Ls.length === 0) Ls = [j];
 
-    var min = Infinity,
+    let min = Infinity,
       optimal_order = [];
 
-    for (var k = 0; k < Ks.length; k++) {
-      var w_min = order(w, i, Ks[k]);
-      for (var m = 0; m < Ls.length; m++) {
-        var x_min = order(x, Ls[m], j);
-        var dist = w_min[0] + distanceMatrix[Ks[k]][Ls[m]] + x_min[0];
+    for (let k = 0; k < Ks.length; k++) {
+      const w_min = order(w, i, Ks[k]);
+      for (let m = 0; m < Ls.length; m++) {
+        const x_min = order(x, Ls[m], j);
+        const dist = w_min[0] + distanceMatrix[Ks[k]][Ls[m]] + x_min[0];
         if (dist < min) {
           min = dist;
           optimal_order = w_min[1].concat(x_min[1]);
@@ -95,16 +95,16 @@ export function optimal_leaf_order() {
   function orderFull(v) {
     leavesMap = {};
     orderMap = {};
-    var min = Infinity,
-      optimal_order = [],
-      left = leaves(v.left),
-      right = leaves(v.right);
+    let min = Infinity;
+    let optimal_order = [];
+    const left = leaves(v.left);
+    const right = leaves(v.right);
 
     if (debug) console.log(printhcluster(v, 0));
 
-    for (var i = 0; i < left.length; i++) {
-      for (var j = 0; j < right.length; j++) {
-        var so = order(v, left[i], right[j]);
+    for (let i = 0; i < left.length; i++) {
+      for (let j = 0; j < right.length; j++) {
+        const so = order(v, left[i], right[j]);
         if (so[0] < min) {
           min = so[0];
           optimal_order = so[1];
@@ -118,7 +118,7 @@ export function optimal_leaf_order() {
   function optimal_leaf_order(matrix) {
     if (distanceMatrix === null)
       distanceMatrix = dist().distance(distance)(matrix);
-    var cluster = hcluster().linkage(linkage).distanceMatrix(distanceMatrix);
+    const cluster = hcluster().linkage(linkage).distanceMatrix(distanceMatrix);
     return orderFull(cluster(matrix));
   }
   optimal_leaf_order.order = orderFull;
@@ -140,7 +140,7 @@ export function optimal_leaf_order() {
   optimal_leaf_order.distance_matrix = function (x) {
     if (!arguments.length) return distanceMatrix;
     // copy
-    distanceMatrix = x.map(function (y) {
+    distanceMatrix = x.map((y) => {
       return y.slice(0);
     });
     return optimal_leaf_order;

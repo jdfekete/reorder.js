@@ -1,18 +1,18 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
-var seedrandom = require('seedrandom');
+const seedrandom = require('seedrandom');
 Math.seedrandom('reorder');
 
-var suite = vows.describe('reorder.graph2mat');
+const suite = vows.describe('reorder.graph2mat');
 
 function remove_zeroes(mat) {
-  var i, j;
+  let i, j;
   for (i = mat.length - 1; i >= 0; i--) {
-    var row = mat[i];
+    const row = mat[i];
     if (
-      row.some(function (a) {
+      row.some((a) => {
         return a > 0;
       })
     ) {
@@ -23,7 +23,7 @@ function remove_zeroes(mat) {
   }
   for (j = mat[0].length - 1; j >= 0; j--) {
     if (
-      mat.some(function (row) {
+      mat.some((row) => {
         return row[j] != 0;
       })
     ) {
@@ -38,28 +38,28 @@ function remove_zeroes(mat) {
 
 suite.addBatch({
   graph2mat: {
-    simple: function () {
-      var mat = [
+    simple() {
+      const mat = [
         [0, 1, 0],
         [1, 0, 1],
         [0, 1, 0],
       ];
-      var graph = reorder.mat2graph(mat);
+      const graph = reorder.mat2graph(mat);
       assert.equal(graph.nodes().length, 3);
       assert.equal(graph.links().length, 2);
-      var m2 = reorder.graph2mat(graph);
+      const m2 = reorder.graph2mat(graph);
       assert.deepEqual(m2, mat);
     },
-    lesssimple: function () {
-      var mat = reorder.random_matrix(0.2, 10),
+    lesssimple() {
+      const mat = reorder.random_matrix(0.2, 10),
         graph = reorder.mat2graph(mat),
         m2 = reorder.graph2mat(graph);
       assert.deepEqual(m2, mat);
     },
-    hard: function () {
-      for (var i = 10; i < 100; i += 20) {
-        for (var j = 10; j < 100; j += 20) {
-          var mat = remove_zeroes(reorder.random_matrix(0.2, i, j, false)),
+    hard() {
+      for (let i = 10; i < 100; i += 20) {
+        for (let j = 10; j < 100; j += 20) {
+          const mat = remove_zeroes(reorder.random_matrix(0.2, i, j, false)),
             graph = reorder.mat2graph(mat, true),
             m2 = reorder.graph2mat(graph);
           assert.deepEqual(m2, mat);

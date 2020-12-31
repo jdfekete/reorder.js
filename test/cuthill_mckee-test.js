@@ -1,10 +1,10 @@
 Queue = require('tiny-queue');
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.cuthill_mckee');
+const suite = vows.describe('reorder.cuthill_mckee');
 
 function Pair(a, b) {
   return { source: a, target: b };
@@ -12,8 +12,8 @@ function Pair(a, b) {
 
 suite.addBatch({
   cuthill_mckee: {
-    simple: function () {
-      var mat = [
+    simple() {
+      const mat = [
         [1, 0, 0, 0, 1, 0, 0, 0],
         [0, 1, 1, 0, 0, 1, 0, 1],
         [0, 1, 1, 0, 1, 0, 0, 0],
@@ -24,17 +24,17 @@ suite.addBatch({
         [0, 1, 0, 0, 0, 1, 0, 1],
       ];
       //reorder.displaymat(mat);
-      var graph = reorder.mat2graph(mat);
-      var components = graph.components();
+      const graph = reorder.mat2graph(mat);
+      const components = graph.components();
       assert.equal(components.length, 2);
       assert.equal(reorder.bandwidth(graph), 6);
-      var order = reorder.reverse_cuthill_mckee_order(graph);
+      const order = reorder.reverse_cuthill_mckee_order(graph);
       //reorder.displaymat(mat, order, order);
       assert.deepEqual(order, [7, 5, 1, 2, 4, 0, 6, 3]);
       assert.equal(reorder.bandwidth(graph, order), 2);
     },
-    boost: function () {
-      var graph = reorder
+    boost() {
+      const graph = reorder
         .graph()
         .generate_nodes(10)
         .links([
@@ -54,17 +54,17 @@ suite.addBatch({
           Pair(6, 7),
         ]) //g-h
         .init();
-      var components = graph.components();
+      const components = graph.components();
       assert.equal(components.length, 1);
       assert.equal(reorder.bandwidth(graph), 8);
-      var order = reorder.reverse_cuthill_mckee_order(graph);
+      const order = reorder.reverse_cuthill_mckee_order(graph);
       // Boost returns anoter order with the same bandwidth
       //assert.deepEqual(order, [0, 8, 5, 7, 3, 6, 4, 2, 1, 9]);
       assert.equal(reorder.bandwidth(graph, order), 4);
     },
-    harder: function () {
-      for (var i = 10; i < 100; i += 20) {
-        var mat = reorder.random_matrix(0.2, i),
+    harder() {
+      for (let i = 10; i < 100; i += 20) {
+        const mat = reorder.random_matrix(0.2, i),
           graph = reorder.mat2graph(mat),
           bw = reorder.bandwidth(graph),
           order = reorder.reverse_cuthill_mckee_order(graph);

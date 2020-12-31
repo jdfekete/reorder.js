@@ -1,11 +1,11 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.laplacian');
+const suite = vows.describe('reorder.laplacian');
 
-var eiffel_laplacian = [
+const eiffel_laplacian = [
   [9, -5, 0, -4, 0],
   [-5, 17, -2, -7, -3],
   [0, -2, 4, -2, 0],
@@ -15,9 +15,9 @@ var eiffel_laplacian = [
 
 suite.addBatch({
   laplacian: {
-    simple: function () {
+    simple() {
       // Eiffel Tower Graph from the ACE article
-      var graph = reorder
+      const graph = reorder
         .graph()
         .generate_nodes(5)
         .links([
@@ -35,8 +35,8 @@ suite.addBatch({
         eiffel_laplacian
       );
     },
-    fiedler: function () {
-      var f = reorder.fiedler_vector(eiffel_laplacian);
+    fiedler() {
+      const f = reorder.fiedler_vector(eiffel_laplacian);
 
       assert.inDeltaArrayOrNeg(
         f,

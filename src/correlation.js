@@ -1,16 +1,16 @@
 import { zeroes, mean } from './aliases';
 
 export const correlation = {
-  pearson: function (a, b) {
-    var ma = mean(a),
-      mb = mean(b),
-      s1 = 0,
-      s2 = 0,
-      s3 = 0,
-      i,
-      dx,
-      dy,
-      n = Math.min(a.length, b.length);
+  pearson(a, b) {
+    const ma = mean(a);
+    const mb = mean(b);
+    let s1 = 0;
+    let s2 = 0;
+    let s3 = 0;
+    let i;
+    let dx;
+    let dy;
+    const n = Math.min(a.length, b.length);
     if (n === 0) return NaN;
     for (i = 0; i < n; i++) {
       dx = a[i] - ma;
@@ -21,24 +21,24 @@ export const correlation = {
     }
     return s1 / Math.sqrt(s2 * s3);
   },
-  pearsonMatrix: function (matrix) {
-    var a,
-      ma,
-      i,
-      j,
-      dx,
-      cor = correlation.pearson,
-      n = matrix.length,
-      ret,
-      mx,
-      sx,
-      sx2;
+  pearsonMatrix(matrix) {
+    let a;
+    let ma;
+    let i;
+    let j;
+    let dx;
+    const cor = correlation.pearson;
+    const n = matrix.length;
+    let ret;
+    let mx;
+    let sx;
+    let sx2;
     if (n === 0) return NaN;
     // do it the hard way for now, we'll optimize later
     ret = zeroes(n, n);
     for (i = 0; i < n - 1; i++) {
       for (j = i + 1; j < n; j++) {
-        var p = cor(matrix[i], matrix[j]);
+        const p = cor(matrix[i], matrix[j]);
         ret[i][j] = ret[j][i] = p;
       }
     }

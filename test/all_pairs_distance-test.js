@@ -1,12 +1,12 @@
-var reorder = require('../dist/reorder.cjs');
+const reorder = require('../dist/reorder.cjs');
 
-var vows = require('vows'),
+const vows = require('vows'),
   assert = require('assert');
 
-var suite = vows.describe('reorder.all-pairs-distance');
+const suite = vows.describe('reorder.all-pairs-distance');
 
 function dotest(graph) {
-  var mat = reorder.all_pairs_distance(graph),
+  const mat = reorder.all_pairs_distance(graph),
     bfs = reorder.all_pairs_distance_bfs(graph),
     n = graph.nodes().length;
 
@@ -28,13 +28,13 @@ function dotest(graph) {
 
 suite.addBatch({
   all_pairs_distance: {
-    simple: function () {
-      var nodes = [{ id: 0 }, { id: 1 }, { id: 2 }],
+    simple() {
+      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }],
         links = [
           { source: 0, target: 1 },
           { source: 1, target: 2 },
         ];
-      var graph = reorder.graph(nodes, links).init(),
+      const graph = reorder.graph(nodes, links).init(),
         mat = dotest(graph);
 
       assert.equal(mat[0].length, 3);
@@ -44,11 +44,11 @@ suite.addBatch({
         [2, 1, 0],
       ]);
     },
-    hard: function () {
+    hard() {
       // compare results with Dijkstra distances
       // from a random node.
-      for (var i = 10; i < 100; i++) {
-        var graph = reorder.graph_connect(reorder.graph_random(i, 0.2));
+      for (let i = 10; i < 100; i++) {
+        const graph = reorder.graph_connect(reorder.graph_random(i, 0.2));
         dotest(graph);
       }
     },
