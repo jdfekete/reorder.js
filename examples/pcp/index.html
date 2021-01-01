@@ -1,31 +1,30 @@
 <meta charset="UTF8">
-<script src="../../lib/d3.v3.js"></script>
-<script src="../../lib/d3.parcoords.js"></script>
-<script src="../../lib/science.v2.js"></script>
-<script src="../../lib/tiny-queue.js"></script>
-<script src="../../dist/reorder.umd.js"></script>
-<link rel="stylesheet" type="text/css" href="../../lib/d3.parcoords.css">
+<script src="/d3.v3.js"></script>
+<script src="/d3.parcoords.js"></script>
+<script src="/reorder.js"></script>
+<link rel="stylesheet" type="text/css" href="/d3.parcoords.css">
 <div id="example" class="parcoords" style="width:360px;height:150px"></div>
 <div id="example2" class="parcoords" style="width:360px;height:150px"></div>
 
 <script>
-var data = [
+const data = [
   [0,-0,0,0,0,3 ],
   [1,-1,1,2,1,6 ],
   [2,-2,4,4,0.5,2],
   [3,-3,9,6,0.33,4],
   [4,-4,16,8,0.25,9]
 ],
-  dimensions = reorder.range(6),
   axes = ['a', 'b', 'c', 'd', 'e', 'f'];
 
-var pc = d3.parcoords()("#example")
+  //reorder.set_debug(true);
+
+  var pc = d3.parcoords({dimensionTitles: axes})("#example")
   .data(data)
   .render()
   .ticks(3)
   .createAxes();
 
-var pc2 = d3.parcoords()("#example2")
+var pc2 = d3.parcoords({dimensionTitles: axes})("#example2")
   .data(data);
   reorder.parcoords(pc2);
   pc2

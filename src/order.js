@@ -13,7 +13,7 @@ export function order() {
   let distanceMatrix = null;
   let vector;
   let except = [];
-  const debug = 0;
+  let _debug = 0;
   let i = 0;
   let j = Infinity;
 
@@ -26,6 +26,11 @@ export function order() {
     except = [];
     i = 0;
     j = Infinity;
+  }
+
+  function debug(v) {
+    if (arguments.length != 0) _debug = v;
+    return _debug;
   }
 
   function order(v) {
@@ -74,7 +79,7 @@ export function order() {
     vector = vector.slice(i0, j0); // always make a copy
     if (i === 0 && j == vector.length) return _order_except();
 
-    if (debug) console.log(`i0=${i0} j0=${j0}`);
+    if (_debug) console.log(`i0=${i0} j0=${j0}`);
 
     if (distanceMatrix !== null) {
       if (j0 !== vector.length) dist_remove(distanceMatrix, j0, vector.length);
@@ -158,7 +163,7 @@ export function order() {
       high = except[k];
       distanceMatrix = dist_remove(distanceMatrix, low + 1, high - 1);
       vector.splice(low + 1, high - low - 2);
-      if (debug) console.log(`Except[${low}, ${high}]`);
+      if (_debug) console.log(`Except[${low}, ${high}]`);
       if (distanceMatrix[low][low + 1] !== 0) {
         // boundaries are equal, they will survive
         distanceMatrix[low][low + 1] = distanceMatrix[low + 1][low] = -1;
@@ -318,13 +323,13 @@ export function order() {
   }
 
   function _order() {
-    if (debug > 1) printmat(distanceMatrix);
-    if (debug > 2) printmat(vector);
+    if (_debug > 1) printmat(distanceMatrix);
+    if (_debug > 2) printmat(vector);
 
     const perm = ordering().linkage(linkage).distanceMatrix(distanceMatrix)(
       vector
     );
-    if (debug) console.log(`Permutation: ${perm}`);
+    if (_debug) console.log(`Permutation: ${perm}`);
 
     return perm;
   }

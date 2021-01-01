@@ -46,7 +46,7 @@ function matrix(json) {
     var dist_adjacency;
 
     var leafOrder = reorder.optimal_leaf_order()
-    	    .distance(science.stats.distance.manhattan);
+    	    .distance(reorder.distance.manhattan);
 
     function computeLeaforder() {
 	var order = leafOrder(adjacency);
@@ -224,7 +224,7 @@ function matrix(json) {
     }
 
     function distance(value) {
-	leafOrder.distance(science.stats.distance[value]);
+	leafOrder.distance(reorder.distance[value]);
 
 	if (currentOrder == 'leafOrder') {
 	    orders.leafOrder = computeLeaforder;

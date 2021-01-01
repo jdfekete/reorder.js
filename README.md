@@ -4,6 +4,7 @@
 
 Want to learn more? [See the wiki.](https://github.com/jdfekete/reorder.js/wiki)
 
+
 ## Development
 
 To help develop Reordering.js, you need to have [Node.js](http://www.nodejs.org)
@@ -22,6 +23,15 @@ To run the tests in the distribution, use the following command:
 ```
 npm run test
 ```
+## Examples
+
+To run the examples, use the following command:
+
+```
+npm run dev
+```
+
+It should open a web browser but if does not, open a web page and connect to: `http://localhost:3004/`.
 
 ## Thanks
 

@@ -22,10 +22,22 @@ export default [
   {
     input: "src/index.js",
     external: ["@sgratzl/science"],
-    output: [
-      { file: pkg.main, format: "cjs" },
-      { file: pkg.module, format: "es" },
-    ],
+    output: {
+      file: pkg.main,
+      format: "cjs"
+    },
+    plugins: [
+      versionInjector(),
+      terser()
+    ]
+  },
+  {
+    input: "src/index.js",
+    external: ["@sgratzl/science"],
+    output: {
+      file: pkg.module,
+      format: "es"
+    },
     plugins: [
       versionInjector()
     ]

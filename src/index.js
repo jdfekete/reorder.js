@@ -12,7 +12,7 @@ export { bfs, bfs_distances, all_pairs_distance_bfs } from './bfs';
 export { bfs_order } from './bfs_order';
 export { ca_decorana, ca, ca_order } from './ca';
 export { condition } from './condition';
-export { version, debug } from './core';
+export { version, debug, set_debug } from './core';
 export { correlation } from './correlation';
 export { count_crossings } from './count_crossings';
 export {

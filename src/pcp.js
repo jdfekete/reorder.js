@@ -43,14 +43,12 @@ function abs_matrix(x) {
   return x.map(y => y.map(Math.abs));
 }
 
-function pcp_flip_axes(perm, naxes, pcor) {
-  let i;
-  let c;
+function pcp_flip_axes(perm, pcor) {
   let sign = 1;
   const signs = [1];
   let negs = 0;
-  for (i = 1; i < perm.length; i++) {
-    c = pcor[perm[i - 1]][perm[i]];
+  for (let i = 1; i < perm.length; i++) {
+    let c = pcor[perm[i - 1]][perm[i]];
     if (c < 0) sign = -sign;
     if (sign < 0) {
       signs.push(-1);
@@ -58,9 +56,8 @@ function pcp_flip_axes(perm, naxes, pcor) {
     } else signs.push(1);
   }
   if (debug) console.log(signs);
-  sign = negs > perm.length - negs ? -1 : 1;
-  if (sign == -1) {
-    for (i = 0; i < perm.length - 1; i++) signs[i] = signs[i] * sign;
+  if (negs > perm.length/2) {
+    for (let i = 0; i < perm.length; i++) signs[i] = -signs[i];
   }
   return signs;
 }
@@ -76,7 +73,7 @@ export function pcp(data, axes) {
   const naxes = permute(axes, perm);
   tdata = permute(tdata, perm);
 
-  const signs = pcp_flip_axes(perm, naxes, pcor),
+  const signs = pcp_flip_axes(perm, pcor),
     ndata = transpose(tdata);
   return [ndata, perm, naxes, signs, pcor];
 }
@@ -93,10 +90,9 @@ export function parcoords(p) {
   let i;
   let j;
   let k;
-  let d;
 
   for (i = 0; i < dimensions.length; i++) {
-    d = dimensions[i];
+    let d = dimensions[i];
     if (types[d] == 'number') {
       row = [];
       for (j = 0; j < data.length; j++) row.push(data[j][d]);
@@ -119,10 +115,10 @@ export function parcoords(p) {
     naxes = permute(dimensions, perm);
   tdata = permute(tdata, perm);
 
-  const signs = pcp_flip_axes(perm, naxes, pcor);
+  dimensions = discarded.reverse().concat(naxes); // put back string columns
+  p.dimensions(dimensions);
+  const signs = pcp_flip_axes(perm, pcor);
   for (i = 0; i < signs.length; i++) {
     if (signs[i] < 0) p.flip(dimensions[i]);
   }
-  dimensions = discarded.reverse().concat(dimensions); // put back string columns
-  return p.dimensions(dimensions);
 }
