@@ -15,12 +15,10 @@ export function meancolumns(v) {
   const o = v[0].length;
   const m = v[0].slice(0);
   let i = 0;
-  let j;
-  let row;
 
   while (++i < n) {
-    row = v[i];
-    for (j = 0; j < o; j++) m[j] += (row[j] - m[j]) / (i + 1);
+    const row = v[i];
+    for (let j = 0; j < o; j++) m[j] += (row[j] - m[j]) / (i + 1);
   }
 
   return m;
