@@ -4,16 +4,14 @@ export const correlation = {
   pearson(a, b) {
     const ma = mean(a);
     const mb = mean(b);
+    const n = Math.min(a.length, b.length);
+    if (n === 0) return NaN;
     let s1 = 0;
     let s2 = 0;
     let s3 = 0;
-    let dx;
-    let dy;
-    const n = Math.min(a.length, b.length);
-    if (n === 0) return NaN;
     for (let i = 0; i < n; i++) {
-      dx = a[i] - ma;
-      dy = b[i] - mb;
+      const dx = a[i] - ma;
+      const dy = b[i] - mb;
       s1 += dx * dy;
       s2 += dx * dx;
       s3 += dy * dy;
