@@ -3,37 +3,30 @@ import { distance as distances } from './distance';
 // This is a modified implementation of hcluster derived from:
 // https://github.com/jasondavies/science.js/blob/master/src/stats/hcluster.js
 export function hcluster() {
-  let distance = distances.euclidean,
-    // single, complete or average
-    linkage = 'single',
-    distMatrix = null;
+  let distance = distances.euclidean;
+
+  // single, complete or average
+  let linkage = 'single';
+
+  let distMatrix = null;
 
   function hcluster(vectors) {
     const n = vectors.length;
     const dMin = [];
     const cSize = [];
+    const clusters = [];
 
-    const //        distMatrix = [],
-      clusters = [];
-
-    let c1;
-    let c2;
-    let c1Cluster;
-    let c2Cluster;
-    let p;
     let root;
-    let i;
-    let j;
     let id = 0;
 
     // Initialise distance matrix and vector of closest clusters.
     if (distMatrix === null) {
       distMatrix = [];
-      i = -1;
+      let i = -1;
       while (++i < n) {
         dMin[i] = 0;
         distMatrix[i] = [];
-        j = -1;
+        let j = -1;
         while (++j < n) {
           distMatrix[i][j] =
             i === j ? Infinity : distance(vectors[i], vectors[j]);
@@ -45,10 +38,10 @@ export function hcluster() {
         throw {
           error: `Provided distance matrix length ${distMatrix.length} instead of ${n}`,
         };
-      i = -1;
+      let i = -1;
       while (++i < n) {
         dMin[i] = 0;
-        j = -1;
+        let j = -1;
         while (++j < n) {
           if (i === j) distMatrix[i][j] = Infinity;
           if (distMatrix[i][dMin[i]] > distMatrix[i][j]) dMin[i] = j;
@@ -56,7 +49,7 @@ export function hcluster() {
       }
     }
     // create leaves of the tree
-    i = -1;
+    let i = -1;
     while (++i < n) {
       if (i != id) console.log('i = %d, id = %d', i, id);
       clusters[i] = [];
@@ -73,17 +66,17 @@ export function hcluster() {
     }
 
     // Main loop
-    for (p = 0; p < n - 1; p++) {
+    for (let p = 0; p < n - 1; p++) {
       // find the closest pair of clusters
-      c1 = 0;
+      let c1 = 0;
       for (i = 0; i < n; i++) {
         if (distMatrix[i][dMin[i]] < distMatrix[c1][dMin[c1]]) c1 = i;
       }
-      c2 = dMin[c1];
+      const c2 = dMin[c1];
 
       // create node to store cluster info
-      c1Cluster = clusters[c1][0];
-      c2Cluster = clusters[c2][0];
+      const c1Cluster = clusters[c1][0];
+      const c2Cluster = clusters[c2][0];
 
       const newCluster = {
         left: c1Cluster,
@@ -103,7 +96,7 @@ export function hcluster() {
       cSize[c1] += cSize[c2];
 
       // overwrite row c1 with respect to the linkage type
-      for (j = 0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         switch (linkage) {
           case 'single':
             if (distMatrix[c1][j] > distMatrix[c2][j])
@@ -122,10 +115,11 @@ export function hcluster() {
       }
       distMatrix[c1][c1] = Infinity;
 
-      for (i = 0; i < n; i++) distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
+      for (let i = 0; i < n; i++)
+        distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
 
       // update dmin and replace ones that previous pointed to c2 to point to c1
-      for (j = 0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         if (dMin[j] == c2) dMin[j] = c1;
         if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) dMin[c1] = j;
       }
