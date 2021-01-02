@@ -8,17 +8,13 @@ export function graph_random_erdos_renyi(n, p, directed) {
 
   const nodes = graph_empty_nodes(n);
   const links = [];
-  let v;
-  let w;
-  let lr;
-  let lp;
 
-  w = -1;
-  lp = Math.log(1.0 - p);
+  let w = -1;
+  let lp = Math.log(1.0 - p);
 
   if (directed) {
-    for (v = 0; v < n; ) {
-      lr = Math.log(1.0 - Math.random());
+    for (let v = 0; v < n; ) {
+      const lr = Math.log(1.0 - Math.random());
       w = w + 1 + Math.floor(lr / lp);
       if (v == w) w = w + 1;
       while (w >= n && v < n) {
@@ -29,8 +25,8 @@ export function graph_random_erdos_renyi(n, p, directed) {
       if (v < n) links.push({ source: v, target: w });
     }
   } else {
-    for (v = 1; v < n; ) {
-      lr = Math.log(1.0 - Math.random());
+    for (let v = 1; v < n; ) {
+      const lr = Math.log(1.0 - Math.random());
       w = w + 1 + Math.floor(lr / lp);
       while (w >= v && v < n) {
         w = w - v;
