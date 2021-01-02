@@ -1,7 +1,7 @@
 const reorder = require('../dist/reorder.cjs');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 
 const suite = vows.describe('reorder.cuthill_mckee');
 
@@ -63,10 +63,10 @@ suite.addBatch({
     },
     harder() {
       for (let i = 10; i < 100; i += 20) {
-        const mat = reorder.random_matrix(0.2, i),
-          graph = reorder.mat2graph(mat),
-          bw = reorder.bandwidth(graph),
-          order = reorder.reverse_cuthill_mckee_order(graph);
+        const mat = reorder.random_matrix(0.2, i);
+        const graph = reorder.mat2graph(mat);
+        const bw = reorder.bandwidth(graph);
+        const order = reorder.reverse_cuthill_mckee_order(graph);
         assert.lesser(reorder.bandwidth(graph, order), bw);
       }
     },
