@@ -5,18 +5,16 @@ import { inverse_permutation } from './permutation';
 export function cuthill_mckee(graph, comp) {
   if (comp.length < 3) return comp;
 
-  let start = comp[0];
-  let min_deg = graph.degree(start);
-  let i;
-  let n;
-  let e;
   const visited = {};
   const queue = new Queue();
   const inv = inverse_permutation(comp);
   const perm = [];
 
-  for (i = 0; i < comp.length; i++) {
-    n = comp[i];
+  let start = comp[0];
+  let min_deg = graph.degree(start);
+
+  for (let i = 0; i < comp.length; i++) {
+    const n = comp[i];
     if (graph.degree(n) < min_deg) {
       min_deg = graph.degree(n);
       start = n;
@@ -25,20 +23,16 @@ export function cuthill_mckee(graph, comp) {
   }
   queue.push(start);
   while (queue.length !== 0) {
-    n = queue.shift();
+    const n = queue.shift();
     if (visited[n]) continue;
     visited[n] = true;
     perm.push(n);
-    e = graph
+    const e = graph
       .edges(n)
       .map((edge) => graph.other(edge, n).index)
       .filter((n) => !visited[n] && n in inv)
-      .sort(
-        (
-          a,
-          b // ascending by degree
-        ) => graph.degree(a) - graph.degree(b)
-      );
+      // ascending by degree
+      .sort((a, b) => graph.degree(a) - graph.degree(b));
 
     e.forEach(queue.push, queue);
   }
@@ -50,13 +44,13 @@ export function reverse_cuthill_mckee(graph, comp) {
 }
 
 export function cuthill_mckee_order(graph, comps) {
-  let i,
-    comp,
-    order = [];
+  let comp;
+  let order = [];
+
   if (!comps) {
     comps = graph.components();
   }
-  for (i = 0; i < comps.length; i++) {
+  for (let i = 0; i < comps.length; i++) {
     comp = comps[i];
     order = order.concat(cuthill_mckee(graph, comp));
   }
@@ -64,13 +58,13 @@ export function cuthill_mckee_order(graph, comps) {
 }
 
 export function reverse_cuthill_mckee_order(graph, comps) {
-  let i,
-    comp,
-    order = [];
+  let comp;
+  let order = [];
+
   if (!comps) {
     comps = graph.components();
   }
-  for (i = 0; i < comps.length; i++) {
+  for (let i = 0; i < comps.length; i++) {
     comp = comps[i];
     order = order.concat(reverse_cuthill_mckee(graph, comp));
   }

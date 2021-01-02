@@ -1,18 +1,18 @@
 const reorder = require('../dist/reorder.cjs');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 
 const suite = vows.describe('reorder.components');
 
 suite.addBatch({
   components: {
     simple() {
-      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }],
-        links = [
-          { source: 0, target: 1 },
-          { source: 1, target: 2 },
-        ];
+      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }];
+      const links = [
+        { source: 0, target: 1 },
+        { source: 1, target: 2 },
+      ];
       const graph = reorder.graph().nodes(nodes).links(links).init();
 
       const components = graph.components();
@@ -20,12 +20,12 @@ suite.addBatch({
       assert.equal(components[0].length, 3);
     },
     lesssimple() {
-      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }],
-        links = [
-          { source: 0, target: 1 },
-          { source: 1, target: 2 },
-          { source: 3, target: 4 },
-        ];
+      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }];
+      const links = [
+        { source: 0, target: 1 },
+        { source: 1, target: 2 },
+        { source: 3, target: 4 },
+      ];
       const graph = reorder.graph().nodes(nodes).links(links).init();
 
       const components = graph.components();

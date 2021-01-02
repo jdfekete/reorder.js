@@ -25,33 +25,24 @@ function median(neighbors) {
   if (neighbors.length === 2) return (neighbors[0] + neighbors[1]) / 2;
   neighbors.sort(cmp_number);
   if (neighbors.length % 2) return neighbors[(neighbors.length - 1) / 2];
-  const rm = neighbors.length / 2,
-    lm = rm - 1,
-    rspan = neighbors[neighbors.length - 1] - neighbors[rm],
-    lspan = neighbors[lm] - neighbors[0];
+  const rm = neighbors.length / 2;
+  const lm = rm - 1;
+  const rspan = neighbors[neighbors.length - 1] - neighbors[rm];
+  const lspan = neighbors[lm] - neighbors[0];
   if (lspan == rspan) return (neighbors[lm] + neighbors[rm]) / 2;
   else return (neighbors[lm] * rspan + neighbors[rm] * lspan) / (lspan + rspan);
 }
 
 export function barycenter(graph, comp, max_iter) {
   const nodes = graph.nodes();
-  let layer1;
-  let layer2;
   let crossings;
   let iter;
-  let best_layer1;
-  let best_layer2;
-  let best_crossings;
-  let best_iter;
   let layer;
-  let inv_layer = {};
-  let i;
-  let v;
   let neighbors;
   let med;
 
-  layer1 = comp.filter((n) => graph.outDegree(n) !== 0);
-  layer2 = comp.filter((n) => graph.inDegree(n) !== 0);
+  const layer1 = comp.filter((n) => graph.outDegree(n) !== 0);
+  const layer2 = comp.filter((n) => graph.inDegree(n) !== 0);
   if (comp.length < 3) {
     return [layer1, layer2, count_crossings(graph, layer1, layer2)];
   }
@@ -59,28 +50,29 @@ export function barycenter(graph, comp, max_iter) {
   if (!max_iter) max_iter = 24;
   else if (max_iter % 2 == 1) max_iter++; // want even number of iterations
 
-  inv_layer = inverse_permutation(layer2);
+  let inv_layer = inverse_permutation(layer2);
 
-  best_crossings = count_crossings(graph, layer1, layer2);
-  best_layer1 = layer1.slice();
-  best_layer2 = layer2.slice();
-  best_iter = 0;
-  const inv_neighbor = (e) => {
-      const n = e.source == v ? e.target : e.source;
-      return inv_layer[n.index];
-    },
-    barycenter_sort = (a, b) => {
-      let d = med[a] - med[b];
-      if (d === 0) {
-        // If both values are equal,
-        // place the odd degree vertex on the left of the even
-        // degree vertex
-        d = (graph.edges(b).length % 2) - (graph.edges(a).length % 2);
-      }
-      if (d < 0) return -1;
-      else if (d > 0) return 1;
-      return 0;
-    };
+  let best_crossings = count_crossings(graph, layer1, layer2);
+  let best_layer1 = layer1.slice();
+  let best_layer2 = layer2.slice();
+  let best_iter = 0;
+
+  let v;
+  const inv_neighbor = (e) =>
+    inv_layer[e.source == v ? e.target : e.source.index];
+
+  const barycenter_sort = (a, b) => {
+    let d = med[a] - med[b];
+    if (d === 0) {
+      // If both values are equal,
+      // place the odd degree vertex on the left of the even
+      // degree vertex
+      d = (graph.edges(b).length % 2) - (graph.edges(a).length % 2);
+    }
+    if (d < 0) return -1;
+    else if (d > 0) return 1;
+    return 0;
+  };
 
   for (
     layer = layer1, iter = 0;
@@ -88,7 +80,7 @@ export function barycenter(graph, comp, max_iter) {
     iter++, layer = layer == layer1 ? layer2 : layer1
   ) {
     med = {};
-    for (i = 0; i < layer.length; i++) {
+    for (let i = 0; i < layer.length; i++) {
       // Compute the median/barycenter for this node and set
       // its (real) value into node.pos
       v = nodes[layer[i]];
@@ -96,10 +88,10 @@ export function barycenter(graph, comp, max_iter) {
       else neighbors = graph.inEdges(v.index);
       neighbors = neighbors.map(inv_neighbor);
       med[v.index] = +median(neighbors);
-      //console.log('median['+i+']='+med[v.index]);
     }
     layer.sort(barycenter_sort);
-    for (i = 0; i < layer.length; i++) inv_layer = inverse_permutation(layer);
+    for (let i = 0; i < layer.length; i++)
+      inv_layer = inverse_permutation(layer);
     crossings = count_crossings(graph, layer1, layer2);
     if (crossings < best_crossings) {
       best_crossings = crossings;

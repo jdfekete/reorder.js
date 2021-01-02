@@ -1,7 +1,7 @@
 const reorder = require('../dist/reorder.cjs');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 
 const suite = vows.describe('reorder.permute');
 
@@ -24,18 +24,18 @@ suite.addBatch({
     },
     harder() {
       for (let i = 10; i <= 100; i += 10) {
-        const list = reorder.permutation(i),
-          perm = reorder.randomPermute(list.slice());
+        const list = reorder.permutation(i);
+        const perm = reorder.randomPermute(list.slice());
 
         assert.deepEqual(perm, reorder.permute(list, perm));
       }
     },
     hard() {
       for (let i = 10; i <= 100; i++) {
-        const list = reorder.permutation(i),
-          perm = reorder.randomPermute(list.slice()),
-          permc = perm.slice(),
-          inv = reorder.inverse_permutation(perm, true);
+        const list = reorder.permutation(i);
+        const perm = reorder.randomPermute(list.slice());
+        const permc = perm.slice();
+        const inv = reorder.inverse_permutation(perm, true);
 
         assert.deepEqual(list, reorder.permute(inv.slice(), perm));
         assert.deepEqual(perm, permc);

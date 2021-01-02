@@ -4,7 +4,7 @@ export class Queue {
   }
 
   push(item) {
-    const node = { item: item };
+    const node = { item };
     if (this.last) {
       this.last = this.last.next = node;
     } else {

@@ -4,17 +4,14 @@ export const correlation = {
   pearson(a, b) {
     const ma = mean(a);
     const mb = mean(b);
+    const n = Math.min(a.length, b.length);
+    if (n === 0) return NaN;
     let s1 = 0;
     let s2 = 0;
     let s3 = 0;
-    let i;
-    let dx;
-    let dy;
-    const n = Math.min(a.length, b.length);
-    if (n === 0) return NaN;
-    for (i = 0; i < n; i++) {
-      dx = a[i] - ma;
-      dy = b[i] - mb;
+    for (let i = 0; i < n; i++) {
+      const dx = a[i] - ma;
+      const dy = b[i] - mb;
       s1 += dx * dy;
       s2 += dx * dx;
       s3 += dy * dy;
@@ -22,16 +19,13 @@ export const correlation = {
     return s1 / Math.sqrt(s2 * s3);
   },
   pearsonMatrix(matrix) {
-    let i;
-    let j;
     const cor = correlation.pearson;
     const n = matrix.length;
-    let ret;
     if (n === 0) return NaN;
     // do it the hard way for now, we'll optimize later
-    ret = zeroes(n, n);
-    for (i = 0; i < n - 1; i++) {
-      for (j = i + 1; j < n; j++) {
+    const ret = zeroes(n, n);
+    for (let i = 0; i < n - 1; i++) {
+      for (let j = i + 1; j < n; j++) {
         const p = cor(matrix[i], matrix[j]);
         ret[i][j] = ret[j][i] = p;
       }

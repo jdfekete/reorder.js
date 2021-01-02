@@ -29,33 +29,29 @@ export function all_pairs_distance(graph, comps) {
  */
 export function all_pairs_distance_floyd_warshall(graph, comp) {
   const dist = infinities(comp.length, comp.length);
-  let i;
-  let j;
-  let k;
-  let inv;
   // Floyd Warshall,
   // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
   // O(n^3) unfortunately
 
-  inv = inverse_permutation(comp);
+  const inv = inverse_permutation(comp);
 
-  for (i = 0; i < comp.length; i++) dist[i][i] = 0;
+  for (let i = 0; i < comp.length; i++) dist[i][i] = 0;
 
   const build_dist = (e) => {
     if (e.source == e.target) return;
     if (!(e.source.index in inv) || !(e.target.index in inv)) return; // ignore edges outside of comp
-    const u = inv[e.source.index],
-      v = inv[e.target.index];
+    const u = inv[e.source.index];
+    const v = inv[e.target.index];
     dist[v][u] = dist[u][v] = graph.distance(e.index);
   };
-  for (i = 0; i < comp.length; i++) {
+  for (let i = 0; i < comp.length; i++) {
     graph.edges(comp[i]).forEach(build_dist);
   }
 
-  for (k = 0; k < comp.length; k++) {
-    for (i = 0; i < comp.length; i++)
+  for (let k = 0; k < comp.length; k++) {
+    for (let i = 0; i < comp.length; i++)
       if (dist[i][k] != Infinity) {
-        for (j = 0; j < comp.length; j++)
+        for (let j = 0; j < comp.length; j++)
           if (dist[k][j] != Infinity && dist[i][j] > dist[i][k] + dist[k][j]) {
             dist[i][j] = dist[i][k] + dist[k][j];
             dist[j][i] = dist[i][j];
@@ -83,25 +79,22 @@ export function floyd_warshall_with_path(graph, comp) {
   const dist = infinities(comp.length, comp.length);
   const next = Array(comp.length);
   const directed = graph.directed();
-  let i;
-  let j;
-  let k;
-  let inv;
+
   // Floyd Warshall,
   // see http://ai-depot.com/BotNavigation/Path-AllPairs.html
   // O(n^3) unfortunately
 
-  inv = inverse_permutation(comp);
+  const inv = inverse_permutation(comp);
 
-  for (i = 0; i < comp.length; i++) {
+  for (let i = 0; i < comp.length; i++) {
     dist[i][i] = 0;
     next[i] = Array(comp.length);
   }
 
   const build_dist = (e) => {
     if (e.source == e.target) return;
-    const u = inv[e.source.index],
-      v = inv[e.target.index];
+    const u = inv[e.source.index];
+    const v = inv[e.target.index];
     dist[u][v] = graph.distance(e);
     next[u][v] = v;
     if (!directed) {
@@ -110,13 +103,13 @@ export function floyd_warshall_with_path(graph, comp) {
     }
   };
 
-  for (i = 0; i < comp.length; i++) {
+  for (let i = 0; i < comp.length; i++) {
     graph.edges(comp[i]).forEach(build_dist);
   }
 
-  for (k = 0; k < comp.length; k++) {
-    for (i = 0; i < comp.length; i++) {
-      for (j = 0; j < comp.length; j++) {
+  for (let k = 0; k < comp.length; k++) {
+    for (let i = 0; i < comp.length; i++) {
+      for (let j = 0; j < comp.length; j++) {
         if (dist[i][j] > dist[i][k] + dist[k][j]) {
           dist[i][j] = dist[i][k] + dist[k][j];
           next[i][j] = next[i][k];
@@ -140,7 +133,9 @@ export function floyd_warshall_with_path(graph, comp) {
  * @return {list} a list of nodes in the shortest path from u to v
  */
 export function floyd_warshall_path(next, u, v) {
-  if (next[u][v] === undefined) return [];
+  if (next[u][v] === undefined) {
+    return [];
+  }
   const path = [u];
   while (u != v) {
     u = next[u][v];

@@ -20,15 +20,11 @@ import { dist } from './dist';
  */
 
 export function optimal_leaf_order() {
-  let distanceMatrix = null,
-    distance = distances.euclidean,
-    linkage = 'complete',
-    leavesMap = {},
-    orderMap = {};
-
-  // function isLeaf(n) {
-  //   return n.depth === 0;
-  // }
+  let distanceMatrix = null;
+  let distance = distances.euclidean;
+  let linkage = 'complete';
+  let leavesMap = {};
+  let orderMap = {};
 
   function leaves(n) {
     if (n === null) return [];
@@ -52,10 +48,10 @@ export function optimal_leaf_order() {
     if (v.depth === 0)
       //isLeaf(v))
       return [0, [v.id]];
-    const l = v.left,
-      r = v.right;
-    const L = leaves(l),
-      R = leaves(r);
+    const l = v.left;
+    const r = v.right;
+    const L = leaves(l);
+    const R = leaves(r);
 
     let w, x;
     if (L.includes(i) && R.includes(j)) {
@@ -65,18 +61,18 @@ export function optimal_leaf_order() {
       w = r;
       x = l;
     } else throw { error: `Node is not common ancestor of ${i}, ${j}` };
-    const Wl = leaves(w.left),
-      Wr = leaves(w.right);
+    const Wl = leaves(w.left);
+    const Wr = leaves(w.right);
     let Ks = Wr.includes(i) ? Wl : Wr;
     if (Ks.length === 0) Ks = [i];
 
-    const Xl = leaves(x.left),
-      Xr = leaves(x.right);
+    const Xl = leaves(x.left);
+    const Xr = leaves(x.right);
     let Ls = Xr.includes(j) ? Xl : Xr;
     if (Ls.length === 0) Ls = [j];
 
-    let min = Infinity,
-      optimal_order = [];
+    let min = Infinity;
+    let optimal_order = [];
 
     for (let k = 0; k < Ks.length; k++) {
       const w_min = order(w, i, Ks[k]);

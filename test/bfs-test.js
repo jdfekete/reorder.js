@@ -1,18 +1,18 @@
 const reorder = require('../dist/reorder.cjs');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 
 const suite = vows.describe('reorder.bfs');
 
 suite.addBatch({
   all_pairs_distance: {
     simple() {
-      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }],
-        links = [
-          { source: 0, target: 1 },
-          { source: 1, target: 2 },
-        ];
+      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }];
+      const links = [
+        { source: 0, target: 1 },
+        { source: 1, target: 2 },
+      ];
       const graph = reorder.graph(nodes, links).init();
       const dist = reorder.bfs_distances(graph, 0);
       //console.log('Dist: %j', dist);

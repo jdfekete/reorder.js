@@ -13,14 +13,11 @@ import { inverse_permutation } from './permutation';
 function count_in_crossings(graph, v, w, inv) {
   const v_edges = graph.inEdges(v);
   const w_edges = graph.inEdges(w);
-  let iv;
-  let iw;
-  let p0;
   let cross = 0;
 
-  for (iw = 0; iw < w_edges.length; iw++) {
-    p0 = inv[w_edges[iw].target.index];
-    for (iv = 0; iv < v_edges.length; iv++) {
+  for (let iw = 0; iw < w_edges.length; iw++) {
+    const p0 = inv[w_edges[iw].target.index];
+    for (let iv = 0; iv < v_edges.length; iv++) {
       if (inv[v_edges[iv].target.index] > p0) cross++;
     }
   }
@@ -30,14 +27,11 @@ function count_in_crossings(graph, v, w, inv) {
 function count_out_crossings(graph, v, w, inv) {
   const v_edges = graph.outEdges(v);
   const w_edges = graph.outEdges(w);
-  let iv;
-  let iw;
-  let p0;
   let cross = 0;
 
-  for (iw = 0; iw < w_edges.length; iw++) {
-    p0 = inv[w_edges[iw].source.index];
-    for (iv = 0; iv < v_edges.length; iv++) {
+  for (let iw = 0; iw < w_edges.length; iw++) {
+    const p0 = inv[w_edges[iw].source.index];
+    for (let iv = 0; iv < v_edges.length; iv++) {
       if (inv[v_edges[iv].source.index] > p0) cross++;
     }
   }
@@ -55,11 +49,6 @@ function count_out_crossings(graph, v, w, inv) {
 export function adjacent_exchange(graph, layer1, layer2) {
   layer1 = layer1.slice();
   layer2 = layer2.slice();
-  let i;
-  let v;
-  let w;
-  let c0;
-  let c1;
   const inv_layer1 = inverse_permutation(layer1);
   const inv_layer2 = inverse_permutation(layer2);
   let swapped = true;
@@ -67,13 +56,13 @@ export function adjacent_exchange(graph, layer1, layer2) {
 
   while (swapped) {
     swapped = false;
-    for (i = 0; i < layer1.length - 1; i++) {
-      v = layer1[i];
-      w = layer1[i + 1];
+    for (let i = 0; i < layer1.length - 1; i++) {
+      const v = layer1[i];
+      const w = layer1[i + 1];
       // should reduce the in crossing and the out crossing
       // otherwise what we gain horizontally is lost vertically
-      c0 = count_out_crossings(graph, v, w, inv_layer2);
-      c1 = count_out_crossings(graph, w, v, inv_layer2);
+      const c0 = count_out_crossings(graph, v, w, inv_layer2);
+      const c1 = count_out_crossings(graph, w, v, inv_layer2);
       if (c0 > c1) {
         layer1[i] = w;
         layer1[i + 1] = v;
@@ -83,11 +72,11 @@ export function adjacent_exchange(graph, layer1, layer2) {
         improved += c0 - c1;
       }
     }
-    for (i = 0; i < layer2.length - 1; i++) {
-      v = layer2[i];
-      w = layer2[i + 1];
-      c0 = count_in_crossings(graph, v, w, inv_layer1);
-      c1 = count_in_crossings(graph, w, v, inv_layer1);
+    for (let i = 0; i < layer2.length - 1; i++) {
+      const v = layer2[i];
+      const w = layer2[i + 1];
+      const c0 = count_in_crossings(graph, v, w, inv_layer1);
+      const c1 = count_in_crossings(graph, w, v, inv_layer1);
       if (c0 > c1) {
         layer2[i] = w;
         layer2[i + 1] = v;

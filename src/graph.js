@@ -28,11 +28,13 @@ export function graph(nodes, links, directed) {
     links = x;
     return graph;
   };
+
   graph.links_indices = () =>
     links.map((l) => ({
       source: l.source.index,
       target: l.target.index,
     }));
+
   graph.linkDistance = function (x) {
     if (!arguments.length) return linkDistance;
     linkDistance = typeof x === 'function' ? x : +x;
@@ -46,40 +48,40 @@ export function graph(nodes, links, directed) {
   };
 
   function init() {
-    let i;
-    let o;
     const n = nodes.length;
     const m = links.length;
 
     components = undefined;
-    for (i = 0; i < n; ++i) {
-      (o = nodes[i]).index = i;
+    for (let i = 0; i < n; ++i) {
+      const o = nodes[i];
+      o.index = i;
       o.weight = 0;
     }
 
-    for (i = 0; i < m; ++i) {
-      (o = links[i]).index = i;
+    for (let i = 0; i < m; ++i) {
+      const o = links[i];
+      o.index = i;
       if (typeof o.source == 'number') o.source = nodes[o.source];
       if (typeof o.target == 'number') o.target = nodes[o.target];
       if (!('value' in o)) o.value = 1;
-      ++o.source.weight;
-      ++o.target.weight;
+      o.source.weight++;
+      o.target.weight++;
     }
 
     if (typeof linkDistance === 'function')
-      for (i = 0; i < m; ++i)
+      for (let i = 0; i < m; ++i)
         links[i].distance = +linkDistance.call(this, links[i], i);
-    else for (i = 0; i < m; ++i) links[i].distance = linkDistance;
+    else for (let i = 0; i < m; ++i) links[i].distance = linkDistance;
 
     edges = Array(nodes.length);
-    for (i = 0; i < nodes.length; ++i) {
+    for (let i = 0; i < nodes.length; ++i) {
       edges[i] = [];
     }
 
     if (directed) {
       inEdges = Array(nodes.length);
       outEdges = Array(nodes.length);
-      for (i = 0; i < nodes.length; ++i) {
+      for (let i = 0; i < nodes.length; ++i) {
         inEdges[i] = [];
         outEdges[i] = [];
       }
@@ -87,8 +89,8 @@ export function graph(nodes, links, directed) {
       inEdges = outEdges = edges;
     }
 
-    for (i = 0; i < links.length; ++i) {
-      o = links[i];
+    for (let i = 0; i < links.length; ++i) {
+      const o = links[i];
       edges[o.source.index].push(o);
       if (o.source.index != o.target.index) edges[o.target.index].push(o);
       if (directed) inEdges[o.source.index].push(o);
@@ -137,9 +139,7 @@ export function graph(nodes, links, directed) {
 
   graph.sinks = () => {
     const sinks = [];
-    let i;
-
-    for (i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       if (graph.outEdges(i).length === 0) sinks.push(i);
     }
     return sinks;
@@ -147,9 +147,7 @@ export function graph(nodes, links, directed) {
 
   graph.sources = () => {
     const sources = [];
-    let i;
-
-    for (i = 0; i < nodes.length; i++) {
+    for (let i = 0; i < nodes.length; i++) {
       if (graph.inEdges(i).length === 0) sources.push(i);
     }
     return sources;
@@ -158,54 +156,48 @@ export function graph(nodes, links, directed) {
   function distance(i) {
     return links[i].distance;
   }
+
   graph.distance = distance;
 
   function neighbors(node) {
-    const e = edges[node],
-      ret = [];
-    for (let i = 0; i < e.length; ++i) {
-      const o = e[i];
+    const e = edges[node];
+    const ret = [];
+
+    for (const o of e) {
       if (o.source.index == node) ret.push(o.target);
       else ret.push(o.source);
     }
+
     return ret;
   }
   graph.neighbors = neighbors;
 
   graph.other = (o, node) => {
-    if (typeof o == 'number') o = links[o];
-    if (o.source.index == node) return o.target;
+    if (typeof o === 'number') o = links[o];
+    if (o.source.index === node) return o.target;
     else return o.source;
   };
 
   function compute_components() {
     const stack = [];
-    let comp = 0;
     const comps = [];
-    let ccomp;
     const n = nodes.length;
-    let i;
-    let j;
-    let v;
-    let l;
-    let o;
-    let e;
 
-    for (i = 0; i < n; i++) nodes[i].comp = 0;
+    for (let i = 0; i < n; i++) nodes[i].comp = 0;
 
-    for (j = 0; j < n; j++) {
+    for (let j = 0, comp = 0; j < n; j++) {
       if (nodes[j].comp !== 0) continue;
       comp = comp + 1; // next connected component
       nodes[j].comp = comp;
       stack.push(j);
-      ccomp = [j]; // current connected component list
+      const ccomp = [j]; // current connected component list
 
       while (stack.length) {
-        v = stack.shift();
-        l = edges[v];
-        for (i = 0; i < l.length; i++) {
-          e = l[i];
-          o = e.source;
+        const v = stack.shift();
+        const l = edges[v];
+        for (let i = 0; i < l.length; i++) {
+          const e = l[i];
+          let o = e.source;
           if (o.index == v) o = e.target;
           if (o.index == v)
             // loop

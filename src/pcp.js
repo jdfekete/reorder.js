@@ -7,14 +7,10 @@ import { permute } from './permute';
 
 export function array_to_dicts(data, axes = range(data[0].length)) {
   const ret = [];
-  let row;
-  let dict;
-  let i;
-  let j;
-  for (i = 0; i < data.length; i++) {
-    row = data[i];
-    dict = {};
-    for (j = 0; j < row.length; j++) {
+  for (let i = 0; i < data.length; i++) {
+    const row = data[i];
+    const dict = {};
+    for (let j = 0; j < row.length; j++) {
       dict[axes[j]] = row[j];
     }
     ret.push(dict);
@@ -26,14 +22,11 @@ export function dicts_to_array(dicts, keys = Object.keys(dicts[0])) {
   const n = keys.length;
   const m = dicts.length;
   const array = Array(m);
-  let i;
-  let j;
-  let row;
 
-  for (i = 0; i < m; i++) {
-    row = Array(n);
+  for (let i = 0; i < m; i++) {
+    const row = Array(n);
     array[i] = row;
-    for (j = 0; j < n; j++) row[j] = dicts[i][keys[j]];
+    for (let j = 0; j < n; j++) row[j] = dicts[i][keys[j]];
   }
   return array;
 }
@@ -43,11 +36,11 @@ function abs_matrix(x) {
 }
 
 function pcp_flip_axes(perm, pcor) {
-  let sign = 1;
   const signs = [1];
+  let sign = 1;
   let negs = 0;
   for (let i = 1; i < perm.length; i++) {
-    let c = pcor[perm[i - 1]][perm[i]];
+    const c = pcor[perm[i - 1]][perm[i]];
     if (c < 0) sign = -sign;
     if (sign < 0) {
       signs.push(-1);
@@ -71,8 +64,8 @@ export function pcp(data, axes) {
   const naxes = permute(axes, perm);
   tdata = permute(tdata, perm);
 
-  const signs = pcp_flip_axes(perm, pcor),
-    ndata = transpose(tdata);
+  const signs = pcp_flip_axes(perm, pcor);
+  const ndata = transpose(tdata);
   return [ndata, perm, naxes, signs, pcor];
 }
 
@@ -81,21 +74,19 @@ export function parcoords(p) {
 
   const data = p.data();
   const types = p.types();
+  const discarded = [];
+
   let dimensions = p.dimensions();
   let tdata = [];
-  let row;
-  const discarded = [];
-  let i;
-  let j;
 
-  for (i = 0; i < dimensions.length; i++) {
-    let d = dimensions[i];
+  for (let i = 0; i < dimensions.length; i++) {
+    const d = dimensions[i];
     if (types[d] == 'number') {
-      row = [];
-      for (j = 0; j < data.length; j++) row.push(data[j][d]);
+      const row = [];
+      for (let j = 0; j < data.length; j++) row.push(data[j][d]);
       tdata.push(row);
     } else if (types[d] == 'date') {
-      row = [];
+      const row = [];
       for (j = 0; j < data.length; j++) row.push(data[j][d].getTime() * 0.001);
       tdata.push(row);
     } else {
@@ -105,11 +96,10 @@ export function parcoords(p) {
       i--;
     }
   }
-  const pcor = correlation.pearsonMatrix(tdata),
-    abs_pcor = abs_matrix(pcor),
-    //h1 = hcluster().linkage('complete').distanceMatrix(abs_pcor)(tdata),
-    perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata),
-    naxes = permute(dimensions, perm);
+  const pcor = correlation.pearsonMatrix(tdata);
+  const abs_pcor = abs_matrix(pcor);
+  const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
+  const naxes = permute(dimensions, perm);
   tdata = permute(tdata, perm);
 
   dimensions = discarded.reverse().concat(naxes); // put back string columns

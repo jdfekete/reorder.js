@@ -3,21 +3,18 @@ function isNum(a, b) {
 }
 export const distance = {
   euclidean(a, b) {
-    let i = a.length,
-      s = 0,
-      x;
-    while (i-- > 0) {
+    let s = 0;
+    for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
-        x = a[i] - b[i];
+        const x = a[i] - b[i];
         s += x * x;
       }
     }
     return Math.sqrt(s);
   },
   manhattan(a, b) {
-    let i = a.length,
-      s = 0;
-    while (i-- > 0) {
+    let s = 0;
+    for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
         s += Math.abs(a[i] - b[i]);
       }
@@ -26,9 +23,8 @@ export const distance = {
   },
   minkowski(p) {
     return (a, b) => {
-      let i = a.length,
-        s = 0;
-      while (i-- > 0) {
+      let s = 0;
+      for (let i = a.length; i > 0; i--) {
         if (isNum(a[i], b[i])) {
           s += Math.pow(Math.abs(a[i] - b[i]), p);
         }
@@ -37,21 +33,18 @@ export const distance = {
     };
   },
   chebyshev(a, b) {
-    let i = a.length,
-      max = 0,
-      x;
-    while (i-- > 0) {
+    let max = 0;
+    for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
-        x = Math.abs(a[i] - b[i]);
+        const x = Math.abs(a[i] - b[i]);
         if (x > max) max = x;
       }
     }
     return max;
   },
   hamming(a, b) {
-    let i = a.length,
-      d = 0;
-    while (i-- > 0) {
+    let d = 0;
+    for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
         if (a[i] !== b[i]) d++;
       }
@@ -59,10 +52,9 @@ export const distance = {
     return d;
   },
   jaccard(a, b) {
-    let n = 0,
-      i = a.length,
-      s = 0;
-    while (i-- > 0) {
+    let n = 0;
+    let s = 0;
+    for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
         if (a[i] === b[i]) s++;
         n++;
@@ -72,14 +64,11 @@ export const distance = {
     return s / n;
   },
   braycurtis(a, b) {
-    let i = a.length,
-      s0 = 0,
-      s1 = 0,
-      ai,
-      bi;
-    while (i-- > 0) {
-      ai = a[i];
-      bi = b[i];
+    let s0 = 0;
+    let s1 = 0;
+    for (let i = a.length; i > 0; i--) {
+      const ai = a[i];
+      const bi = b[i];
       if (isNum(ai, bi)) {
         s0 += Math.abs(ai - bi);
         s1 += Math.abs(ai + bi);

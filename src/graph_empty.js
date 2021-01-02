@@ -2,8 +2,7 @@ import { graph } from './graph';
 
 export function graph_empty_nodes(n) {
   const nodes = Array(n);
-  let i;
-  for (i = 0; i < n; i++) nodes[i] = { id: i };
+  for (let i = 0; i < n; i++) nodes[i] = { id: i };
   return nodes;
 }
 
