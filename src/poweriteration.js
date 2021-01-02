@@ -16,20 +16,21 @@ export function poweriteration(v, eps, init) {
 
   const n = v.length;
   let b;
-  let i;
-  let j;
   let tmp = Array(n);
   let s = 100;
 
   assert(n == v[0].length, 'poweriteration needs a square matrix');
   if (!init) {
     b = random_array(n);
-  } else b = init.slice(); // copy
+  } else {
+    // copy
+    b = init.slice();
+  }
   normalize(b);
   while (s-- > 0) {
-    for (i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       tmp[i] = 0;
-      for (j = 0; j < n; j++) tmp[i] += v[i][j] * b[j];
+      for (let j = 0; j < n; j++) tmp[i] += v[i][j] * b[j];
     }
     normalize(tmp);
     if (dot(tmp, b) > 1.0 - eps) break;
