@@ -1,3 +1,4 @@
+/*jshint unused:false */
 import { lin, stats, zeroes } from '@sgratzl/science';
 
 export { zeroes };
