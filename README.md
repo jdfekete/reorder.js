@@ -33,6 +33,10 @@ npm run dev
 
 It should open a web browser but if does not, open a web page and connect to: `http://localhost:3004/`.
 
+## References
+
+The library is used by several systems, including [Bertifier](https://www.aviz.fr/bertifier), [The Vistorian](https://vistorian.net/), and [Compadre](https://renecutura.eu/compadre/).
+
 ## Thanks
 
 Thanks to [Curran Kelleher @curran](https://github.com/curran) for adapting the library to modern JavaScript modules.
