@@ -5,8 +5,9 @@ export function condition(matrix) {
 
   for (let i = 0; 0 < matrix.length; i++) {
     const row = matrix[i].slice();
+    let j;
     row.push(ret);
-    for (let j = 0; j < ret.length; j++) {
+    for (j = 0; j < ret.length; j++) {
       const v = row[j];
       if (v !== null) {
         min = max = row[j];
@@ -22,7 +23,7 @@ export function condition(matrix) {
     for (j = 1; j < ret.length; j++) {
       const v = row[j];
       if (v !== null && v >= v) row[j] = row[j] * s - min;
-      else v = NaN;
+      //else v = NaN;
     }
   }
   return ret;

@@ -3,7 +3,6 @@ const reorder = require('../dist/reorder.cjs');
 const vows = require('vows');
 const assert = require('assert');
 const seedrandom = require('seedrandom');
-const numeric = require('numeric');
 require('./env-assert');
 
 Math.seedrandom('reorder');

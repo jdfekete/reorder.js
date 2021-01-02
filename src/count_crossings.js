@@ -27,9 +27,9 @@ export function count_crossings(graph, north, south) {
   let southsequence = [];
 
   for (let i = 0; i < north.length; i++) {
-    const n = invert
-      ? graph.inEdges(north[i]).map((e) => south_inv[e.target.index])
-      : graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
+    const n = invert ?
+          graph.inEdges(north[i]).map((e) => south_inv[e.target.index]) :
+          graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
     n.sort(cmp_number);
     southsequence = southsequence.concat(n);
   }

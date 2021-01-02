@@ -171,7 +171,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   let tol = 0.000005;
   trans(y, y, x, aidot, mi, n, dat); //,1);
   icount = 0;
-  while (true) {
+  for(;;) {
     // 20
     a = 0;
     for (let j = 0; j < n; j++) a += y[j] * adotj[j]; // 30

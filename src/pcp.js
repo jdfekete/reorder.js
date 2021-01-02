@@ -87,7 +87,7 @@ export function parcoords(p) {
       tdata.push(row);
     } else if (types[d] == 'date') {
       const row = [];
-      for (j = 0; j < data.length; j++) row.push(data[j][d].getTime() * 0.001);
+      for (let j = 0; j < data.length; j++) row.push(data[j][d].getTime() * 0.001);
       tdata.push(row);
     } else {
       // remove dimension
@@ -105,7 +105,7 @@ export function parcoords(p) {
   dimensions = discarded.reverse().concat(naxes); // put back string columns
   p.dimensions(dimensions);
   const signs = pcp_flip_axes(perm, pcor);
-  for (i = 0; i < signs.length; i++) {
+  for (let i = 0; i < signs.length; i++) {
     if (signs[i] < 0) p.flip(dimensions[i]);
   }
 }
