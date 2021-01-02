@@ -6,9 +6,9 @@ const vows = require('vows'),
 const suite = vows.describe('reorder.all-pairs-distance');
 
 function dotest(graph) {
-  const mat = reorder.all_pairs_distance(graph),
-    bfs = reorder.all_pairs_distance_bfs(graph),
-    n = graph.nodes().length;
+  const mat = reorder.all_pairs_distance(graph);
+  const bfs = reorder.all_pairs_distance_bfs(graph);
+  const n = graph.nodes().length;
 
   assert.equal(mat.length, 1); // 1 component
   assert.deepEqual(mat[0], bfs);
@@ -29,13 +29,13 @@ function dotest(graph) {
 suite.addBatch({
   all_pairs_distance: {
     simple() {
-      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }],
-        links = [
-          { source: 0, target: 1 },
-          { source: 1, target: 2 },
-        ];
-      const graph = reorder.graph(nodes, links).init(),
-        mat = dotest(graph);
+      const nodes = [{ id: 0 }, { id: 1 }, { id: 2 }];
+      const links = [
+        { source: 0, target: 1 },
+        { source: 1, target: 2 },
+      ];
+      const graph = reorder.graph(nodes, links).init();
+      const mat = dotest(graph);
 
       assert.equal(mat[0].length, 3);
       assert.deepEqual(mat[0], [
