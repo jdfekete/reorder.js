@@ -9,17 +9,14 @@ function sumrows(v) {
   const n = v.length;
   const o = v[0].length;
   const sumrow = Array(n);
-  let i;
-  let j;
-  let row;
-  let s;
 
-  for (i = 0; i < n; i++) {
-    row = v[i];
-    s = 0;
-    for (j = 0; j < o; j++) s += row[j];
+  for (let i = 0; i < n; i++) {
+    const row = v[i];
+    let s = 0;
+    for (let j = 0; j < o; j++) s += row[j];
     sumrow[i] = s;
   }
+
   return sumrow;
 }
 
@@ -27,14 +24,12 @@ function sumcols(v) {
   const n = v.length;
   const o = v[0].length;
   const sumcol = zeroes(o);
-  let i;
-  let j;
-  let row;
 
-  for (i = 0; i < n; i++) {
-    row = v[i];
-    for (j = 0; j < o; j++) sumcol[j] += row[j];
+  for (let i = 0; i < n; i++) {
+    const row = v[i];
+    for (let j = 0; j < o; j++) sumcol[j] += row[j];
   }
+
   return sumcol;
 }
 
@@ -49,29 +44,32 @@ function sumcols(v) {
 // https://cran.r-project.org/web/packages/vegan/index.html
 
 function decorana(dat) {
-  const // consider as zero eigenvalue
-    ZEROEIG = 1e-7;
+  // consider as zero eigenvalue
+  const ZEROEIG = 1e-7;
 
-  let x;
-  let y;
-  let aidot;
-  let adotj;
-  let s1;
   const nr = dat.length;
   const nc = dat[0].length;
 
-  adotj = sumcols(dat);
-  aidot = sumrows(dat);
+  const adotj = sumcols(dat);
+  const aidot = sumrows(dat);
   //console.log('adotj='); printvec(adotj);
   //console.log('aidot='); printvec(aidot);
 
-  s1 = eigy(array1d(nr, 1.0), array1d(nc, 1.0), nr, nc, dat, aidot, adotj);
+  const s1 = eigy(
+    array1d(nr, 1.0),
+    array1d(nc, 1.0),
+    nr,
+    nc,
+    dat,
+    aidot,
+    adotj
+  );
   if (s1.eig < ZEROEIG) {
     s1.rows = s1.cols = [];
     s1.eig = 0;
   } else {
-    x = s1.rows;
-    y = s1.cols;
+    const x = s1.rows;
+    const y = s1.cols;
     yxmult(y, x, nr, nc, dat);
     for (let i = 0; i < nr; i++) x[i] /= aidot[i];
   }
@@ -79,14 +77,13 @@ function decorana(dat) {
 }
 
 function trans(y, yy, x, aidot, mi, n, dat, prt) {
-  let i;
   if (prt) console.log(`TRANS ${prt}`);
   yxmult(y, x, mi, n, dat, prt);
-  for (i = 0; i < mi; i++) {
+  for (let i = 0; i < mi; i++) {
     x[i] = x[i] / aidot[i]; // 10
   }
   // 100
-  // a1 = 0.0;
+  // a1 = 0;
   // for (i = 0; i < mi; i++)
   // 	a1 += aidot[i]*x[i]; // 110
   // for (i = 0; i < mi; i++)
@@ -103,17 +100,15 @@ function printvec(y) {
 }
 
 function xymult(x, y, mi, n, dat, prt) {
-  let i, j, ax, row;
-
   if (prt) {
     console.log('xymult');
     printvec(y, 5, null, 'y=');
   }
-  for (j = 0; j < n; j++) y[j] = 0.0; // 10
-  for (i = 0; i < mi; i++) {
-    ax = x[i];
-    row = dat[i];
-    for (j = 0; j < n; j++) y[j] += ax * row[j]; // 20
+  for (let j = 0; j < n; j++) y[j] = 0; // 10
+  for (let i = 0; i < mi; i++) {
+    const ax = x[i];
+    const row = dat[i];
+    for (let j = 0; j < n; j++) y[j] += ax * row[j]; // 20
   }
   if (prt) {
     //console.log('xymult[1]=');
@@ -122,15 +117,14 @@ function xymult(x, y, mi, n, dat, prt) {
 }
 
 function yxmult(y, x, mi, n, dat, prt) {
-  let i, j, ax, row;
   if (prt) {
     console.log('yxmult');
     printvec(x, 5, null, 'x=');
   }
-  for (i = 0; i < mi; i++) {
-    ax = 0.0;
-    row = dat[i];
-    for (j = 0; j < n; j++) {
+  for (let i = 0; i < mi; i++) {
+    let ax = 0;
+    const row = dat[i];
+    for (let j = 0; j < n; j++) {
       ax += y[j] * row[j]; // 10
     }
     x[i] = ax; // 20
@@ -142,9 +136,6 @@ function yxmult(y, x, mi, n, dat, prt) {
 }
 
 function eigy(x, y, mi, n, dat, aidot, adotj) {
-  let i;
-  let j;
-  let tot;
   let icount;
   let a;
   let ay;
@@ -169,59 +160,59 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   const y3 = zeroes(n);
   const y4 = zeroes(n);
   const y5 = zeroes(n);
-  let tol;
 
-  tot = 0.0;
-  for (j = 0; j < n; j++) {
+  let tot = 0;
+  for (let j = 0; j < n; j++) {
     tot += adotj[j];
     y[j] = j + 1.0; // 10
   }
   y[0] = 1.1;
-  tol = 0.000005;
+
+  let tol = 0.000005;
   trans(y, y, x, aidot, mi, n, dat); //,1);
   icount = 0;
-  for (;;) {
+  while (true) {
     // 20
-    a = 0.0;
-    for (j = 0; j < n; j++) a += y[j] * adotj[j]; // 30
+    a = 0;
+    for (let j = 0; j < n; j++) a += y[j] * adotj[j]; // 30
     a /= tot;
-    ex = 0.0;
-    for (j = 0; j < n; j++) {
+    ex = 0;
+    for (let j = 0; j < n; j++) {
       ay = y[j] - a;
       ex += ay * ay * adotj[j];
       y[j] = ay; // 40
     }
     ex = Math.sqrt(ex);
-    for (j = 0; j < n; j++) y[j] /= ex; // 50
+    for (let j = 0; j < n; j++) y[j] /= ex; // 50
     trans(y, y2, x, aidot, mi, n, dat); //,2);
-    a = 0.0;
-    a11 = 0.0;
-    a12 = 0.0;
-    a22 = 0.0;
-    a23 = 0.0;
-    a33 = 0.0;
-    a34 = 0.0;
-    a44 = 0.0;
-    for (j = 0; j < n; j++) {
+    a = 0;
+    a11 = 0;
+    a12 = 0;
+    a22 = 0;
+    a23 = 0;
+    a33 = 0;
+    a34 = 0;
+    a44 = 0;
+    for (let j = 0; j < n; j++) {
       ay = y2[j];
       y2[j] = ay / adotj[j];
       a += ay;
       a11 += ay * y[j]; // 60
     }
     a /= tot;
-    for (j = 0; j < n; j++) {
+    for (let j = 0; j < n; j++) {
       ay = y2[j] - (a + a11 * y[j]);
       a12 += ay * ay * adotj[j];
       y2[j] = ay; // 70
     }
     a12 = Math.sqrt(a12);
-    for (j = 0; j < n; j++) y2[j] /= a12; // 80
+    for (let j = 0; j < n; j++) y2[j] /= a12; // 80
     if (a12 < tol || icount > 999) break;
     icount++;
     trans(y2, y3, x, aidot, mi, n, dat); //,3);
-    a = 0.0;
-    b13 = 0.0;
-    for (j = 0; j < n; j++) {
+    a = 0;
+    b13 = 0;
+    for (let j = 0; j < n; j++) {
       ay = y3[j];
       y3[j] = ay / adotj[j];
       a += ay;
@@ -229,7 +220,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
       b13 += ay * y[j]; // 90
     }
     a /= tot;
-    for (j = 0; j < n; j++) {
+    for (let j = 0; j < n; j++) {
       ay = y3[j] - (a + a22 * y2[j] + b13 * y[j]);
       a23 += ay * ay * adotj[j];
       y3[j] = ay; // 100
@@ -237,14 +228,14 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
     a23 = Math.sqrt(a23);
     if (a23 > tol) {
       // 105
-      for (j = 0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         y3[j] /= a23; // 110
       }
       trans(y3, y4, x, aidot, mi, n, dat); //,4);
-      a = 0.0;
-      b14 = 0.0;
-      b24 = 0.0;
-      for (j = 0; j < n; j++) {
+      a = 0;
+      b14 = 0;
+      b24 = 0;
+      for (let j = 0; j < n; j++) {
         ay = y4[j];
         y4[j] /= adotj[j];
         a += ay;
@@ -253,7 +244,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
         b24 += ay * y2[j]; // 120
       }
       a /= tot;
-      for (j = 0; j < n; j++) {
+      for (let j = 0; j < n; j++) {
         ay = y4[j] - (a + a33 * y3[j] + b14 * y[j] + b24 * y2[j]);
         a34 += ay * ay * adotj[j];
         y4[j] = ay; // 130
@@ -261,14 +252,14 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
       a34 = Math.sqrt(a34);
       if (a34 > tol) {
         // 135
-        for (j = 0; j < n; j++) y4[j] /= a34; // 140
+        for (let j = 0; j < n; j++) y4[j] /= a34; // 140
         trans(y4, y5, x, aidot, mi, n, dat); //,5);
-        for (j = 0; j < n; j++) a44 += y4[j] * y5[j]; // 150
+        for (let j = 0; j < n; j++) a44 += y4[j] * y5[j]; // 150
       } else {
-        a34 = 0.0;
+        a34 = 0;
       }
     } else {
-      a23 = 0.0;
+      a23 = 0;
     }
     // 160
     res = solve_tridiag(tol, a11, a12, a22, a23, a33, a34, a44);
@@ -284,7 +275,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
 
     // 180
     if (a12 < tol) break;
-    for (j = 0; j < n; j++)
+    for (let j = 0; j < n; j++)
       y[j] = ax1 * y[j] + ax2 * y2[j] + ax3 * y3[j] + ax4 * y4[j]; // 190
     // goto 20
   }
@@ -295,33 +286,34 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   }
   let aymax = y[0];
   let aymin = y[0];
-  for (j = 1; j < n; j++) {
+  for (let j = 1; j < n; j++) {
     a = y[j];
     if (a < aymin) aymin = a;
     else if (a > aymax) aymax = a;
   }
   if (-aymin > aymax) {
     for (
-      j = 0;
+      let j = 0;
       j < n;
       j++ // 210
-    )
+    ) {
       y[j] = -y[j];
+    }
   }
   yxmult(y, x, mi, n, dat); //,true);
-  for (i = 0; i < mi; i++) x[i] /= aidot[i]; // 220
+  for (let i = 0; i < mi; i++) x[i] /= aidot[i]; // 220
   // 225
-  let axlong = 0.0;
-  for (i = 0; i < mi; i++) axlong += aidot[i] * sqr(x[i]); // 230
+  let axlong = 0;
+  for (let i = 0; i < mi; i++) axlong += aidot[i] * sqr(x[i]); // 230
   axlong = Math.sqrt(axlong);
-  for (i = 0; i < mi; i++) x[i] /= axlong; // 240
-  for (j = 0; j < n; j++) y[j] /= axlong; // 250
-  let sumsq = 0.0,
-    ax;
-  for (i = 0; i < mi; i++) {
+  for (let i = 0; i < mi; i++) x[i] /= axlong; // 240
+  for (let j = 0; j < n; j++) y[j] /= axlong; // 250
+  let sumsq = 0;
+  let ax;
+  for (let i = 0; i < mi; i++) {
     ax = x[i];
     row = dat[i];
-    for (j = 0; j < n; j++) {
+    for (let j = 0; j < n; j++) {
       sumsq += row[j] * sqr(ax - y[j]); // 255
     }
     // 260
@@ -333,7 +325,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
     if (sd1 > sd) sd = sd1;
   }
   // 265
-  for (j = 0; j < n; j++) y[j] /= sd; // 270
+  for (let j = 0; j < n; j++) y[j] /= sd; // 270
 
   //printvec(x);
   //printvec(y);
@@ -345,22 +337,21 @@ function sqr(x) {
 }
 
 function solve_tridiag(tol, a11, a12, a22, a23, a33, a34, a44) {
-  let // 160
-    ax1 = 1.0,
-    ax2 = 0.1,
-    ax3 = 0.01,
-    ax4 = 0.001,
-    itimes,
-    axx1,
-    axx2,
-    axx3,
-    axx4,
-    ex,
-    exx,
-    resi;
+  // 160
+  let ax1 = 1.0;
+  let ax2 = 0.1;
+  let ax3 = 0.01;
+  let ax4 = 0.001;
+  let axx1;
+  let axx2;
+  let axx3;
+  let axx4;
+  let ex;
+  let exx;
+  let resi;
   //console.log('a11:'+a11+' a12:'+a12+' a22:'+a22);
   //console.log('a23:'+a23+' a33:'+a33+' a34:'+a34+' a44:'+a44);
-  for (itimes = 0; itimes < 100; itimes++) {
+  for (let itimes = 0; itimes < 100; itimes++) {
     axx1 = a11 * ax1 + a12 * ax2;
     axx2 = a12 * ax1 + a22 * ax2 + a23 * ax3;
     axx3 = a23 * ax2 + a33 * ax3 + a34 * ax4;
