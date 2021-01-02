@@ -11,16 +11,12 @@ function eucl(a, b) {
 }
 
 function remove_equal_dist(dm) {
-  let i;
-  let j;
-  let v;
-  let row;
   const values = {};
 
-  for (i = 0; i < dm.length; i++) {
-    row = dm[i];
-    for (j = i + 1; j < dm.length; j++) {
-      v = row[j];
+  for (let i = 0; i < dm.length; i++) {
+    const row = dm[i];
+    for (let j = i + 1; j < dm.length; j++) {
+      let v = row[j];
       if (values[v]) {
         console.log(`Duplicate dist ${v} at [${i},${j}]`);
         v += Math.random() / 1000;
@@ -48,8 +44,8 @@ function clusterEqual(h1, h2) {
 suite.addBatch({
   leaforder: {
     simple() {
-      const data = [2, 1, 4, 3],
-        expect = [1, 2, 3, 4];
+      const data = [2, 1, 4, 3];
+      const expect = [1, 2, 3, 4];
       let x = reorder.optimal_leaf_order().distance(eucl)(data);
       assert.deepEqual(reorder.stablepermute(data, x), expect);
 
@@ -73,21 +69,18 @@ suite.addBatch({
       const rows = 30;
       const cols = 20;
       const array = [];
-      let i;
-      let j;
-      let row;
 
-      for (i = 0; i < rows; i++) {
-        row = [];
+      for (let i = 0; i < rows; i++) {
+        const row = [];
         array.push(row);
-        for (j = 0; j < cols; j++) {
+        for (let j = 0; j < cols; j++) {
           row.push(Math.random());
         }
       }
       const order = reorder.optimal_leaf_order();
       let perm = order(array);
       // Check determinism
-      for (i = 0; i < 3; i++) {
+      for (let i = 0; i < 3; i++) {
         const p2 = order(array);
         assert.deepEqual(perm, p2);
       }
@@ -102,8 +95,8 @@ suite.addBatch({
       );
 
       perm = reorder.optimal_leaf_order().distanceMatrix(dm)(array);
-      const a2 = reorder.permute(array, perm),
-        d2 = reorder.dist()(a2);
+      const a2 = reorder.permute(array, perm);
+      const d2 = reorder.dist()(a2);
       dm = reorder.permute(dm, perm);
       dm = reorder.permutetranspose(dm, perm);
 
