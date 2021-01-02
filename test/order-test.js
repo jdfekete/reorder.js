@@ -1,8 +1,8 @@
 const reorder = require('../dist/reorder.cjs');
 const seedrandom = require('seedrandom');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 
 const suite = vows.describe('reorder.order');
 
@@ -31,22 +31,17 @@ function fortytwo(a) {
 
 function lesssimple() {
   const prefix = reorder.range(0, 10);
-  let suffix;
+  let prev = 10;
+  let data = [prev];
 
-  let prev = 10,
-    data = [prev],
-    next,
-    i,
-    j;
-
-  for (i = 0; i < 30; i++) {
-    next = Math.random() + prev;
+  for (let i = 0; i < 30; i++) {
+    const next = Math.random() + prev;
     data.push(next);
     prev = next;
   }
-  suffix = reorder.range(Math.ceil(prev + 1), Math.ceil(prev + 21));
-  i = prefix.length;
-  j = i + data.length;
+  const suffix = reorder.range(Math.ceil(prev + 1), Math.ceil(prev + 21));
+  const i = prefix.length;
+  const j = i + data.length;
   data = prefix.concat(data).concat(suffix);
   //console.log("Original   : "+data);
   const randata = reorder.randomPermute(data.slice(0), i, j);
@@ -65,10 +60,10 @@ function insert_simple(v, i, j) {
 }
 
 function insert_lesssimple() {
-  const plen = Math.round(Math.random() * 20),
-    mlen = Math.round(Math.random() * 20) + 2,
-    slen = Math.round(Math.random() * 20),
-    cut = Math.round(Math.random() * (plen + slen));
+  const plen = Math.round(Math.random() * 20);
+  const mlen = Math.round(Math.random() * 20) + 2;
+  const slen = Math.round(Math.random() * 20);
+  const cut = Math.round(Math.random() * (plen + slen));
   const prefix = reorder.range(42, 42 + plen);
   const middle = reorder.range(42 + plen, 42 + plen + mlen);
   const suffix = reorder.range(42 + plen + mlen, 42 + plen + mlen + slen);
@@ -80,6 +75,7 @@ function insert_lesssimple() {
     .order()
     .distance(eucl)
     .except([cut, cut + middle.length])(shuffled);
+
   assert.deepEqual(
     reorder.stablepermute(shuffled, x),
     prefix.concat(middle.concat(suffix))
@@ -106,11 +102,11 @@ suite.addBatch({
     },
     lesssimple,
     evenharder() {
-      for (n = 10; n-- > 0; ) lesssimple();
+      for (let n = 10; n-- > 0; ) lesssimple();
     },
     'equiv-simple': function () {
-      const data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo),
-        shuffled = reorder.randomPermute(data.slice(0));
+      const data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo);
+      const shuffled = reorder.randomPermute(data.slice(0));
 
       const x = reorder.order().distance(eucl)(shuffled);
       assert.deepEqual(reorder.stablepermute(shuffled, x), data);
@@ -125,11 +121,8 @@ suite.addBatch({
         [0, 0, 1, 1, 1, 1, 0, 0, 0],
       ];
 
-      const x = reorder
-        .order()
-        //		    .distance(reorder.distance.manhattan)
-        .linkage('single')(data);
-      //	    console.log(toLetter(x));
+      const x = reorder.order().linkage('single')(data);
+
       assert.deepEqual(
         reorder.stablepermute(reorder.range(0, data.length), x),
         toNum(['a', 'f', 'e', 'd', 'c', 'b'])
@@ -163,10 +156,12 @@ suite.addBatch({
       let shuffled = reorder.randomPermute(prefix.concat(suffix));
 
       shuffled = shuffled.slice(0, 5).concat(middle).concat(shuffled.slice(5));
+
       const x = reorder
         .order()
         .distance(eucl)
         .except([5, 5 + middle.length])(shuffled);
+
       assert.deepEqual(
         reorder.stablepermute(shuffled, x),
         reorder.range(0, 13).map(fortytwo)
@@ -357,7 +352,7 @@ suite.addBatch({
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
     },
     'insert-lesssimple': insert_lesssimple,
-    'insert-evenharder': function () {
+    'insert-evenharder': () => {
       for (let i = 0; i < 20; i++) {
         //console.log("Loop "+i);
         insert_lesssimple();
@@ -369,14 +364,6 @@ suite.addBatch({
 function deepEqual(actual, expected) {
   if (actual === expected) {
     return true;
-
-    // } else if (Buffer.isBuffer(actual) && Buffer.isBuffer(expected)) {
-    //   if (actual.length != expected.length) return false;
-
-    //   for (var i = 0; i < actual.length; i++) {
-    //     if (actual[i] !== expected[i]) return false;
-    //   }
-    //   return true;
   } else if (actual instanceof Date && expected instanceof Date) {
     return actual.getTime() === expected.getTime();
   } else if (typeof actual != 'object' && typeof expected != 'object') {
@@ -408,22 +395,22 @@ function objEquiv(a, b) {
     b = pSlice.call(b);
     return deepEqual(a, b);
   }
+  let ka;
+  let kb;
   try {
-    var ka = Object.keys(a),
-      kb = Object.keys(b),
-      key,
-      i;
+    ka = Object.keys(a);
+    kb = Object.keys(b);
   } catch (e) {
     return false;
   }
   if (ka.length != kb.length) return false;
   ka.sort();
   kb.sort();
-  for (i = ka.length - 1; i >= 0; i--) {
+  for (let i = ka.length - 1; i >= 0; i--) {
     if (ka[i] != kb[i]) return false;
   }
-  for (i = ka.length - 1; i >= 0; i--) {
-    key = ka[i];
+  for (let i = ka.length - 1; i >= 0; i--) {
+    const key = ka[i];
     if (!deepEqual(a[key], b[key])) return false;
   }
   return true;
