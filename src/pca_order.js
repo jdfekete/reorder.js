@@ -13,13 +13,10 @@ function center(v) {
   const mean = meancolumns(v);
   const o = mean.length;
   const v1 = Array(n);
-  let i;
-  let j;
-  let row;
 
-  for (i = 0; i < n; i++) {
-    row = v[i].slice(0);
-    for (j = 0; j < o; j++) {
+  for (let i = 0; i < n; i++) {
+    const row = v[i].slice(0);
+    for (let j = 0; j < o; j++) {
       row[j] -= mean[j];
     }
     v1[i] = row;
