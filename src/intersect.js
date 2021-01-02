@@ -1,6 +1,6 @@
 export function intersect_sorted_ints(a, b) {
-  let ai = 0,
-    bi = 0;
+  let ai = 0;
+  let bi = 0;
   const result = [];
 
   while (ai < a.length && bi < b.length) {
