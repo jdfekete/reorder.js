@@ -1,11 +1,10 @@
 export function displaymat(mat, rowperm, colperm) {
-  let i, j, row, col, str;
   console.log('Matrix:');
-  for (i = 0; i < mat.length; i++) {
-    row = rowperm ? mat[rowperm[i]] : mat[i];
-    str = '';
-    for (j = 0; j < row.length; j++) {
-      col = colperm ? row[colperm[j]] : row[j];
+  for (let i = 0; i < mat.length; i++) {
+    const row = rowperm ? mat[rowperm[i]] : mat[i];
+    let str = '';
+    for (let j = 0; j < row.length; j++) {
+      const col = colperm ? row[colperm[j]] : row[j];
       str += col ? '*' : ' ';
     }
     console.log(str);
@@ -13,9 +12,8 @@ export function displaymat(mat, rowperm, colperm) {
 }
 
 export function printvec(row, prec, colperm, line) {
-  let j;
   if (!line) line = '';
-  for (j = 0; j < row.length; j++) {
+  for (let j = 0; j < row.length; j++) {
     if (line.length !== 0) line += ', ';
     if (colperm) line += row[colperm[j]].toFixed(prec);
     else line += row[j].toFixed(prec);
@@ -24,10 +22,9 @@ export function printvec(row, prec, colperm, line) {
 }
 
 export function printmat(m, prec, rowperm, colperm) {
-  let row;
   if (!prec) prec = 4;
   for (let i = 0; i < m.length; i++) {
-    row = rowperm ? m[rowperm[i]] : m[i];
+    const row = rowperm ? m[rowperm[i]] : m[i];
     printvec(row, prec, colperm, `${i}: `);
   }
 }
