@@ -26,9 +26,9 @@ export function optimal_leaf_order() {
     leavesMap = {},
     orderMap = {};
 
-  function isLeaf(n) {
-    return n.depth === 0;
-  }
+  // function isLeaf(n) {
+  //   return n.depth === 0;
+  // }
 
   function leaves(n) {
     if (n === null) return [];
@@ -140,7 +140,7 @@ export function optimal_leaf_order() {
   optimal_leaf_order.distance_matrix = function (x) {
     if (!arguments.length) return distanceMatrix;
     // copy
-    distanceMatrix = x.map(y => y.slice(0));
+    distanceMatrix = x.map((y) => y.slice(0));
     return optimal_leaf_order;
   };
   optimal_leaf_order.distanceMatrix = optimal_leaf_order.distance_matrix; // compatibility

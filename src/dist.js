@@ -60,7 +60,7 @@ export function distmin(distMatrix) {
   return min;
 }
 
-export function dist_remove(dist, n, m=n+1) {
+export function dist_remove(dist, n, m = n + 1) {
   let i;
   dist.splice(n, m - n);
   for (i = dist.length; i-- > 0; ) dist[i].splice(n, m - n);

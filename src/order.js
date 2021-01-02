@@ -1,6 +1,5 @@
 import { distance as distances } from './distance';
 import { optimal_leaf_order } from './optimal_leaf_order';
-import { debug } from './core';
 import { dist_remove, distmax, dist } from './dist';
 import { assert, printmat } from './debug';
 import { range } from './range';
@@ -137,9 +136,7 @@ export function order() {
       );
     }
     if (i0 !== 0) {
-      perm = permutation(i0).concat(
-        perm.map(v => v + i0)
-      );
+      perm = permutation(i0).concat(perm.map((v) => v + i0));
     }
     if (orig.length > j0) {
       perm = perm.concat(range(j0, orig.length));
@@ -289,8 +286,7 @@ export function order() {
   }
 
   function _fix_exception(perm, l, m, next, len) {
-    let i, j, k;
-
+    // let i, j, k;
     // for (k = 0; k < except.length; k += 2) {
     //     if (m == except[k]) {
     //         next = m+1;
@@ -335,7 +331,7 @@ export function order() {
   }
 
   function _perm_insert(perm, i, nv) {
-    perm = perm.map(v => v < nv ? v : v + 1);
+    perm = perm.map((v) => (v < nv ? v : v + 1));
     perm.splice(i, 0, nv);
     return perm;
   }
@@ -345,6 +341,8 @@ export function order() {
       distanceMatrix = dist().distance(distance)(vector);
     return distanceMatrix;
   }
+
+  order.debug = debug;
 
   order.distance = function (x) {
     if (!arguments.length) return distance;
@@ -374,10 +372,9 @@ export function order() {
     return order;
   };
 
-  function _orderExcept(vector, i, j) {
+  function orderExcept(vector, i, j) {
     const distanceMatrix = dist().distance(distance)(vector);
-    let row,
-      k,
+    let k,
       l,
       rev = false,
       args,
@@ -403,7 +400,7 @@ export function order() {
     return perm;
   }
 
-  order.orderrowsexcept = order.orderexcept;
+  order.orderrowsexcept = orderExcept;
 
   return order;
 }

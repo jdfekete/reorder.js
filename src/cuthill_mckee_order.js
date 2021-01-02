@@ -1,15 +1,14 @@
+import { Queue } from './queue';
 import { inverse_permutation } from './permutation';
 
 /*jshint loopfunc:true */
 export function cuthill_mckee(graph, comp) {
   if (comp.length < 3) return comp;
 
-  const nodes = graph.nodes();
   let start = comp[0];
   let min_deg = graph.degree(start);
   let i;
   let n;
-  let edges;
   let e;
   const visited = {};
   const queue = new Queue();
@@ -32,10 +31,14 @@ export function cuthill_mckee(graph, comp) {
     perm.push(n);
     e = graph
       .edges(n)
-      .map(edge => graph.other(edge, n).index)
-      .filter(n => !visited[n] && n in inv)
-      .sort((a, b) => // ascending by degree
-    graph.degree(a) - graph.degree(b));
+      .map((edge) => graph.other(edge, n).index)
+      .filter((n) => !visited[n] && n in inv)
+      .sort(
+        (
+          a,
+          b // ascending by degree
+        ) => graph.degree(a) - graph.degree(b)
+      );
 
     e.forEach(queue.push, queue);
   }

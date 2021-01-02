@@ -10,7 +10,6 @@ export function graph_random_erdos_renyi(n, p, directed) {
   const links = [];
   let v;
   let w;
-  let i;
   let lr;
   let lp;
 

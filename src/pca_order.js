@@ -29,8 +29,6 @@ function center(v) {
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 export function pca1d(v, eps) {
-  const n = v.length;
-
   if (v.length === 0) return null;
 
   v = center(v);

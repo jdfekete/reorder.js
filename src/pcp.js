@@ -4,9 +4,8 @@ import { transpose } from './aliases';
 import { correlation } from './correlation';
 import { optimal_leaf_order } from './optimal_leaf_order';
 import { permute } from './permute';
-import { hcluster } from './hcluster';
 
-export function array_to_dicts(data, axes=range(data[0].length)) {
+export function array_to_dicts(data, axes = range(data[0].length)) {
   const ret = [];
   let row;
   let dict;
@@ -23,7 +22,7 @@ export function array_to_dicts(data, axes=range(data[0].length)) {
   return ret;
 }
 
-export function dicts_to_array(dicts, keys=Object.keys(dicts[0])) {
+export function dicts_to_array(dicts, keys = Object.keys(dicts[0])) {
   const n = keys.length;
   const m = dicts.length;
   const array = Array(m);
@@ -40,7 +39,7 @@ export function dicts_to_array(dicts, keys=Object.keys(dicts[0])) {
 }
 
 function abs_matrix(x) {
-  return x.map(y => y.map(Math.abs));
+  return x.map((y) => y.map(Math.abs));
 }
 
 function pcp_flip_axes(perm, pcor) {
@@ -56,7 +55,7 @@ function pcp_flip_axes(perm, pcor) {
     } else signs.push(1);
   }
   if (debug) console.log(signs);
-  if (negs > perm.length/2) {
+  if (negs > perm.length / 2) {
     for (let i = 0; i < perm.length; i++) signs[i] = -signs[i];
   }
   return signs;
@@ -68,7 +67,6 @@ export function pcp(data, axes) {
   let tdata = transpose(data);
   const pcor = correlation.pearsonMatrix(tdata);
   const abs_pcor = abs_matrix(pcor);
-  const h1 = hcluster().linkage('complete').distanceMatrix(abs_pcor)(tdata);
   const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
   const naxes = permute(axes, perm);
   tdata = permute(tdata, perm);
@@ -89,7 +87,6 @@ export function parcoords(p) {
   const discarded = [];
   let i;
   let j;
-  let k;
 
   for (i = 0; i < dimensions.length; i++) {
     let d = dimensions[i];
@@ -110,7 +107,7 @@ export function parcoords(p) {
   }
   const pcor = correlation.pearsonMatrix(tdata),
     abs_pcor = abs_matrix(pcor),
-    h1 = hcluster().linkage('complete').distanceMatrix(abs_pcor)(tdata),
+    //h1 = hcluster().linkage('complete').distanceMatrix(abs_pcor)(tdata),
     perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata),
     naxes = permute(dimensions, perm);
   tdata = permute(tdata, perm);

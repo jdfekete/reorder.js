@@ -13,7 +13,7 @@ export function condition(matrix) {
     row.push(ret);
     for (j = 0; j < ret.length; j++) {
       v = row[j];
-      if (v !== null && b >= b) {
+      if (v !== null) {
         min = max = row[j];
         break;
       }

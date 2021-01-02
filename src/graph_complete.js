@@ -1,4 +1,5 @@
 import { graph } from './graph';
+import { graph_empty_nodes } from './graph_empty';
 
 export function complete_graph(n, directed) {
   const nodes = graph_empty_nodes(n);

@@ -1,4 +1,3 @@
-Queue = require('tiny-queue');
 const reorder = require('../dist/reorder.cjs');
 
 const vows = require('vows'),

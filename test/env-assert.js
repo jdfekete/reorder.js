@@ -80,7 +80,7 @@ assert.inDeltaArrayAbs = (actual, expected, delta, message) => {
 };
 
 function neg(a) {
-  return a.map(x => -x);
+  return a.map((x) => -x);
 }
 
 assert.inDeltaArrayOrNeg = (actual, expected, delta, message) => {

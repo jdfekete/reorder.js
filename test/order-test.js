@@ -430,11 +430,11 @@ function objEquiv(a, b) {
 }
 
 function toNum(a) {
-  return a.map(l => l.charCodeAt(0) - 97);
+  return a.map((l) => l.charCodeAt(0) - 97);
 }
 
 function toLetter(a) {
-  return a.map(l => String.fromCharCode(97 + l));
+  return a.map((l) => String.fromCharCode(97 + l));
 }
 
 suite.export(module);

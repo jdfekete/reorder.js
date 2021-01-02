@@ -19,9 +19,7 @@ export function poweriteration(v, eps, init) {
   let i;
   let j;
   let tmp = Array(n);
-  let norm;
   let s = 100;
-  let e;
 
   assert(n == v[0].length, 'poweriteration needs a square matrix');
   if (!init) {

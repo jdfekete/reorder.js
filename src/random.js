@@ -4,7 +4,7 @@ import { zeroes } from './aliases';
 /* Fisher-Yates shuffle.
    See http://bost.ocks.org/mike/shuffle/
  */
-export function randomPermute(array, i=0, j=array.length) {
+export function randomPermute(array, i = 0, j = array.length) {
   let m = j - i,
     t,
     k;

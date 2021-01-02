@@ -8,7 +8,6 @@ export function laplacian(graph, comp) {
   const inv = inverse_permutation(comp);
   let i;
   let j;
-  let k;
   let row;
   let sum;
   let edges;

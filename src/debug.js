@@ -24,9 +24,9 @@ export function printvec(row, prec, colperm, line) {
 }
 
 export function printmat(m, prec, rowperm, colperm) {
-  let i, j, row, line;
+  let row;
   if (!prec) prec = 4;
-  for (i = 0; i < m.length; i++) {
+  for (let i = 0; i < m.length; i++) {
     row = rowperm ? m[rowperm[i]] : m[i];
     printvec(row, prec, colperm, `${i}: `);
   }

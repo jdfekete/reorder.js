@@ -1,4 +1,4 @@
-export function intersect_sorted_ints(array1, array2) {
+export function intersect_sorted_ints(a, b) {
   let ai = 0,
     bi = 0;
   const result = [];

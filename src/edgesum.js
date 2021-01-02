@@ -1,4 +1,5 @@
 import { range } from './range';
+import { inverse_permutation } from './permutation';
 
 export function edgesum(graph, order) {
   if (!order) order = range(graph.nodes().length);

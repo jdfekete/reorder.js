@@ -33,18 +33,20 @@
       "pretest": "npm run build",
       "test": "vows --nocolor; echo",
       "clean": "rm -rf node_modules",
-      "prettier": "prettier --single-quote --write '{src,test}/**/*.js'"
+      "prettier": "prettier --single-quote --write '{src,test}/**/*.js'",
+      "docs": "jsdoc -c jsdoc.config.json",
+      "check": "jshint src/*.js"
    },
    "files": [
       "dist"
    ],
    "dependencies": {
-      "@sgratzl/science": "^2.0.0",
-      "tiny-queue": "0.2.1"
+      "@sgratzl/science": "^2.0.0"
    },
    "devDependencies": {
       "@rollup/plugin-commonjs": "^17.0.0",
       "@rollup/plugin-node-resolve": "^11.0.1",
+      "jsdoc": "^3.6.6",
       "jshint": "^2.9.7",
       "jsonfile": "2.0.0",
       "numeric": "1.2.6",
@@ -61,6 +63,7 @@
    },
    "license": "BSD-2-Clause",
    "jshintConfig": {
-      "laxbreak": true
+       "esversion": 6,
+       "varstmt": true
    }
 }

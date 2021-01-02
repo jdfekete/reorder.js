@@ -1,3 +1,4 @@
+import { Queue } from './queue';
 import { flatten, cmp_number } from './utils';
 
 export function bfs(graph, v, fn) {

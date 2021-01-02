@@ -1,10 +1,8 @@
 export function meantranspose(v, j) {
   const n = v.length;
   if (n === 0) return NaN;
-  const o = v[0].length;
   let m = 0;
   let i = -1;
-  let row;
 
   while (++i < n) m += (v[i][j] - m) / (i + 1);
 

@@ -1,7 +1,7 @@
-export function range(start, stop, step=1) {
+export function range(start, stop, step = 1) {
   if (arguments.length < 2) {
-      stop = start;
-      start = 0;
+    stop = start;
+    start = 0;
   }
   const range = [];
   let i = start;

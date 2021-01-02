@@ -25,6 +25,6 @@ export function mat2graph(mat, directed) {
     }
   }
   return graph(nodes, links, directed)
-    .linkDistance((l, i) => 1 + max_value - l.value)
+    .linkDistance((l) => 1 + max_value - l.value)
     .init();
 }

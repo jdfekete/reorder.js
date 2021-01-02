@@ -1,5 +1,5 @@
 import { debug } from './core';
-import { poweriteration, poweriteration_n } from './poweriteration';
+import { poweriteration_n } from './poweriteration';
 import { array1d } from './utils';
 import { random_array } from './random';
 
@@ -38,7 +38,7 @@ export function fiedler_vector(B, eps) {
   const n = B.length;
 
   const // Copy B
-    Bhat = B.map(row => row.slice());
+    Bhat = B.map((row) => row.slice());
 
   let i;
   let j;

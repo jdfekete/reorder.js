@@ -151,7 +151,7 @@ export function hcluster() {
 
   hcluster.distanceMatrix = function (x) {
     if (!arguments.length) return distMatrix;
-    distMatrix = x.map(y => y.slice(0));
+    distMatrix = x.map((y) => y.slice(0));
     return hcluster;
   };
 

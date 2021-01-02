@@ -1,3 +1,5 @@
+import { graph } from './graph';
+
 export function graph_empty_nodes(n) {
   const nodes = Array(n);
   let i;

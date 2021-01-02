@@ -21,7 +21,7 @@ export default [
   },
   {
     input: "src/index.js",
-    external: ["@sgratzl/science"],
+    external: ["@sgratzl/science", "tiny-queue"],
     output: {
       file: pkg.main,
       format: "cjs"
@@ -33,7 +33,7 @@ export default [
   },
   {
     input: "src/index.js",
-    external: ["@sgratzl/science"],
+    external: ["@sgratzl/science", "tiny-queue"],
     output: {
       file: pkg.module,
       format: "es"

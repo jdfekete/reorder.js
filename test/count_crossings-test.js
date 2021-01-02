@@ -22,7 +22,9 @@ function naive_count_crossings(graph, north, south) {
   for (i = 0; i < north.length; i++) {
     v = north[i];
     links = links.concat(
-      graph.outEdges(v).map(e => [inv_north[e.target.index], inv_south[e.source.index]])
+      graph
+        .outEdges(v)
+        .map((e) => [inv_north[e.target.index], inv_south[e.source.index]])
     );
   }
   for (i = 0; i < links.length; i++) {
@@ -39,10 +41,10 @@ function naive_count_crossings(graph, north, south) {
 function dotest(mat) {
   const graph = reorder.mat2graph(mat, true),
     comps = graph.components(),
-    comp = comps.reduce((a, b) => a.length > b.length ? a : b);
+    comp = comps.reduce((a, b) => (a.length > b.length ? a : b));
   comp.sort((a, b) => a - b);
-  const layer1 = comp.filter(n => graph.outEdges(n).length != 0),
-    layer2 = comp.filter(n => graph.inEdges(n).length != 0);
+  const layer1 = comp.filter((n) => graph.outEdges(n).length != 0),
+    layer2 = comp.filter((n) => graph.inEdges(n).length != 0);
   //console.time('fast_crossings');
   const c1 = reorder.count_crossings(graph, layer1, layer2);
   //console.timeEnd('fast_crossings');
@@ -87,8 +89,8 @@ suite.addBatch({
           .directed(true)
           .init(),
         comp = graph.components()[0],
-        layer1 = comp.filter(n => graph.outEdges(n).length != 0),
-        layer2 = comp.filter(n => graph.inEdges(n).length != 0);
+        layer1 = comp.filter((n) => graph.outEdges(n).length != 0),
+        layer2 = comp.filter((n) => graph.inEdges(n).length != 0);
 
       assert.equal(naive_count_crossings(graph, layer1, layer2), 12);
       assert.equal(reorder.count_crossings(graph, layer1, layer2), 12);

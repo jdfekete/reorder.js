@@ -22,17 +22,11 @@ export const correlation = {
     return s1 / Math.sqrt(s2 * s3);
   },
   pearsonMatrix(matrix) {
-    let a;
-    let ma;
     let i;
     let j;
-    let dx;
     const cor = correlation.pearson;
     const n = matrix.length;
     let ret;
-    let mx;
-    let sx;
-    let sx2;
     if (n === 0) return NaN;
     // do it the hard way for now, we'll optimize later
     ret = zeroes(n, n);

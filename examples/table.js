@@ -1,30 +1,3 @@
-// <!DOCTYPE html>
-// <html>
-//   <head>
-//     <meta charset="utf-8">
-//     <title>Heatmap</title>
-//     <style>
-// body {
-//   font: 10px sans-serif;
-// }
-// line {
-//   stroke: #000;
-// }
-//     </style>
-//     <script src="../../lib/d3.v3.js"></script>
-//     <script src="../../lib/science.v1.js"></script>
-//     <script src="../../lib/tiny-queue.js"></script>
-//     <script src="../../reorder.v1.js"></script>
-//   </head>
-//   <body>
-//     <button type="button" onclick="order(reorder.randomPermutation(n), reorder.randomPermutation(m))">Permute Randomly</button>
-//     <div id='heatmap'></div>
-// <script>
-
-// var margin = {top: 80, right: 0, bottom: 10, left: 80},
-//     width = 720 - margin.left - margin.right,
-//     height = 720 - margin.top - margin.bottom;
-
 function table(json) {
     var matrix = json.matrix,
 	row_labels = json.row_labels,

@@ -50,8 +50,8 @@ export function barycenter(graph, comp, max_iter) {
   let neighbors;
   let med;
 
-  layer1 = comp.filter(n => graph.outDegree(n) !== 0);
-  layer2 = comp.filter(n => graph.inDegree(n) !== 0);
+  layer1 = comp.filter((n) => graph.outDegree(n) !== 0);
+  layer2 = comp.filter((n) => graph.inDegree(n) !== 0);
   if (comp.length < 3) {
     return [layer1, layer2, count_crossings(graph, layer1, layer2)];
   }

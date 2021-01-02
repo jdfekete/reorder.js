@@ -56,8 +56,6 @@ function decorana(dat) {
   let y;
   let aidot;
   let adotj;
-  let mi;
-  let n;
   let s1;
   const nr = dat.length;
   const nc = dat[0].length;
@@ -81,7 +79,7 @@ function decorana(dat) {
 }
 
 function trans(y, yy, x, aidot, mi, n, dat, prt) {
-  let i, j, a1;
+  let i;
   if (prt) console.log(`TRANS ${prt}`);
   yxmult(y, x, mi, n, dat, prt);
   for (i = 0; i < mi; i++) {
@@ -182,7 +180,7 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   tol = 0.000005;
   trans(y, y, x, aidot, mi, n, dat); //,1);
   icount = 0;
-  while (true) {
+  for (;;) {
     // 20
     a = 0.0;
     for (j = 0; j < n; j++) a += y[j] * adotj[j]; // 30
@@ -297,7 +295,6 @@ function eigy(x, y, mi, n, dat, aidot, adotj) {
   }
   let aymax = y[0];
   let aymin = y[0];
-  const sign = 1;
   for (j = 1; j < n; j++) {
     a = y[j];
     if (a < aymin) aymin = a;
