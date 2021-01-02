@@ -6,18 +6,15 @@ export function permute(list, perm) {
 }
 
 export function permute_inplace(list, perm) {
-  let i, j, v, tmp;
-
-  //list = list.slice();
-  for (i = 0; i < list.length; i++) {
-    j = perm[i];
+  for (let i = 0; i < list.length; i++) {
+    let j = perm[i];
     if (j < 0) {
       perm[i] = -1 - j;
       continue;
     }
-    v = i;
+    let v = i;
     while (j != i) {
-      tmp = list[j];
+      let tmp = list[j];
       list[j] = list[v];
       list[v] = tmp;
       v = j;
