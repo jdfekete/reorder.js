@@ -15,16 +15,12 @@ import { random_array } from './random';
 // Also, the smallest eigenvector is 1^n
 
 function gershgorin_bound(B) {
-  let i;
-  let j;
   let max = 0;
   const n = B.length;
-  let t;
-  let row;
-  for (i = 0; i < n; i++) {
-    row = B[i];
-    t = row[i];
-    for (j = 0; j < n; j++) if (j != i) t += Math.abs(row[j]);
+  for (let i = 0; i < n; i++) {
+    const row = B[i];
+    let t = row[i];
+    for (let j = 0; j < n; j++) if (j != i) t += Math.abs(row[j]);
     if (t > max) max = t;
   }
   if (debug) {
@@ -37,20 +33,17 @@ export function fiedler_vector(B, eps) {
   const g = gershgorin_bound(B);
   const n = B.length;
 
-  const // Copy B
-    Bhat = B.map((row) => row.slice());
+  // Copy B
+  const Bhat = B.map((row) => row.slice());
 
-  let i;
-  let j;
-  let row;
-  for (i = 0; i < n; i++) {
-    row = Bhat[i];
-    for (j = 0; j < n; j++) {
+  for (let i = 0; i < n; i++) {
+    const row = Bhat[i];
+    for (let j = 0; j < n; j++) {
       if (i == j) row[j] = g - row[j];
       else row[j] = -row[j];
     }
   }
-  const init = [array1d(n, 1), random_array(n)],
-    eig = poweriteration_n(Bhat, 2, init, eps, 1);
+  const init = [array1d(n, 1), random_array(n)];
+  const eig = poweriteration_n(Bhat, 2, init, eps, 1);
   return eig[0][1];
 }
