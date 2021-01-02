@@ -97,20 +97,18 @@ assert.inDeltaArrayOrNeg = (actual, expected, delta, message) => {
 };
 
 function permutationEqual(actual, expected) {
-  let n;
   if (!(Array.isArray(actual) && Array.isArray(expected))) return false;
-  n = actual.length;
+  let n = actual.length;
   if (n != expected.length) return false;
   while (n--) if (actual[n] != expected[n]) return false;
   return true;
 }
 
 function permutationInverted(actual, expected) {
-  let n, i;
   if (!(isArray(actual) && isArray(expected))) return false;
-  n = actual.length;
+  let n = actual.length;
   if (n != expected.length) return false;
-  i = n - 1;
+  const i = n - 1;
   while (n--) if (actual[n] != expected[i - n]) return false;
   return true;
 }
