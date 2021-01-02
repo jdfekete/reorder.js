@@ -35,15 +35,12 @@ export function order() {
   function order(v) {
     vector = v;
     j = Math.min(j, v.length);
-    let i0 = i > 0 ? i - 1 : 0,
-      j0 = j < vector.length ? j + 1 : j,
-      k,
-      low,
-      high;
+    let i0 = i > 0 ? i - 1 : 0;
+    let j0 = j < vector.length ? j + 1 : j;
 
-    for (k = except.length - 1; k > 0; k -= 2) {
-      low = except[k - 1];
-      high = except[k];
+    for (let k = except.length - 1; k > 0; k -= 2) {
+      let low = except[k - 1];
+      let high = except[k];
       if (high >= j0) {
         if (j0 > j) {
           j0 = Math.min(j0, low + 1);
@@ -70,10 +67,6 @@ export function order() {
 
   function _order_limits(i0, j0) {
     const orig = vector;
-    let perm;
-    let row;
-    let k;
-    let l;
 
     vector = vector.slice(i0, j0); // always make a copy
     if (i === 0 && j == vector.length) return _order_except();
@@ -93,13 +86,14 @@ export function order() {
       // row i0 should be far away from each rows so move it away
       // by changing the distance matrix, adding "max" to each
       // distance from row/column 0
-      row = distanceMatrix[0];
-      for (k = row.length; k-- > 1; ) row[k] += max;
-      for (k = distanceMatrix.length; k-- > 1; ) distanceMatrix[k][0] += max;
+      const row = distanceMatrix[0];
+      for (let k = row.length; k-- > 1; ) row[k] += max;
+      for (let k = distanceMatrix.length; k-- > 1; )
+        distanceMatrix[k][0] += max;
       max += max;
       // also fix the exception list
       if (i0 !== 0) {
-        for (k = 0; k < except.length; k++) except[k] -= i0;
+        for (let k = 0; k < except.length; k++) except[k] -= i0;
       }
     }
     if (j0 > j) {
@@ -107,9 +101,9 @@ export function order() {
       // i0 and j0 are farthest from each other.
       // add 2*max to each distance from row/col
       // j-i-1
-      l = distanceMatrix.length - 1;
-      row = distanceMatrix[l];
-      for (k = l; k-- > 0; ) {
+      const l = distanceMatrix.length - 1;
+      const row = distanceMatrix[l];
+      for (let k = l; k-- > 0; ) {
         row[k] += max;
         distanceMatrix[k][l] += max;
       }
@@ -117,7 +111,7 @@ export function order() {
     // the algorithm should work as is, except
     // the order can be reversed in the end.
 
-    perm = _order_except();
+    let perm = _order_except();
     if (i0 < i) {
       if (perm[0] !== 0) perm.reverse();
       if (j0 > j) {
