@@ -5,12 +5,10 @@ import { zeroes } from './aliases';
    See http://bost.ocks.org/mike/shuffle/
  */
 export function randomPermute(array, i = 0, j = array.length) {
-  let m = j - i,
-    t,
-    k;
+  let m = j - i;
   while (m > 0) {
-    k = i + Math.floor(Math.random() * m--);
-    t = array[i + m];
+    const k = i + Math.floor(Math.random() * m--);
+    const t = array[i + m];
     array[i + m] = array[k];
     array[k] = t;
   }
@@ -38,28 +36,25 @@ export function random_matrix(p, n, m, sym) {
   if (n != m) sym = false;
   else if (!sym) sym = true;
   const mat = zeroes(n, m);
-  let i;
-  let j;
-  let cnt;
 
   if (sym) {
-    for (i = 0; i < n; i++) {
-      cnt = 0;
-      for (j = 0; j < i + 1; j++) {
+    for (let i = 0; i < n; i++) {
+      let cnt = 0;
+      for (let j = 0; j < i + 1; j++) {
         if (Math.random() < p) {
           mat[i][j] = mat[j][i] = 1;
           cnt++;
         }
       }
       if (cnt === 0) {
-        j = Math.floor((Math.random() * n) / 2);
+        const j = Math.floor((Math.random() * n) / 2);
         mat[i][j] = mat[j][i] = 1;
       }
     }
   } else {
-    for (i = 0; i < n; i++) {
-      cnt = 0;
-      for (j = 0; j < m; j++) {
+    for (let i = 0; i < n; i++) {
+      let cnt = 0;
+      for (let j = 0; j < m; j++) {
         if (Math.random() < p) {
           mat[i][j] = 1;
           cnt++;
