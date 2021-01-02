@@ -90,7 +90,8 @@ export function barycenter(graph, comp, max_iter) {
       med[v.index] = +median(neighbors);
     }
     layer.sort(barycenter_sort);
-    for (let i = 0; i < layer.length; i++) inv_layer = inverse_permutation(layer);
+    for (let i = 0; i < layer.length; i++)
+      inv_layer = inverse_permutation(layer);
     crossings = count_crossings(graph, layer1, layer2);
     if (crossings < best_crossings) {
       best_crossings = crossings;
