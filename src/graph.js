@@ -163,11 +163,12 @@ export function graph(nodes, links, directed) {
   function neighbors(node) {
     const e = edges[node],
       ret = [];
-    for (let i = 0; i < e.length; ++i) {
-      const o = e[i];
+
+    for (const o of e) {
       if (o.source.index == node) ret.push(o.target);
       else ret.push(o.source);
     }
+
     return ret;
   }
   graph.neighbors = neighbors;

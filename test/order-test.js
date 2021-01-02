@@ -9,13 +9,13 @@ const suite = vows.describe('reorder.order');
 Math.seedrandom('reorder');
 
 assert.ORdeepEqual = (actual, expected_list) => {
-  for (let i = 0; i < expected_list.length; i++) {
-    const expected = expected_list[i];
+  for (const expected of expected_list) {
     if (deepEqual(actual, expected)) {
       assert.ok(actual, 'Assert OK');
       return true;
     }
   }
+
   assert.fail(actual, expected_list, 'Assert: Expectations failed');
   return false;
 };
