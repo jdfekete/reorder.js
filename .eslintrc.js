@@ -9,5 +9,7 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
+        "curly": "warn",
+        "brace-style": ["warn", "1tbs"]
     }
 };

@@ -8,7 +8,9 @@ import { sort_order } from './sort_order';
 function center(v) {
   const n = v.length;
 
-  if (n === 0) return null;
+  if (n === 0) {
+    return null;
+  }
 
   const mean = meancolumns(v);
   const o = mean.length;
@@ -26,7 +28,9 @@ function center(v) {
 
 // See http://en.wikipedia.org/wiki/Power_iteration
 export function pca1d(v, eps) {
-  if (v.length === 0) return null;
+  if (v.length === 0) {
+    return null;
+  }
 
   v = center(v);
   const cov = variancecovariance(v);

@@ -1,7 +1,9 @@
 export function permute(list, perm) {
   let m = perm.length;
   const copy = list.slice();
-  while (m--) copy[m] = list[perm[m]];
+  while (m--) {
+    copy[m] = list[perm[m]];
+  }
   return copy;
 }
 
@@ -28,6 +30,8 @@ export function permute_inplace(list, perm) {
 
 export function permutetranspose(array, indexes) {
   let m = array.length;
-  while (m-- > 0) array[m] = permute(array[m], indexes);
+  while (m-- > 0) {
+    array[m] = permute(array[m], indexes);
+  }
   return array;
 }

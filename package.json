@@ -33,7 +33,7 @@
       "pretest": "npm run build",
       "test": "vows --nocolor; echo",
       "clean": "rm -rf node_modules",
-      "prettier": "prettier --single-quote --write '{src,test}/**/*.js'",
+      "prettier": "prettier --write '{src,test}/**/*.js'",
       "docs": "jsdoc -c jsdoc.config.json",
       "check": "jshint src/*.js"
    },
@@ -69,5 +69,8 @@
        "globals": {
            "console": false
        }
+   },
+   "prettier": {
+       "singleQuote": true
    }
 }

@@ -5,7 +5,9 @@ export const correlation = {
     const ma = mean(a);
     const mb = mean(b);
     const n = Math.min(a.length, b.length);
-    if (n === 0) return NaN;
+    if (n === 0) {
+      return NaN;
+    }
     let s1 = 0;
     let s2 = 0;
     let s3 = 0;
@@ -21,7 +23,9 @@ export const correlation = {
   pearsonMatrix(matrix) {
     const cor = correlation.pearson;
     const n = matrix.length;
-    if (n === 0) return NaN;
+    if (n === 0) {
+      return NaN;
+    }
     // do it the hard way for now, we'll optimize later
     const ret = zeroes(n, n);
     for (let i = 0; i < n - 1; i++) {

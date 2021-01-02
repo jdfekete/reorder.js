@@ -24,7 +24,9 @@ export function dist() {
   }
 
   dist.distance = function (x) {
-    if (!arguments.length) return distance;
+    if (!arguments.length) {
+      return distance;
+    }
     distance = x;
     return dist;
   };
@@ -38,7 +40,11 @@ export function distmax(distMatrix) {
 
   for (let i = 0; i < n; i++) {
     const row = distMatrix[i];
-    for (let j = i + 1; j < n; j++) if (row[j] > max) max = row[j];
+    for (let j = i + 1; j < n; j++) {
+      if (row[j] > max) {
+        max = row[j];
+      }
+    }
   }
 
   return max;
@@ -50,7 +56,11 @@ export function distmin(distMatrix) {
 
   for (let i = 0; i < n; i++) {
     const row = distMatrix[i];
-    for (let j = i + 1; j < n; j++) if (row[j] < min) min = row[j];
+    for (let j = i + 1; j < n; j++) {
+      if (row[j] < min) {
+        min = row[j];
+      }
+    }
   }
 
   return min;
@@ -58,6 +68,8 @@ export function distmin(distMatrix) {
 
 export function dist_remove(dist, n, m = n + 1) {
   dist.splice(n, m - n);
-  for (let i = dist.length; i-- > 0; ) dist[i].splice(n, m - n);
+  for (let i = dist.length; i-- > 0; ) {
+    dist[i].splice(n, m - n);
+  }
   return dist;
 }

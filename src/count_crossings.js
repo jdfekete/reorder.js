@@ -27,15 +27,17 @@ export function count_crossings(graph, north, south) {
   let southsequence = [];
 
   for (let i = 0; i < north.length; i++) {
-    const n = invert ?
-          graph.inEdges(north[i]).map((e) => south_inv[e.target.index]) :
-          graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
+    const n = invert
+      ? graph.inEdges(north[i]).map((e) => south_inv[e.target.index])
+      : graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
     n.sort(cmp_number);
     southsequence = southsequence.concat(n);
   }
 
   let firstIndex = 1;
-  while (firstIndex < south.length) firstIndex <<= 1;
+  while (firstIndex < south.length) {
+    firstIndex <<= 1;
+  }
 
   const treeSize = 2 * firstIndex - 1;
   firstIndex -= 1;
@@ -46,7 +48,9 @@ export function count_crossings(graph, north, south) {
     let index = southsequence[i] + firstIndex;
     tree[index]++;
     while (index > 0) {
-      if (index % 2) crosscount += tree[index + 1];
+      if (index % 2) {
+        crosscount += tree[index + 1];
+      }
       index = (index - 1) >> 1;
       tree[index]++;
     }

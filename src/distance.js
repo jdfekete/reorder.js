@@ -37,7 +37,9 @@ export const distance = {
     for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
         const x = Math.abs(a[i] - b[i]);
-        if (x > max) max = x;
+        if (x > max) {
+          max = x;
+        }
       }
     }
     return max;
@@ -46,7 +48,9 @@ export const distance = {
     let d = 0;
     for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
-        if (a[i] !== b[i]) d++;
+        if (a[i] !== b[i]) {
+          d++;
+        }
       }
     }
     return d;
@@ -56,11 +60,15 @@ export const distance = {
     let s = 0;
     for (let i = a.length; i > 0; i--) {
       if (isNum(a[i], b[i])) {
-        if (a[i] === b[i]) s++;
+        if (a[i] === b[i]) {
+          s++;
+        }
         n++;
       }
     }
-    if (n === 0) return 0;
+    if (n === 0) {
+      return 0;
+    }
     return s / n;
   },
   braycurtis(a, b) {
@@ -74,7 +82,9 @@ export const distance = {
         s1 += Math.abs(ai + bi);
       }
     }
-    if (s1 === 0) return 0;
+    if (s1 === 0) {
+      return 0;
+    }
     return s0 / s1;
   },
 };

@@ -22,19 +22,30 @@ export function randomPermutation(n) {
 export function random_array(n, min, max) {
   const ret = Array(n);
   if (arguments.length == 1) {
-    while (n) ret[--n] = Math.random();
+    while (n) {
+      ret[--n] = Math.random();
+    }
   } else if (arguments.length == 2) {
-    while (n) ret[--n] = Math.random() * min;
+    while (n) {
+      ret[--n] = Math.random() * min;
+    }
   } else {
-    while (n) ret[--n] = min + Math.random() * (max - min);
+    while (n) {
+      ret[--n] = min + Math.random() * (max - min);
+    }
   }
   return ret;
 }
 
 export function random_matrix(p, n, m, sym) {
-  if (!m) m = n;
-  if (n != m) sym = false;
-  else if (!sym) sym = true;
+  if (!m) {
+    m = n;
+  }
+  if (n != m) {
+    sym = false;
+  } else if (!sym) {
+    sym = true;
+  }
   const mat = zeroes(n, m);
 
   if (sym) {
@@ -60,7 +71,9 @@ export function random_matrix(p, n, m, sym) {
           cnt++;
         }
       }
-      if (cnt === 0) mat[i][Math.floor(Math.random() * m)] = 1;
+      if (cnt === 0) {
+        mat[i][Math.floor(Math.random() * m)] = 1;
+      }
     }
   }
   return mat;

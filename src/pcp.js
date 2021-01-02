@@ -26,7 +26,9 @@ export function dicts_to_array(dicts, keys = Object.keys(dicts[0])) {
   for (let i = 0; i < m; i++) {
     const row = Array(n);
     array[i] = row;
-    for (let j = 0; j < n; j++) row[j] = dicts[i][keys[j]];
+    for (let j = 0; j < n; j++) {
+      row[j] = dicts[i][keys[j]];
+    }
   }
   return array;
 }
@@ -41,21 +43,31 @@ function pcp_flip_axes(perm, pcor) {
   let negs = 0;
   for (let i = 1; i < perm.length; i++) {
     const c = pcor[perm[i - 1]][perm[i]];
-    if (c < 0) sign = -sign;
+    if (c < 0) {
+      sign = -sign;
+    }
     if (sign < 0) {
       signs.push(-1);
       negs++;
-    } else signs.push(1);
+    } else {
+      signs.push(1);
+    }
   }
-  if (debug) console.log(signs);
+  if (debug) {
+    console.log(signs);
+  }
   if (negs > perm.length / 2) {
-    for (let i = 0; i < perm.length; i++) signs[i] = -signs[i];
+    for (let i = 0; i < perm.length; i++) {
+      signs[i] = -signs[i];
+    }
   }
   return signs;
 }
 
 export function pcp(data, axes) {
-  if (!axes) axes = range(data[0].length);
+  if (!axes) {
+    axes = range(data[0].length);
+  }
 
   let tdata = transpose(data);
   const pcor = correlation.pearsonMatrix(tdata);
@@ -83,11 +95,15 @@ export function parcoords(p) {
     const d = dimensions[i];
     if (types[d] == 'number') {
       const row = [];
-      for (let j = 0; j < data.length; j++) row.push(data[j][d]);
+      for (let j = 0; j < data.length; j++) {
+        row.push(data[j][d]);
+      }
       tdata.push(row);
     } else if (types[d] == 'date') {
       const row = [];
-      for (let j = 0; j < data.length; j++) row.push(data[j][d].getTime() * 0.001);
+      for (let j = 0; j < data.length; j++) {
+        row.push(data[j][d].getTime() * 0.001);
+      }
       tdata.push(row);
     } else {
       // remove dimension
@@ -106,6 +122,8 @@ export function parcoords(p) {
   p.dimensions(dimensions);
   const signs = pcp_flip_axes(perm, pcor);
   for (let i = 0; i < signs.length; i++) {
-    if (signs[i] < 0) p.flip(dimensions[i]);
+    if (signs[i] < 0) {
+      p.flip(dimensions[i]);
+    }
   }
 }

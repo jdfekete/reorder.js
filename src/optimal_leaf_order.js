@@ -27,27 +27,37 @@ export function optimal_leaf_order() {
   let orderMap = {};
 
   function leaves(n) {
-    if (n === null) return [];
-    if (n.id in leavesMap) return leavesMap[n.id];
+    if (n === null) {
+      return [];
+    }
+    if (n.id in leavesMap) {
+      return leavesMap[n.id];
+    }
     return (leavesMap[n.id] = _leaves(n));
   }
 
   function _leaves(n) {
-    if (n === null) return [];
-    if (n.depth === 0) return [n.id];
+    if (n === null) {
+      return [];
+    }
+    if (n.depth === 0) {
+      return [n.id];
+    }
     return leaves(n.left).concat(leaves(n.right));
   }
 
   function order(v, i, j) {
     const key = `k${v.id}-${i}-${j}`; // ugly key
-    if (key in orderMap) return orderMap[key];
+    if (key in orderMap) {
+      return orderMap[key];
+    }
     return (orderMap[key] = _order(v, i, j));
   }
 
   function _order(v, i, j) {
-    if (v.depth === 0)
-      //isLeaf(v))
+    if (v.depth === 0) {
       return [0, [v.id]];
+    }
     const l = v.left;
     const r = v.right;
     const L = leaves(l);
@@ -60,16 +70,22 @@ export function optimal_leaf_order() {
     } else if (R.includes(i) && L.includes(j)) {
       w = r;
       x = l;
-    } else throw { error: `Node is not common ancestor of ${i}, ${j}` };
+    } else {
+      throw { error: `Node is not common ancestor of ${i}, ${j}` };
+    }
     const Wl = leaves(w.left);
     const Wr = leaves(w.right);
     let Ks = Wr.includes(i) ? Wl : Wr;
-    if (Ks.length === 0) Ks = [i];
+    if (Ks.length === 0) {
+      Ks = [i];
+    }
 
     const Xl = leaves(x.left);
     const Xr = leaves(x.right);
     let Ls = Xr.includes(j) ? Xl : Xr;
-    if (Ls.length === 0) Ls = [j];
+    if (Ls.length === 0) {
+      Ls = [j];
+    }
 
     let min = Infinity;
     let optimal_order = [];
@@ -96,7 +112,9 @@ export function optimal_leaf_order() {
     const left = leaves(v.left);
     const right = leaves(v.right);
 
-    if (debug) console.log(printhcluster(v, 0));
+    if (debug) {
+      console.log(printhcluster(v, 0));
+    }
 
     for (let i = 0; i < left.length; i++) {
       for (let j = 0; j < right.length; j++) {
@@ -112,8 +130,9 @@ export function optimal_leaf_order() {
   }
 
   function optimal_leaf_order(matrix) {
-    if (distanceMatrix === null)
+    if (distanceMatrix === null) {
       distanceMatrix = dist().distance(distance)(matrix);
+    }
     const cluster = hcluster().linkage(linkage).distanceMatrix(distanceMatrix);
     return orderFull(cluster(matrix));
   }
@@ -121,20 +140,26 @@ export function optimal_leaf_order() {
   optimal_leaf_order.reorder = optimal_leaf_order;
 
   optimal_leaf_order.distance = function (x) {
-    if (!arguments.length) return distance;
+    if (!arguments.length) {
+      return distance;
+    }
     distance = x;
     distanceMatrix = null;
     return optimal_leaf_order;
   };
 
   optimal_leaf_order.linkage = function (x) {
-    if (!arguments.length) return linkage;
+    if (!arguments.length) {
+      return linkage;
+    }
     linkage = x;
     return optimal_leaf_order;
   };
 
   optimal_leaf_order.distance_matrix = function (x) {
-    if (!arguments.length) return distanceMatrix;
+    if (!arguments.length) {
+      return distanceMatrix;
+    }
     // copy
     distanceMatrix = x.map((y) => y.slice(0));
     return optimal_leaf_order;

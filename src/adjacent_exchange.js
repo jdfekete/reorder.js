@@ -18,7 +18,9 @@ function count_in_crossings(graph, v, w, inv) {
   for (let iw = 0; iw < w_edges.length; iw++) {
     const p0 = inv[w_edges[iw].target.index];
     for (let iv = 0; iv < v_edges.length; iv++) {
-      if (inv[v_edges[iv].target.index] > p0) cross++;
+      if (inv[v_edges[iv].target.index] > p0) {
+        cross++;
+      }
     }
   }
   return cross;
@@ -32,7 +34,9 @@ function count_out_crossings(graph, v, w, inv) {
   for (let iw = 0; iw < w_edges.length; iw++) {
     const p0 = inv[w_edges[iw].source.index];
     for (let iv = 0; iv < v_edges.length; iv++) {
-      if (inv[v_edges[iv].source.index] > p0) cross++;
+      if (inv[v_edges[iv].source.index] > p0) {
+        cross++;
+      }
     }
   }
   return cross;

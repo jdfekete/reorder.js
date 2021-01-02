@@ -2,7 +2,9 @@ import { range } from './range';
 import { inverse_permutation } from './permutation';
 
 export function edgesum(graph, order) {
-  if (!order) order = range(graph.nodes().length);
+  if (!order) {
+    order = range(graph.nodes().length);
+  }
 
   const inv = inverse_permutation(order);
   const links = graph.links();

@@ -20,8 +20,14 @@ function gershgorin_bound(B) {
   for (let i = 0; i < n; i++) {
     const row = B[i];
     let t = row[i];
-    for (let j = 0; j < n; j++) if (j != i) t += Math.abs(row[j]);
-    if (t > max) max = t;
+    for (let j = 0; j < n; j++) {
+      if (j != i) {
+        t += Math.abs(row[j]);
+      }
+    }
+    if (t > max) {
+      max = t;
+    }
   }
   if (debug) {
     console.log('gershgorin_bound=%d', max);
@@ -39,8 +45,11 @@ export function fiedler_vector(B, eps) {
   for (let i = 0; i < n; i++) {
     const row = Bhat[i];
     for (let j = 0; j < n; j++) {
-      if (i == j) row[j] = g - row[j];
-      else row[j] = -row[j];
+      if (i == j) {
+        row[j] = g - row[j];
+      } else {
+        row[j] = -row[j];
+      }
     }
   }
   const init = [array1d(n, 1), random_array(n)];

@@ -28,7 +28,9 @@ export function order() {
   }
 
   function debug(v) {
-    if (arguments.length != 0) _debug = v;
+    if (arguments.length != 0) {
+      _debug = v;
+    }
     return _debug;
   }
 
@@ -55,7 +57,9 @@ export function order() {
         } else {
           low = i0;
         }
-      } else if (high - low < 3) except.splice(k - 1, 2);
+      } else if (high - low < 3) {
+        except.splice(k - 1, 2);
+      }
     }
 
     try {
@@ -69,13 +73,21 @@ export function order() {
     const orig = vector;
 
     vector = vector.slice(i0, j0); // always make a copy
-    if (i === 0 && j == vector.length) return _order_except();
+    if (i === 0 && j == vector.length) {
+      return _order_except();
+    }
 
-    if (_debug) console.log(`i0=${i0} j0=${j0}`);
+    if (_debug) {
+      console.log(`i0=${i0} j0=${j0}`);
+    }
 
     if (distanceMatrix !== null) {
-      if (j0 !== vector.length) dist_remove(distanceMatrix, j0, vector.length);
-      if (i0 > 0) dist_remove(distanceMatrix, 0, i0);
+      if (j0 !== vector.length) {
+        dist_remove(distanceMatrix, j0, vector.length);
+      }
+      if (i0 > 0) {
+        dist_remove(distanceMatrix, 0, i0);
+      }
     } else {
       _compute_dist();
     }
@@ -87,13 +99,18 @@ export function order() {
       // by changing the distance matrix, adding "max" to each
       // distance from row/column 0
       const row = distanceMatrix[0];
-      for (let k = row.length; k-- > 1; ) row[k] += max;
-      for (let k = distanceMatrix.length; k-- > 1; )
+      for (let k = row.length; k-- > 1; ) {
+        row[k] += max;
+      }
+      for (let k = distanceMatrix.length; k-- > 1; ) {
         distanceMatrix[k][0] += max;
+      }
       max += max;
       // also fix the exception list
       if (i0 !== 0) {
-        for (let k = 0; k < except.length; k++) except[k] -= i0;
+        for (let k = 0; k < except.length; k++) {
+          except[k] -= i0;
+        }
       }
     }
     if (j0 > j) {
@@ -113,7 +130,9 @@ export function order() {
 
     let perm = _order_except();
     if (i0 < i) {
-      if (perm[0] !== 0) perm.reverse();
+      if (perm[0] !== 0) {
+        perm.reverse();
+      }
       if (j0 > j) {
         assert(
           perm[0] === 0 && perm[perm.length - 1] == perm.length - 1,
@@ -123,7 +142,9 @@ export function order() {
         assert(perm[0] === 0, 'Invalid constrained permutation start');
       }
     } else if (j0 > j) {
-      if (perm[perm.length - 1] !== perm.length - 1) perm = perm.reverse();
+      if (perm[perm.length - 1] !== perm.length - 1) {
+        perm = perm.reverse();
+      }
       assert(
         perm[perm.length - 1] == perm.length - 1,
         'Invalid constrained permutation end'
@@ -141,7 +162,9 @@ export function order() {
   function _order_except() {
     let perm, k, l, low, high, pos;
 
-    if (except.length === 0) return _order_equiv();
+    if (except.length === 0) {
+      return _order_equiv();
+    }
 
     // TODO: postpone the calculation to avoid computing the except items
     _compute_dist();
@@ -154,7 +177,9 @@ export function order() {
       high = except[k];
       distanceMatrix = dist_remove(distanceMatrix, low + 1, high - 1);
       vector.splice(low + 1, high - low - 2);
-      if (_debug) console.log(`Except[${low}, ${high}]`);
+      if (_debug) {
+        console.log(`Except[${low}, ${high}]`);
+      }
       if (distanceMatrix[low][low + 1] !== 0) {
         // boundaries are equal, they will survive
         distanceMatrix[low][low + 1] = distanceMatrix[low + 1][low] = -1;
@@ -170,8 +195,11 @@ export function order() {
       high = except[k + 1];
       // Prepare for inserting range [low+1,high-1]
       for (l = 0; l < perm.length; l++) {
-        if (perm[l] > low) perm[l] += high - low - 2;
-        else if (perm[l] == low) pos = l;
+        if (perm[l] > low) {
+          perm[l] += high - low - 2;
+        } else if (perm[l] == low) {
+          pos = l;
+        }
       }
       if (pos > 0 && perm[pos - 1] == high - 1) {
         // reversed order
@@ -232,7 +260,9 @@ export function order() {
           // remove equivalent item from dist and vector
           distanceMatrix = dist_remove(distanceMatrix, l);
           vector.splice(l, 1);
-        } else if (row[l] < 0) has_1 = true;
+        } else if (row[l] < 0) {
+          has_1 = true;
+        }
       }
       if (e.length !== 0) {
         e.unshift(k);
@@ -302,24 +332,34 @@ export function order() {
     } else if (perm[l + len + 1] == next) {
       _swap(perm, l + len, perm.indexOf(m));
       return l;
-    } else throw 'Index not found';
+    } else {
+      throw 'Index not found';
+    }
   }
 
   function _swap(perm, a, b) {
-    if (a == b) return;
+    if (a == b) {
+      return;
+    }
     const c = perm[a];
     perm[a] = perm[b];
     perm[b] = c;
   }
 
   function _order() {
-    if (_debug > 1) printmat(distanceMatrix);
-    if (_debug > 2) printmat(vector);
+    if (_debug > 1) {
+      printmat(distanceMatrix);
+    }
+    if (_debug > 2) {
+      printmat(vector);
+    }
 
     const perm = ordering().linkage(linkage).distanceMatrix(distanceMatrix)(
       vector
     );
-    if (_debug) console.log(`Permutation: ${perm}`);
+    if (_debug) {
+      console.log(`Permutation: ${perm}`);
+    }
 
     return perm;
   }
@@ -331,27 +371,34 @@ export function order() {
   }
 
   function _compute_dist() {
-    if (distanceMatrix === null)
+    if (distanceMatrix === null) {
       distanceMatrix = dist().distance(distance)(vector);
+    }
     return distanceMatrix;
   }
 
   order.debug = debug;
 
   order.distance = function (x) {
-    if (!arguments.length) return distance;
+    if (!arguments.length) {
+      return distance;
+    }
     distance = x;
     return order;
   };
 
   order.linkage = function (x) {
-    if (!arguments.length) return linkage;
+    if (!arguments.length) {
+      return linkage;
+    }
     linkage = x;
     return order;
   };
 
   order.limits = function (x, y) {
-    if (!arguments.length) return [i, j];
+    if (!arguments.length) {
+      return [i, j];
+    }
     i = x;
     j = y;
     return order;
@@ -359,9 +406,14 @@ export function order() {
 
   order.except = function (list) {
     let i;
-    if (!arguments.length) return except.slice(0);
-    for (i = 1; i < list.length; i++)
-      if (list[i - 1] >= list[i]) throw 'Invalid list, indices not sorted';
+    if (!arguments.length) {
+      return except.slice(0);
+    }
+    for (i = 1; i < list.length; i++) {
+      if (list[i - 1] >= list[i]) {
+        throw 'Invalid list, indices not sorted';
+      }
+    }
     except = list.slice(0);
     return order;
   };
@@ -382,9 +434,13 @@ export function order() {
     pos = perm.indexOf(i);
     for (k = 0; k < perm.length; k++) {
       l = perm[k];
-      if (l > i) perm[k] += j - i - 2;
+      if (l > i) {
+        perm[k] += j - i - 2;
+      }
     }
-    if (pos !== 0 && perm[pos - 1] === j - 1) rev = true;
+    if (pos !== 0 && perm[pos - 1] === j - 1) {
+      rev = true;
+    }
     if (rev) {
       perm.reverse();
       pos = perm.length - pos - 1;

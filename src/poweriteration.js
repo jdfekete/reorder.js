@@ -6,13 +6,19 @@ import { debug } from './core';
 function normalize(v) {
   const norm = length(v);
   let i = v.length;
-  if (norm === 0 || Math.abs(norm - 1) < 1e-9) return 1;
-  while (i-- > 0) v[i] /= norm;
+  if (norm === 0 || Math.abs(norm - 1) < 1e-9) {
+    return 1;
+  }
+  while (i-- > 0) {
+    v[i] /= norm;
+  }
   return norm;
 }
 
 export function poweriteration(v, eps, init) {
-  if (!eps) eps = 1e-9;
+  if (!eps) {
+    eps = 1e-9;
+  }
 
   const n = v.length;
   let b;
@@ -30,10 +36,14 @@ export function poweriteration(v, eps, init) {
   while (s-- > 0) {
     for (let i = 0; i < n; i++) {
       tmp[i] = 0;
-      for (let j = 0; j < n; j++) tmp[i] += v[i][j] * b[j];
+      for (let j = 0; j < n; j++) {
+        tmp[i] += v[i][j] * b[j];
+      }
     }
     normalize(tmp);
-    if (dot(tmp, b) > 1.0 - eps) break;
+    if (dot(tmp, b) > 1.0 - eps) {
+      break;
+    }
     const t = tmp;
     tmp = b;
     b = t; // swap b/tmp
@@ -42,7 +52,9 @@ export function poweriteration(v, eps, init) {
 }
 
 export function poweriteration_n(v, p, init, eps, start) {
-  if (!eps) eps = 1e-9;
+  if (!eps) {
+    eps = 1e-9;
+  }
 
   const n = v.length;
   const b = Array(p);
@@ -62,7 +74,9 @@ export function poweriteration_n(v, p, init, eps, start) {
       eigenvalue[i] = normalize(b[i]);
     }
   }
-  if (!start) start = 0;
+  if (!start) {
+    start = 0;
+  }
 
   for (let k = start; k < p; k++) {
     let bk = b[k];
@@ -71,20 +85,28 @@ export function poweriteration_n(v, p, init, eps, start) {
       for (let l = 0; l < k; l++) {
         const row = b[l];
         const d = dot(bk, row);
-        for (let i = 0; i < n; i++) bk[i] -= d * row[i];
+        for (let i = 0; i < n; i++) {
+          bk[i] -= d * row[i];
+        }
       }
 
       for (let i = 0; i < n; i++) {
         tmp[i] = 0;
-        for (let j = 0; j < n; j++) tmp[i] += v[i][j] * bk[j];
+        for (let j = 0; j < n; j++) {
+          tmp[i] += v[i][j] * bk[j];
+        }
       }
       eigenvalue[k] = normalize(tmp);
-      if (dot(tmp, bk) > 1 - eps) break;
+      if (dot(tmp, bk) > 1 - eps) {
+        break;
+      }
       bk = tmp;
       tmp = b[k];
       b[k] = bk; // swap b/tmp
     }
-    if (debug) console.log('eig[%d]=%j', k, bk);
+    if (debug) {
+      console.log('eig[%d]=%j', k, bk);
+    }
   }
   return [b, eigenvalue];
 }

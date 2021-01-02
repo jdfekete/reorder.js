@@ -20,17 +20,28 @@ export function barycenter_order(graph, comps, max_iter) {
 // P. Eades and N. Wormald, Edge crossings in drawings of bipartite graphs.
 // Algorithmica, vol. 11 (1994) 379–403.
 function median(neighbors) {
-  if (neighbors.length === 0) return -1; // should not happen
-  if (neighbors.length === 1) return neighbors[0];
-  if (neighbors.length === 2) return (neighbors[0] + neighbors[1]) / 2;
+  if (neighbors.length === 0) {
+    return -1;
+  } // should not happen
+  if (neighbors.length === 1) {
+    return neighbors[0];
+  }
+  if (neighbors.length === 2) {
+    return (neighbors[0] + neighbors[1]) / 2;
+  }
   neighbors.sort(cmp_number);
-  if (neighbors.length % 2) return neighbors[(neighbors.length - 1) / 2];
+  if (neighbors.length % 2) {
+    return neighbors[(neighbors.length - 1) / 2];
+  }
   const rm = neighbors.length / 2;
   const lm = rm - 1;
   const rspan = neighbors[neighbors.length - 1] - neighbors[rm];
   const lspan = neighbors[lm] - neighbors[0];
-  if (lspan == rspan) return (neighbors[lm] + neighbors[rm]) / 2;
-  else return (neighbors[lm] * rspan + neighbors[rm] * lspan) / (lspan + rspan);
+  if (lspan == rspan) {
+    return (neighbors[lm] + neighbors[rm]) / 2;
+  } else {
+    return (neighbors[lm] * rspan + neighbors[rm] * lspan) / (lspan + rspan);
+  }
 }
 
 export function barycenter(graph, comp, max_iter) {
@@ -47,8 +58,11 @@ export function barycenter(graph, comp, max_iter) {
     return [layer1, layer2, count_crossings(graph, layer1, layer2)];
   }
 
-  if (!max_iter) max_iter = 24;
-  else if (max_iter % 2 == 1) max_iter++; // want even number of iterations
+  if (!max_iter) {
+    max_iter = 24;
+  } else if (max_iter % 2 == 1) {
+    max_iter++;
+  } // want even number of iterations
 
   let inv_layer = inverse_permutation(layer2);
 
@@ -69,8 +83,11 @@ export function barycenter(graph, comp, max_iter) {
       // degree vertex
       d = (graph.edges(b).length % 2) - (graph.edges(a).length % 2);
     }
-    if (d < 0) return -1;
-    else if (d > 0) return 1;
+    if (d < 0) {
+      return -1;
+    } else if (d > 0) {
+      return 1;
+    }
     return 0;
   };
 
@@ -84,14 +101,18 @@ export function barycenter(graph, comp, max_iter) {
       // Compute the median/barycenter for this node and set
       // its (real) value into node.pos
       v = nodes[layer[i]];
-      if (layer == layer1) neighbors = graph.outEdges(v.index);
-      else neighbors = graph.inEdges(v.index);
+      if (layer == layer1) {
+        neighbors = graph.outEdges(v.index);
+      } else {
+        neighbors = graph.inEdges(v.index);
+      }
       neighbors = neighbors.map(inv_neighbor);
       med[v.index] = +median(neighbors);
     }
     layer.sort(barycenter_sort);
-    for (let i = 0; i < layer.length; i++)
+    for (let i = 0; i < layer.length; i++) {
       inv_layer = inverse_permutation(layer);
+    }
     crossings = count_crossings(graph, layer1, layer2);
     if (crossings < best_crossings) {
       best_crossings = crossings;

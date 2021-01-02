@@ -28,13 +28,17 @@ export function bfs_distances(graph, v) {
   const dist = {};
   dist[v] = 0;
   bfs(graph, v, (v, c) => {
-    if (c >= 0 && v != c) dist[c] = dist[v] + 1;
+    if (c >= 0 && v != c) {
+      dist[c] = dist[v] + 1;
+    }
   });
   return dist;
 }
 
 export function all_pairs_distance_bfs(graph, comps) {
-  if (!comps) comps = [graph.nodes_indices()];
+  if (!comps) {
+    comps = [graph.nodes_indices()];
+  }
   const nodes = comps.reduce(flatten).sort(cmp_number);
   const mat = Array(nodes.length);
 

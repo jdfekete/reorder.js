@@ -12,10 +12,13 @@ import { inverse_permutation } from './permutation';
  */
 export function all_pairs_distance(graph, comps) {
   const distances = [];
-  if (!comps) comps = graph.components();
+  if (!comps) {
+    comps = graph.components();
+  }
 
-  for (let i = 0; i < comps.length; i++)
+  for (let i = 0; i < comps.length; i++) {
     distances.push(all_pairs_distance_floyd_warshall(graph, comps[i]));
+  }
   return distances;
 }
 
@@ -35,11 +38,17 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
 
   const inv = inverse_permutation(comp);
 
-  for (let i = 0; i < comp.length; i++) dist[i][i] = 0;
+  for (let i = 0; i < comp.length; i++) {
+    dist[i][i] = 0;
+  }
 
   const build_dist = (e) => {
-    if (e.source == e.target) return;
-    if (!(e.source.index in inv) || !(e.target.index in inv)) return; // ignore edges outside of comp
+    if (e.source == e.target) {
+      return;
+    }
+    if (!(e.source.index in inv) || !(e.target.index in inv)) {
+      return;
+    } // ignore edges outside of comp
     const u = inv[e.source.index];
     const v = inv[e.target.index];
     dist[v][u] = dist[u][v] = graph.distance(e.index);
@@ -49,14 +58,16 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
   }
 
   for (let k = 0; k < comp.length; k++) {
-    for (let i = 0; i < comp.length; i++)
+    for (let i = 0; i < comp.length; i++) {
       if (dist[i][k] != Infinity) {
-        for (let j = 0; j < comp.length; j++)
+        for (let j = 0; j < comp.length; j++) {
           if (dist[k][j] != Infinity && dist[i][j] > dist[i][k] + dist[k][j]) {
             dist[i][j] = dist[i][k] + dist[k][j];
             dist[j][i] = dist[i][j];
           }
+        }
       }
+    }
   }
   return dist;
 }
@@ -74,7 +85,9 @@ export function all_pairs_distance_floyd_warshall(graph, comp) {
  */
 
 export function floyd_warshall_with_path(graph, comp) {
-  if (!comp) comp = graph.components()[0];
+  if (!comp) {
+    comp = graph.components()[0];
+  }
 
   const dist = infinities(comp.length, comp.length);
   const next = Array(comp.length);
@@ -92,7 +105,9 @@ export function floyd_warshall_with_path(graph, comp) {
   }
 
   const build_dist = (e) => {
-    if (e.source == e.target) return;
+    if (e.source == e.target) {
+      return;
+    }
     const u = inv[e.source.index];
     const v = inv[e.target.index];
     dist[u][v] = graph.distance(e);

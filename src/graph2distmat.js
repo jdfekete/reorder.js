@@ -22,7 +22,9 @@ export function distmat2valuemat(distmat) {
 }
 
 export function graph2valuemats(graph, comps) {
-  if (!comps) comps = graph.components();
+  if (!comps) {
+    comps = graph.components();
+  }
 
   const dists = all_pairs_distance(graph, comps);
   return dists.map(distmat2valuemat);

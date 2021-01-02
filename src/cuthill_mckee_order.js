@@ -3,7 +3,9 @@ import { inverse_permutation } from './permutation';
 
 /*jshint loopfunc:true */
 export function cuthill_mckee(graph, comp) {
-  if (comp.length < 3) return comp;
+  if (comp.length < 3) {
+    return comp;
+  }
 
   const visited = {};
   const queue = new Queue();
@@ -18,13 +20,17 @@ export function cuthill_mckee(graph, comp) {
     if (graph.degree(n) < min_deg) {
       min_deg = graph.degree(n);
       start = n;
-      if (min_deg == 1) break;
+      if (min_deg == 1) {
+        break;
+      }
     }
   }
   queue.push(start);
   while (queue.length !== 0) {
     const n = queue.shift();
-    if (visited[n]) continue;
+    if (visited[n]) {
+      continue;
+    }
     visited[n] = true;
     perm.push(n);
     const e = graph

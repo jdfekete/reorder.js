@@ -5,7 +5,9 @@ import { permute } from './permute';
 
 export function spectral_order(graph, comps) {
   let order = [];
-  if (!comps) comps = graph.components();
+  if (!comps) {
+    comps = graph.components();
+  }
 
   for (let i = 0; i < comps.length; i++) {
     const comp = comps[i];

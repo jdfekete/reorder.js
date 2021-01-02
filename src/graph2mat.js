@@ -6,18 +6,26 @@ export function graph2mat(graph, directed) {
   const n = nodes.length;
   let mat;
 
-  if (!directed) directed = graph.directed();
+  if (!directed) {
+    directed = graph.directed();
+  }
   if (directed) {
     let rows = n;
     let cols = n;
 
     for (let i = n - 1; i >= 0; i--) {
-      if (graph.inEdges(i).length !== 0) break;
-      else rows--;
+      if (graph.inEdges(i).length !== 0) {
+        break;
+      } else {
+        rows--;
+      }
     }
     for (let i = n - 1; i >= 0; i--) {
-      if (graph.outEdges(i).length !== 0) break;
-      else cols--;
+      if (graph.outEdges(i).length !== 0) {
+        break;
+      } else {
+        cols--;
+      }
     }
     //console.log("Rows: "+rows+" Cols: "+cols);
     mat = zeroes(rows, cols);
