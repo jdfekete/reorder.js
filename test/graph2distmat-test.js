@@ -1,7 +1,7 @@
 const reorder = require('../dist/reorder.cjs');
 
-const vows = require('vows'),
-  assert = require('assert');
+const vows = require('vows');
+const assert = require('assert');
 const seedrandom = require('seedrandom');
 Math.seedrandom('reorder');
 
@@ -11,15 +11,15 @@ suite.addBatch({
   graph2distmat: {
     simple() {
       const mat = [
-          [0, 1, 0],
-          [1, 0, 1],
-          [0, 1, 0],
-        ],
-        dist = [
-          [0, 1, 2],
-          [1, 0, 1],
-          [2, 1, 0],
-        ];
+        [0, 1, 0],
+        [1, 0, 1],
+        [0, 1, 0],
+      ];
+      const dist = [
+        [0, 1, 2],
+        [1, 0, 1],
+        [2, 1, 0],
+      ];
       const graph = reorder.mat2graph(mat);
       assert.equal(graph.nodes().length, 3);
       assert.equal(graph.links().length, 2);
