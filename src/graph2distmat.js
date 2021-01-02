@@ -12,11 +12,9 @@ export function distmat2valuemat(distmat) {
   const n = distmat.length;
   const valuemat = zeroes(n, n);
   const max_dist = distmax(distmat);
-  let i;
-  let j;
 
-  for (i = 0; i < n; i++) {
-    for (j = i; j < n; j++) {
+  for (let i = 0; i < n; i++) {
+    for (let j = i; j < n; j++) {
       valuemat[j][i] = valuemat[i][j] = 1 + max_dist - distmat[i][j];
     }
   }
