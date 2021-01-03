@@ -1,0 +1,94 @@
+<!doctype html>
+<title>Cars</title>
+<link rel="stylesheet" type="text/css" href="/parcoords.css">
+<link rel="stylesheet" type="text/css" href="/style.css">
+<style>
+body { margin: 50px auto 20px;}
+#example1,
+#example2 {
+ width: 700px;
+  height: 200px;
+}
+</style>
+<script src="/d3.v5.min.js"></script>
+<script src="/parcoords.standalone.js"></script>
+<script src="/reorder.js"></script>
+<div id="example1" class="parcoords" style="width:960px;height:200px;"></div>
+<div id="example2" class="parcoords" style="width:960px;height:200px;"></div>
+
+<script>
+    // quantitative color scale
+    var blue_to_brown = d3.scaleLinear()
+        .domain([9, 50])
+        .range(["steelblue", "brown"])
+        .interpolate(d3.interpolateLab);
+    var color = function(d) { return blue_to_brown(d['economy (mpg)']); };
+
+  // interact with this variable from a javascript console
+    var parcoords = ParCoords()("#example1")
+        .color(color)
+        .alpha(0.4);
+    var parcoords2 = ParCoords()("#example2")
+        .color(color)
+        .alpha(0.4);
+
+    // load csv file and create the chart
+    d3.csv('cars.csv').then(function(data) {
+        parcoords
+            .data(data)
+            .composite("darker")
+            .margin({ top: 20, left: 60, bottom: 10, right: 50 })
+            .hideAxis(['name'])
+            .render()
+            .shadows()
+            .reorderable()
+            .interactive()
+            .brushMode("1D-axes");  // enable brushing
+
+        parcoords2
+            .data(data)
+            .composite("darker")
+            .margin({ top: 20, left: 60, bottom: 10, right: 50 })
+            .hideAxis(['name']);
+        reorder.parcoords_es(parcoords2);
+        parcoords2
+            .render()
+            .shadows()
+            .reorderable()
+            .interactive()
+            .brushMode("1D-axes");  // enable brushing
+      
+    });
+    var sltBrushMode = d3.select('#sltBrushMode')
+    sltBrushMode.selectAll('option')
+        .data(parcoords.brushModes())
+        .enter()
+        .append('option')
+        .text(function(d) { return d; });
+    sltBrushMode.on('change', function() {
+        parcoords.brushMode(this.value);
+        switch(this.value) {
+            case 'None':
+                d3.select("#pStrums").style("visibility", "hidden");
+                d3.select("#lblPredicate").style("visibility", "hidden");
+                d3.select("#sltPredicate").style("visibility", "hidden");
+                d3.select("#btnReset").style("visibility", "hidden");
+                break;
+            case '2D-strums':
+                d3.select("#pStrums").style("visibility", "visible");
+                break;
+            default:
+                d3.select("#pStrums").style("visibility", "hidden");
+                d3.select("#lblPredicate").style("visibility", "visible");
+                d3.select("#sltPredicate").style("visibility", "visible");
+                d3.select("#btnReset").style("visibility", "visible");
+                break;
+        }
+    });
+    sltBrushMode.property('value', '1D-axes');
+    d3.select('#btnReset').on('click', function() {parcoords.brushReset();})
+    d3.select('#sltPredicate').on('change', function() {
+        parcoords.brushPredicate(this.value);
+    });
+
+</script>

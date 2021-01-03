@@ -50,7 +50,7 @@ export { meantranspose, meancolumns } from './mean';
 export { optimal_leaf_order } from './optimal_leaf_order';
 export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
-export { array_to_dicts, dicts_to_array, pcp, parcoords } from './pcp';
+export { array_to_dicts, dicts_to_array, pcp, parcoords, parcoords_es } from './pcp';
 export { permutation, inverse_permutation } from './permutation';
 export { permute, permute_inplace, permutetranspose } from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
