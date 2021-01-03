@@ -81,11 +81,19 @@ export function pcp(data, axes) {
   return [ndata, perm, naxes, signs, pcor];
 }
 
+function parcoords_types(parcoords) {
+  if (parcoords.types==undefined) {
+    const dims = parcoords.dimensions();
+    return Object.entries(dims).map(([k,v]) => v.type);
+  }
+  return parcoords.types();
+}
+
 export function parcoords(p) {
   p.detectDimensions().autoscale();
 
   const data = p.data();
-  const types = p.types();
+  const types = parcoords_types(p);
   const hidden = p.hideAxis();
   const discarded = [];
 
@@ -123,7 +131,8 @@ export function parcoords(p) {
   const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
   const naxes = permute(dimensions, perm);
 
-  dimensions = discarded.reverse().concat(naxes); // put back string columns
+  // put back string and hidden columns
+  dimensions = discarded.reverse().concat(naxes);
   p.dimensions(dimensions);
   p.hideAxis(hidden);
   const signs = pcp_flip_axes(perm, pcor);
