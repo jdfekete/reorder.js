@@ -2,22 +2,22 @@ const reorder = require('../dist/reorder.cjs');
 
 const vows = require('vows');
 const assert = require('assert');
-const seedrandom = require('seedrandom');
+require('seedrandom');
 require('./env-assert');
 
 Math.seedrandom('reorder');
 
 const suite = vows.describe('reorder.ca');
 
-function compare_order(row_order1, row_order2, msg) {
-  const tmp = Array(row_order1.length);
-  assert.equal(row_order1.length, row_order2.length);
-  for (let i = 0; i < row_order1.length; i++) {
-    if (Math.abs(row_order2) < 1e-9) tmp[i] = NaN;
-    else tmp[i] = row_order1[i] / row_order2[i];
-  }
-  reorder.printvec(tmp, 2, null, msg);
-}
+// function compare_order(row_order1, row_order2, msg) {
+//   const tmp = Array(row_order1.length);
+//   assert.equal(row_order1.length, row_order2.length);
+//   for (let i = 0; i < row_order1.length; i++) {
+//     if (Math.abs(row_order2) < 1e-9) tmp[i] = NaN;
+//     else tmp[i] = row_order1[i] / row_order2[i];
+//   }
+//   reorder.printvec(tmp, 2, null, msg);
+// }
 
 suite.addBatch({
   ca: {

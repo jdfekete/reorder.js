@@ -2,7 +2,7 @@ const reorder = require('../dist/reorder.cjs');
 
 const vows = require('vows');
 const assert = require('assert');
-const seedrandom = require('seedrandom');
+require('seedrandom');
 Math.seedrandom('reorder');
 
 const suite = vows.describe('reorder.graph2mat');
@@ -17,11 +17,19 @@ function remove_zeroes(mat) {
     mat.pop();
   }
   for (let j = mat[0].length - 1; j >= 0; j--) {
+    /* jshint ignore:start */
+    /* It complains (with reason) that:
+       Functions declared within loops referencing an outer scoped variable
+       may lead to confusing semantics. (j)
+    */
     if (mat.some((row) => row[j] != 0)) {
       //console.log('remove column %d', j);
       break;
     }
-    for (i = 0; i < mat.length; i++) mat[i].pop();
+    /* jshint ignore:end */
+    for (let i = 0; i < mat.length; i++) {
+      mat[i].pop();
+    }
   }
 
   return mat;

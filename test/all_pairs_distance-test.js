@@ -8,7 +8,7 @@ const suite = vows.describe('reorder.all-pairs-distance');
 function dotest(graph) {
   const mat = reorder.all_pairs_distance(graph);
   const bfs = reorder.all_pairs_distance_bfs(graph);
-  const n = graph.nodes().length;
+  //const n = graph.nodes().length;
 
   assert.equal(mat.length, 1); // 1 component
   assert.deepEqual(mat[0], bfs);

@@ -23,12 +23,18 @@ function inDelta(actual, expected, delta) {
 function inDeltaArray(actual, expected, delta) {
   const n = expected.length;
   let i = -1;
-  if (actual.length !== n) return false;
+  if (actual.length !== n) {
+    return false;
+  }
   while (++i < n) {
     if (Array.isArray(actual[i])) {
-      if (!inDeltaArray(actual[i], expected[i], delta)) return false;
+      if (!inDeltaArray(actual[i], expected[i], delta)) {
+        return false;
+      }
     } else {
-      if (!inDeltaNumber(actual[i], expected[i], delta)) return false;
+      if (!inDeltaNumber(actual[i], expected[i], delta)) {
+        return false;
+      }
     }
   }
   return true;
@@ -40,12 +46,13 @@ function inDeltaNumber(actual, expected, delta) {
 }
 
 assert.inDeltaArray = (actual, expected, delta, message) => {
-  if (!inDeltaArray(actual, expected, delta))
+  if (!inDeltaArray(actual, expected, delta)) {
     assert.fail(
       actual,
       expected,
       message || `expected {actual} to equal to {expected} within ${delta}`
     );
+  }
   return true;
 };
 
@@ -67,8 +74,8 @@ assert.inDeltaArrayAbs = (actual, expected, delta, message) => {
       assert.inDeltaArrayAbs
     );
   }
-  while (++i < n)
-    if (!inDeltaAbs(actual[i], expected[i], delta))
+  while (++i < n) {
+    if (!inDeltaAbs(actual[i], expected[i], delta)) {
       assert.fail(
         actual,
         expected,
@@ -76,6 +83,8 @@ assert.inDeltaArrayAbs = (actual, expected, delta, message) => {
         null,
         assert.inDeltaArrayAbs
       );
+    }
+  }
   return true;
 };
 
@@ -87,29 +96,46 @@ assert.inDeltaArrayOrNeg = (actual, expected, delta, message) => {
   if (
     !inDeltaArray(actual, expected, delta) &&
     !inDeltaArray(neg(actual), expected, delta)
-  )
+  ) {
     assert.fail(
       actual,
       expected,
       message || `expected {actual} to equal to {expected} within ${delta}`
     );
+  }
   return true;
 };
 
 function permutationEqual(actual, expected) {
-  if (!(Array.isArray(actual) && Array.isArray(expected))) return false;
+  if (!(Array.isArray(actual) && Array.isArray(expected))) {
+    return false;
+  }
   let n = actual.length;
-  if (n != expected.length) return false;
-  while (n--) if (actual[n] != expected[n]) return false;
+  if (n != expected.length) {
+    return false;
+  }
+  while (n--) {
+    if (actual[n] != expected[n]) {
+      return false;
+    }
+  }
   return true;
 }
 
 function permutationInverted(actual, expected) {
-  if (!(isArray(actual) && isArray(expected))) return false;
+  if (!(Array.isArray(actual) && Array.isArray(expected))) {
+    return false;
+  }
   let n = actual.length;
-  if (n != expected.length) return false;
+  if (n != expected.length) {
+    return false;
+  }
   const i = n - 1;
-  while (n--) if (actual[n] != expected[i - n]) return false;
+  while (n--) {
+    if (actual[n] != expected[i - n]) {
+      return false;
+    }
+  }
   return true;
 }
 
@@ -117,11 +143,12 @@ assert.permutationEqual = (actual, expected, message) => {
   if (
     !permutationEqual(actual, expected) &&
     !permutationInverted(actual, expected)
-  )
+  ) {
     assert.fail(
       actual,
       expected,
       message || 'expected {actual} to be equal or inverse of {expected}'
     );
+  }
   return true;
 };

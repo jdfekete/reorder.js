@@ -81,20 +81,55 @@ export function pcp(data, axes) {
   return [ndata, perm, naxes, signs, pcor];
 }
 
-function parcoords_types(parcoords) {
-  if (parcoords.types==undefined) {
-    const dims = parcoords.dimensions();
-    return Object.entries(dims).map(([k,v]) => v.type);
+export function parcoords_es(p) {
+  p.detectDimensions().autoscale();
+
+  const dimensions = p.dimensions();
+  const data = p.data();
+  const ignored = [];
+  const naxes = [];
+
+  let tdata = [];
+
+  for (const [d, val] in dimensions) {
+    if (val.type == 'number' || val.type == 'date') {
+      const row = [];
+      const scale = val.yscale;
+      for (let j = 0; j < data.length; j++) {
+        row.push(scale(data[j][d]));
+      }
+      tdata.push(row);
+      naxes.push(d);
+    } else {
+      ignored.push(d);
+    }
   }
-  return parcoords.types();
+  const pcor = correlation.pearsonMatrix(tdata);
+  const abs_pcor = abs_matrix(pcor);
+  const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
+  const position = {};
+
+  // put back string columns
+  
+  permute(naxes, perm)
+    .concat(ignored.reverse())
+    .forEach((v,i)=>position[v] = i);
+  p.sortDimensions(naxes);
+  const signs = pcp_flip_axes(perm, pcor);
+  for (let i = 0; i < signs.length; i++) {
+    if (signs[i] < 0) {
+      p.flip(dimensions[i]);
+    }
+  }
 }
 
 export function parcoords(p) {
   p.detectDimensions().autoscale();
 
   const data = p.data();
-  const types = parcoords_types(p);
+  const types = p.types(p);
   const hidden = p.hideAxis();
+  const yscale = p.yscale(p);
   const discarded = [];
 
   let dimensions = p.dimensions();
@@ -107,16 +142,11 @@ export function parcoords(p) {
       dimensions.splice(i, 1);
       discarded.push(d);
       i--;
-    } else if (types[d] == 'number') {
+    } else if (types[d] == 'number' || types[d] == 'date') {
       const row = [];
+      const scale = yscale[d];
       for (let j = 0; j < data.length; j++) {
-        row.push(data[j][d]);
-      }
-      tdata.push(row);
-    } else if (types[d] == 'date') {
-      const row = [];
-      for (let j = 0; j < data.length; j++) {
-        row.push(data[j][d].getTime() * 0.001);
+        row.push(scale(data[j][d]));
       }
       tdata.push(row);
     } else {

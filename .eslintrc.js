@@ -1,15 +1,16 @@
 module.exports = {
     "env": {
-        "browser": true,
-        "es2021": true
+      "browser": true,
+      "es2021": true,
+      "node": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 12,
-        "sourceType": "module"
+      "ecmaVersion": 12,
+      "sourceType": "module"
     },
     "rules": {
-        "curly": "warn",
-        "brace-style": ["warn", "1tbs"]
+      "curly": "warn",
+      "brace-style": ["warn", "1tbs"]
     }
 };

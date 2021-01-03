@@ -31,7 +31,9 @@ function remove_equal_dist(dm) {
 function clusterEqual(h1, h2) {
   //console.log(h1);
   //console.log(h2);
-  if (h1 == h2) return true;
+  if (h1 == h2) {
+    return true;
+  }
   return (
     h1.dist == h2.dist &&
     h1.size == h2.size &&

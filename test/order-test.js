@@ -1,10 +1,8 @@
 const reorder = require('../dist/reorder.cjs');
-const seedrandom = require('seedrandom');
-
 const vows = require('vows');
 const assert = require('assert');
-
 const suite = vows.describe('reorder.order');
+require('seedrandom');
 
 Math.seedrandom('reorder');
 
@@ -102,7 +100,9 @@ suite.addBatch({
     },
     lesssimple,
     evenharder() {
-      for (let n = 10; n-- > 0; ) lesssimple();
+      for (let n = 10; n-- > 0; ) {
+        lesssimple();
+      }
     },
     'equiv-simple': function () {
       const data = [0, 1, 2, 2, 2, 2, 3, 4, 4, 4, 5, 5, 6].map(fortytwo);
@@ -309,7 +309,8 @@ suite.addBatch({
         [0, 1, 0],
         [0, 1, 0],
       ];
-      const x = reorder.order().limits(1, 12).except([2, 4, 7, 12])(data);
+      reorder.order().limits(1, 12).except([2, 4, 7, 12])(data);
+      // const x = reorder.order().limits(1, 12).except([2, 4, 7, 12])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
@@ -328,7 +329,8 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      const x = reorder.order().limits(1, 11).except([1, 6])(data);
+      reorder.order().limits(1, 11).except([1, 6])(data);
+      // const x = reorder.order().limits(1, 11).except([1, 6])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
@@ -346,7 +348,8 @@ suite.addBatch({
         [0, 1, 1],
         [0, 0, 1],
       ];
-      const x = reorder.order().limits(1, 10).except([5, 9])(data);
+      reorder.order().limits(1, 10).except([5, 9])(data);
+      // const x = reorder.order().limits(1, 10).except([5, 9])(data);
       // Since several rows are identical, there are multiple
       // possible correct orderings
       // assert.deepEqual(x, [0, 8, 2, 3, 4, 5, 6, 7, 10, 1, 9]);
@@ -383,10 +386,16 @@ function isArguments(object) {
   return Object.prototype.toString.call(object) == '[object Arguments]';
 }
 
+const pSlice = Array.prototype.slice;
+
 // Taken from node/lib/assert.js
 function objEquiv(a, b) {
-  if (isUndefinedOrNull(a) || isUndefinedOrNull(b)) return false;
-  if (a.prototype !== b.prototype) return false;
+  if (isUndefinedOrNull(a) || isUndefinedOrNull(b)) {
+    return false;
+  }
+  if (a.prototype !== b.prototype) {
+    return false;
+  }
   if (isArguments(a)) {
     if (!isArguments(b)) {
       return false;
@@ -403,15 +412,21 @@ function objEquiv(a, b) {
   } catch (e) {
     return false;
   }
-  if (ka.length != kb.length) return false;
+  if (ka.length != kb.length) {
+    return false;
+  }
   ka.sort();
   kb.sort();
   for (let i = ka.length - 1; i >= 0; i--) {
-    if (ka[i] != kb[i]) return false;
+    if (ka[i] != kb[i]) {
+      return false;
+    }
   }
   for (let i = ka.length - 1; i >= 0; i--) {
     const key = ka[i];
-    if (!deepEqual(a[key], b[key])) return false;
+    if (!deepEqual(a[key], b[key])) {
+      return false;
+    }
   }
   return true;
 }
@@ -420,8 +435,10 @@ function toNum(a) {
   return a.map((l) => l.charCodeAt(0) - 97);
 }
 
+/*
 function toLetter(a) {
   return a.map((l) => String.fromCharCode(97 + l));
 }
+*/
 
 suite.export(module);

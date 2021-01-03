@@ -35,7 +35,7 @@
       "clean": "rm -rf node_modules",
       "prettier": "prettier --write '{src,test}/**/*.js'",
       "docs": "jsdoc -c jsdoc.config.json",
-      "check": "jshint src/*.js"
+      "check": "jshint src/*.js test/*.js"
    },
    "files": [
       "dist"
@@ -63,11 +63,13 @@
    "license": "BSD-2-Clause",
    "jshintConfig": {
       "esversion": 6,
-       "varstmt": true,
-       "undef": true,
-       "unused": true,
-       "globals": {
-           "console": false
+     "node": true,
+      "laxbreak": true,
+      "varstmt": true,
+      "undef": true,
+      "unused": true,
+      "globals": {
+         "console": false
        }
    },
    "prettier": {
