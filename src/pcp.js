@@ -86,6 +86,7 @@ export function parcoords(p) {
 
   const data = p.data();
   const types = p.types();
+  const hidden = p.hideAxis();
   const discarded = [];
 
   let dimensions = p.dimensions();
@@ -93,7 +94,12 @@ export function parcoords(p) {
 
   for (let i = 0; i < dimensions.length; i++) {
     const d = dimensions[i];
-    if (types[d] == 'number') {
+    if (hidden.includes(d)) {
+      // remove dimension
+      dimensions.splice(i, 1);
+      discarded.push(d);
+      i--;
+    } else if (types[d] == 'number') {
       const row = [];
       for (let j = 0; j < data.length; j++) {
         row.push(data[j][d]);
@@ -116,10 +122,10 @@ export function parcoords(p) {
   const abs_pcor = abs_matrix(pcor);
   const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
   const naxes = permute(dimensions, perm);
-  tdata = permute(tdata, perm);
 
   dimensions = discarded.reverse().concat(naxes); // put back string columns
   p.dimensions(dimensions);
+  p.hideAxis(hidden);
   const signs = pcp_flip_axes(perm, pcor);
   for (let i = 0; i < signs.length; i++) {
     if (signs[i] < 0) {
