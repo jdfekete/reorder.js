@@ -32,7 +32,7 @@
       "dev": "rollup -c rollup.config.dev.js -w",
       "pretest": "npm run build",
       "test": "vows --nocolor; echo",
-      "clean": "rm -rf node_modules",
+      "clean": "rm -rf node_modules dist",
       "prettier": "prettier --write '{src,test}/**/*.js'",
       "docs": "jsdoc -c jsdoc.config.json",
       "check": "jshint src/*.js test/*.js",
