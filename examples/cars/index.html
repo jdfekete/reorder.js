@@ -1,4 +1,7 @@
-<meta charset="UTF8">
+<!doctype html>
+<title>Cars</title>
+<link rel="stylesheet" type="text/css" href="/d3.parcoords.css">
+<link rel="stylesheet" type="text/css" href="/style.css">
 <style>
 body { margin: 50px auto 20px;}
 #example1,
@@ -7,10 +10,9 @@ body { margin: 50px auto 20px;}
   height: 200px;
 }
 </style>
-<script src="/d3.v3.js"></script>
+<script src="/d3.v3.min.js"></script>
 <script src="/d3.parcoords.js"></script>
 <script src="/reorder.js"></script>
-<link rel="stylesheet" type="text/css" href="/d3.parcoords.css">
 <div id="example1" class="parcoords"></div>
 <div id="example2" class="parcoords"></div>
 
@@ -31,7 +33,7 @@ d3.csv('cars.csv', function(data) {
     .hideAxis(["name"])
     .composite("darker")
     .color((d) => blue_to_brown(Math.abs(d['economy (mpg)'])))  // quantitative color scale
-    .alpha(0.35)
+    .alpha(0.4)
     .render()
     .brushMode("1D-axes")  // enable brushing
     .interactive();
@@ -76,7 +78,7 @@ d3.csv('cars.csv', function(data) {
     .hideAxis(["name"])
     .composite("darker")
     .color((d) => blue_to_brown(d['economy (mpg)']))  // quantitative color scale
-    .alpha(0.35);
+    .alpha(0.4);
 
   reorder.parcoords(pc2);
   pc2.render()
