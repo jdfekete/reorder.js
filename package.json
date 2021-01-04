@@ -63,16 +63,16 @@
    "license": "BSD-2-Clause",
    "jshintConfig": {
       "esversion": 6,
-     "node": true,
+      "node": true,
       "laxbreak": true,
       "varstmt": true,
       "undef": true,
       "unused": true,
       "globals": {
          "console": false
-       }
+      }
    },
    "prettier": {
-       "singleQuote": true
+      "singleQuote": true
    }
 }
