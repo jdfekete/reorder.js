@@ -1,6 +1,5 @@
 import { range } from './range';
 import { debug } from './core';
-import { transpose } from './aliases';
 import { correlation } from './correlation';
 import { optimal_leaf_order } from './optimal_leaf_order';
 import { permute } from './permute';
@@ -64,61 +63,17 @@ function pcp_flip_axes(perm, pcor) {
   return signs;
 }
 
-export function pcp(data, axes) {
+export function pcp(tdata, axes) {
   if (!axes) {
-    axes = range(data[0].length);
+    axes = range(tdata.length);
   }
 
-  let tdata = transpose(data);
   const pcor = correlation.pearsonMatrix(tdata);
   const abs_pcor = abs_matrix(pcor);
   const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
   const naxes = permute(axes, perm);
-  tdata = permute(tdata, perm);
-
   const signs = pcp_flip_axes(perm, pcor);
-  const ndata = transpose(tdata);
-  return [ndata, perm, naxes, signs, pcor];
-}
-
-export function parcoords_es(p) {
-  //p.detectDimensions().autoscale();
-
-  const dimensions = p.dimensions();
-  const data = p.data();
-  const ignored = [];
-  const naxes = [];
-
-  let tdata = [];
-
-  for (const d in dimensions) {
-    const val = dimensions[d];
-    if (val.type == 'number' || val.type == 'date') {
-      const row = [];
-      const scale = val.yscale;
-      for (let j = 0; j < data.length; j++) {
-        row.push(scale(data[j][d]));
-      }
-      tdata.push(row);
-      naxes.push(d);
-    } else {
-      ignored.push(d);
-    }
-  }
-  const pcor = correlation.pearsonMatrix(tdata);
-  const abs_pcor = abs_matrix(pcor);
-  const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
-  // compute the permuted axes and put back string columns at end
-  const ndomain = permute(naxes, perm).concat(ignored.reverse());
-  // change the order in the xscale
-  p.xscale.domain(ndomain);
-  p.sortDimensions();
-  const signs = pcp_flip_axes(perm, pcor);
-  for (let i = 0; i < signs.length; i++) {
-    if (signs[i] < 0) {
-      p.flip(ndomain[i]);
-    }
-  }
+  return [naxes, signs, perm, pcor];
 }
 
 export function parcoords(p) {
@@ -129,9 +84,8 @@ export function parcoords(p) {
   const hidden = p.hideAxis();
   const yscale = p.yscale;
   const discarded = [];
-
+  const tdata = [];
   let dimensions = p.dimensions();
-  let tdata = [];
 
   for (let i = 0; i < dimensions.length; i++) {
     const d = dimensions[i];
@@ -154,19 +108,49 @@ export function parcoords(p) {
       i--;
     }
   }
-  const pcor = correlation.pearsonMatrix(tdata);
-  const abs_pcor = abs_matrix(pcor);
-  const perm = optimal_leaf_order().distanceMatrix(abs_pcor)(tdata);
-  const naxes = permute(dimensions, perm);
+  const [naxes, signs] = pcp(tdata, dimensions);
 
   // put back string and hidden columns
   dimensions = naxes.concat(discarded.reverse());
   p.dimensions(dimensions);
   p.hideAxis(hidden);
-  const signs = pcp_flip_axes(perm, pcor);
   for (let i = 0; i < signs.length; i++) {
     if (signs[i] < 0) {
       p.flip(dimensions[i]);
     }
   }
 }
+
+export function parcoords_es(p) {
+  const dimensions = p.dimensions();
+  const data = p.data();
+  const ignored = [];
+  const axes = [];
+  const tdata = [];
+
+  for (const d in dimensions) {
+    const val = dimensions[d];
+    if (val.type == 'number' || val.type == 'date') {
+      const row = [];
+      const scale = val.yscale;
+      for (let j = 0; j < data.length; j++) {
+        row.push(scale(data[j][d]));
+      }
+      tdata.push(row);
+      axes.push(d);
+    } else {
+      ignored.push(d);
+    }
+  }
+  const [naxes, signs] = pcp(tdata, axes);
+  const ndomain = naxes.concat(ignored.reverse());
+  // change the order in the xscale
+  p.xscale.domain(ndomain);
+  p.sortDimensions();
+  for (let i = 0; i < signs.length; i++) {
+    if (signs[i] < 0) {
+      p.flip(ndomain[i]);
+    }
+  }
+}
+
