@@ -1,6 +1,6 @@
 {
    "name": "reorder.js",
-   "version": "2.0.0",
+   "version": "2.0.1",
    "description": "Matrix reordering in JavaScript.",
    "keywords": [
       "es6",
@@ -35,7 +35,8 @@
       "clean": "rm -rf node_modules",
       "prettier": "prettier --write '{src,test}/**/*.js'",
       "docs": "jsdoc -c jsdoc.config.json",
-      "check": "jshint src/*.js test/*.js"
+      "check": "jshint src/*.js test/*.js",
+      "release": "release-it"
    },
    "files": [
       "dist"
@@ -51,6 +52,7 @@
       "jsonfile": "2.0.0",
       "parcoord-es": "^2.2.10",
       "prettier": "^2.2.1",
+      "release-it": "^14.2.2",
       "rollup": "^2.35.1",
       "rollup-plugin-livereload": "^2.0.0",
       "rollup-plugin-local-resolve": "^1.0.7",
