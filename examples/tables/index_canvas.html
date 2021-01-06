@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <title>Heatmap Canvas</title>
+   <meta charset="utf-8"/>
+    <script src="/reorder.js"></script>
+  <script type="application/javascript">
+var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
+	      [0, 1, 1, 0, 0, 1, 0, 1],
+	      [0, 1, 1, 0, 1, 0, 0, 0],
+	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [1, 0, 1, 0, 1, 0, 0, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1],
+//	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1]],
+    row_labels = ['1', '2', '3', '4', '5', '6', '7', '8'],
+    col_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+      n = matrix.length,
+      m = matrix[0].length;
+
+
+     var margin = {top: 80, right: 0, bottom: 10, left: 80},
+         width = 720 - margin.left - margin.right,
+         height = 720 - margin.top - margin.bottom;
+
+function rgb(r, g, b) {
+      return "rgb("+Math.floor(r)+","+Math.floor(g)+","+Math.floor(b)+")";
+}
+
+function interpolate_colors(n, r1, g1, b1, r2, g2, b2) {
+      var ret = [];
+      for (i = 0; i < (n-1); i++) {
+	  ret.push(rgb((r1*(n-i-1)+r2*i)/(n-1),
+		       (g1*(n-i-1)+g2*i)/(n-1),
+		       (b1*(n-i-1)+b2*i)/(n-1)));
+      }
+      return ret;
+}
+
+     var color = interpolate_colors(16, 255,255,255, 255,165,0),
+	  row_perm = reorder.permutation(n),
+	  col_perm = reorder.permutation(m);
+
+    function draw() {
+      var canvas = document.getElementById("canvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d"), 
+	  n = matrix.length,
+	  m = matrix[0].length,
+	  r, c, v, i, j;
+	  gridSize = Math.min(width / n, height / m),
+	  h = gridSize,
+	  th = h*n,
+	  w = gridSize,
+	  tw = w*m,
+	  max_value = 1;
+	  
+	  ctx.save();
+	  ctx.clearStyle = 'white';
+	  ctx.clearRect(0, 0,
+			width+margin.left+margin.right,
+			height+margin.top+margin.bottom);
+	  ctx.translate(margin.left, margin.top);
+	  for (i = 0; i < n; i++) {
+	      r = row_perm[i];
+	      for (j = 0; j < m; j++) {
+		  c = col_perm[j];
+		  v = matrix[r][c] * (color.length-1) / max_value;
+		  ctx.fillStyle = color[Math.floor(v)];
+		  ctx.fillRect(j*w, i*h, w, h);
+	      }
+	  }
+	  ctx.strokeStyle = 'black';
+	  ctx.fillStyle = 'black';
+	  ctx.strokeRect(0, 0, tw, th);
+	  ctx.font = '10px sans-serif';
+	  ctx.beginPath(0, 0);
+	  for (i = 0; i < n; i++) {
+	      r = row_perm[i];
+	      ctx.moveTo(0, i*h);
+	      ctx.lineTo(tw, i*h);
+	      ctx.stroke();
+	      v = ctx.measureText(row_labels[r]);
+	      ctx.fillText(row_labels[r], -6-v.width, i*h+h/2);
+	  }
+	  ctx.rotate(-Math.PI/2);
+	  for (j = 0; j < m; j++) {
+	      c = col_perm[j];
+	      ctx.moveTo(0, j*w);
+	      ctx.lineTo(-th, j*w);
+	      ctx.stroke();
+	      v = ctx.measureText(col_labels[r]);
+	      ctx.fillText(col_labels[c], 6+v.width, j*w+w/2);
+	  }
+	  ctx.restore();
+      }
+    }
+
+    function order(rows, cols) {
+	row_perm = rows;
+	col_perm = cols;
+	draw();
+    }
+
+    function random_permute() {
+      order(reorder.randomPermutation(matrix.length),
+	    reorder.randomPermutation(matrix[0].length));
+    }
+
+    function optimal_leaf_order_permute() {
+	var transpose = reorder.transpose(matrix),
+	dist_rows = reorder.dist()(matrix),
+	dist_cols = reorder.dist()(transpose),
+	olorder = reorder.optimal_leaf_order(),
+	row_perm = olorder.distanceMatrix(dist_rows)(matrix),
+	col_perm = olorder.distanceMatrix(dist_cols)(transpose);
+	
+	order(row_perm, col_perm);
+    }
+
+   function initial_order_permute() {
+       order(reorder.permutation(matrix.length),
+	     reorder.permutation(matrix[0].length));
+   }
+  </script>
+ </head>
+ <body onload="draw();">
+    <button type="button" onclick="random_permute()">Random Permute</button>
+    <button type="button" onclick="optimal_leaf_order_permute()">Optimal Leaf Order Permute</button>
+    <button type="button" onclick="initial_order_permute()">Initial Order</button>
+   <canvas id="canvas" width="720" height="720"></canvas>
+ </body>
+</html>

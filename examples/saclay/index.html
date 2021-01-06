@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>INRIA Saclay Researchers Co-Authorship Network</title>
+<style>
+
+@import url(/style.css);
+
+aside {
+  font-size: small;
+  left: -300px;
+  position: absolute;
+  width: 180px;
+}
+
+.background {
+  fill: #eee;
+}
+
+line {
+  stroke: #fff;
+}
+
+text.active {
+  fill: red;
+}
+
+text.active {
+  fill: red;
+  font-size: 120%;
+}
+
+rect.highlight {
+    fill: none;
+    stroke: red;
+    stroke-width: 2;
+}
+
+</style>
+<script src="/d3.v3.js"></script>
+<script src="/reorder.min.js"></script>
+<script src="/matrix.js"></script>
+
+<header>
+  <aside>Oct 6, 2013</aside>
+  <a href="../" rel="author">Jean-Daniel Fekete</a>
+</header>
+
+<h1>INRIA Saclay Researchers Co-Authorship Network</h1>
+
+<aside style="margin-top:80px;">
+<p>Order: <select id="order">
+  <option value="name">by Name</option>
+  <option value="count">by Frequency</option>
+  <option value="group">by Cluster</option>
+  <option value="leafOrder">by Leaf Order</option>
+  <option value="leafOrderDist">by Leaf Order over Distance Matrix</option>
+  <option value="barycenter">by Crossing Reduction</option>
+  <option value="rcm">by Bandwidth Reduction (RCM)</option>
+  <option value="spectral">Spectral</option>
+</select>
+
+<p>Distance: <select id="distance">
+  <option value="manhattan">Manhattan</option>
+  <option value="euclidean" selected="true">Euclidean</option>
+  <option value="chebyshev">Chebyshev</option>
+  <option value="hamming">Hamming</option>
+  <option value="jaccard">Jaccard</option>
+  <option value="braycurtis">Braycurtis</option>
+</select>
+
+<p>This matrix diagram visualizes researchers co-authorship at <a href="www.inria.fr">INRIA</a> <a href="http://www.inria.fr/centre/saclay">Saclay</a>.
+
+
+<p>Each colored cell represents two authors that co-authored the same articles; darker cells indicate authors that collaborated more frequently.
+
+<p>Use the drop-down menu to reorder the matrix and explore the data.
+
+<p>Built with <a href="http://d3js.org/">d3.js</a>.
+</aside>
+
+<script>
+var margin = {top: 80, right: 0, bottom: 10, left: 80},
+    width = 1500,
+    height = 1500;
+
+var x = d3.scale.ordinal().rangeBands([0, width]),
+    z = d3.scale.linear().domain([0, 4]).clamp(true),
+    c = d3.scale.category10().domain(d3.range(10));
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .style("margin-left", -margin.left + "px")
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.json("aviz2.json", loadJson);
+
+</script>
+
+<p class="attribution">Source: <a href="http://hal.inria.fr">HAL INRIA</a>.
+
+<p>A network can be represented by an <i><a href="http://en.wikipedia.org/wiki/Adjacency_matrix">adjacency matrix</a></i>, where each cell <i>ij</i> represents an edge from vertex <i>i</i> to vertex <i>j</i>. Here, vertices represent authors in publications, while edges represent co-authorship of publications.
+
+<p>Given this two-dimensional representation of a graph, a natural visualization is to show the matrix! However, the effectiveness of a matrix diagram is heavily dependent on the order of rows and columns: if related nodes are placed closed to each other, it is easier to identify clusters and bridges.
+
+<p>This example lets you try different orderings via the drop-down menu. This type of diagram can be extended with manual reordering of rows and columns, and expanding or collapsing of clusters, to allow deeper exploration. <a href="http://en.wikipedia.org/wiki/Jacques_Bertin">Jacques Bertin</a> (or more specifically, his fleet of assistants) did this by hand with paper strips.
+
+<p>The multiple ordering algorithms are provided by the library <a href="http://github.com/jdfekete/reorder.js">Reorder.js</a>.
+
+<p>While path-following is harder in a matrix view than in a <a href="http://mbostock.github.com/d3/ex/force.html">node-link diagram</a>, matrices have other advantages. As networks get large and highly connected, node-link diagrams often devolve into giant hairballs of line crossings. Line crossings are impossible with matrix views. Matrix cells can also be encoded to show additional data; here color depicts clusters computed by a community-detection algorithm.
+
+<footer>
+  <aside>October 6, 2013</aside>
+  <a href="http://www.aviz.fr/~fekete" rel="author">Jean-Daniel Fekete</a>
+</footer>

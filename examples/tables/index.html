@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Heatmap</title>
+    <style>
+body {
+  font: 10px sans-serif;
+}
+line {
+  stroke: #000;
+}
+    </style>
+    <script src="/d3.v3.js"></script>
+    <script src="/reorder.js"></script>
+    <script src="/table.js"></script>
+  </head>
+  <body>
+    <button type="button" onclick="random_permute()">Random Permute</button>
+    <button type="button" onclick="optimal_leaf_order_permute()">Optimal Leaf Order Permute</button>
+    <button type="button" onclick="initial_order_permute()">Initial Order</button>
+    <div id='heatmap'></div>
+<script>
+
+var margin = {top: 80, right: 0, bottom: 10, left: 80},
+    width = 720 - margin.left - margin.right,
+    height = 720 - margin.top - margin.bottom;
+
+    svg = d3.select("#heatmap").append("svg")
+	    .attr("width", width + margin.left + margin.right)
+	    .attr("height", height + margin.top + margin.bottom)
+	    .append("g")
+	    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
+	      [0, 1, 1, 0, 0, 1, 0, 1],
+	      [0, 1, 1, 0, 1, 0, 0, 0],
+	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [1, 0, 1, 0, 1, 0, 0, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1],
+//	      [0, 0, 0, 1, 0, 0, 1, 0],
+	      [0, 1, 0, 0, 0, 1, 0, 1]],
+    row_labels = ['1', '2', '3', '4', '5', '6', '7', '8'],
+    col_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+
+      
+table({matrix: matrix, row_labels: row_labels, col_labels: col_labels});
+
+function random_permute() {
+      table.order(reorder.randomPermutation(matrix.length),
+		  reorder.randomPermutation(matrix[0].length));
+}
+
+function optimal_leaf_order_permute() {
+  var transpose = reorder.transpose(matrix),
+      dist_rows = reorder.dist()(matrix),
+      dist_cols = reorder.dist()(transpose),
+      order = reorder.optimal_leaf_order(),
+      row_perm = order.distanceMatrix(dist_rows)(matrix),
+      col_perm = order.distanceMatrix(dist_cols)(transpose);
+      
+      table.order(row_perm, col_perm);
+}
+
+function initial_order_permute() {
+      table.order(reorder.permutation(matrix.length),
+		  reorder.permutation(matrix[0].length));
+}
+      
+    </script>
+  </body>
+</html>
+
