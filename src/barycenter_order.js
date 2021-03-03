@@ -73,7 +73,7 @@ export function barycenter(graph, comp, max_iter) {
 
   let v;
   const inv_neighbor = (e) =>
-    inv_layer[e.source == v ? e.target : e.source.index];
+    inv_layer[e.source == v ? e.target.index : e.source.index];
 
   const barycenter_sort = (a, b) => {
     let d = med[a] - med[b];
