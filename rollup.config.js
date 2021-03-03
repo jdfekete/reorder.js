@@ -27,8 +27,7 @@ export default [
       format: "cjs"
     },
     plugins: [
-      versionInjector(),
-      terser()
+      versionInjector()
     ]
   },
   {
