@@ -7,7 +7,7 @@ Want to learn more? [See the wiki.](https://github.com/jdfekete/reorder.js/wiki)
 
 ## Development
 
-To help develop Reordering.js, you need to have [Node.js](http://www.nodejs.org)
+To develop Reordering.js, you need to have [Node.js](http://www.nodejs.org)
 and [NPM](http://www.npmjs.org) installed. Once you have done that, run the
 following from the root directory of this repository to install the development
 dependencies:
