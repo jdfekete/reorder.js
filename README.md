@@ -13,7 +13,7 @@ following from the root directory of this repository to install the development
 dependencies:
 
 ```
-npm run install
+npm install
 ```
 
 ## Testing
