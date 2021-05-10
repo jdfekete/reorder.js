@@ -2,9 +2,9 @@ const reorder = require('../dist/reorder.cjs');
 const vows = require('vows');
 const assert = require('assert');
 const suite = vows.describe('reorder.order');
-require('seedrandom');
+const seedrandom = require('seedrandom');
 
-Math.seedrandom('reorder');
+seedrandom('reorder');
 
 assert.ORdeepEqual = (actual, expected_list) => {
   for (const expected of expected_list) {

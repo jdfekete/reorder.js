@@ -2,8 +2,9 @@ const reorder = require('../dist/reorder.cjs');
 
 const vows = require('vows');
 const assert = require('assert');
-require('seedrandom');
-Math.seedrandom('reorder');
+const seedrandom = require('seedrandom');
+
+seedrandom('reorder');
 
 const suite = vows.describe('reorder.graph2mat');
 

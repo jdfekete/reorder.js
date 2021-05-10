@@ -2,9 +2,9 @@ const reorder = require('../dist/reorder.cjs');
 
 const vows = require('vows');
 const assert = require('assert');
-require('seedrandom');
+const seedrandom = require('seedrandom');
 
-Math.seedrandom('reorder');
+seedrandom('reorder');
 
 const suite = vows.describe('reorder.count_crossings');
 
