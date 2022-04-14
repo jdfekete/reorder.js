@@ -224,7 +224,12 @@ function matrix(json) {
     }
 
     function distance(value) {
-	leafOrder.distance(reorder.distance[value]);
+        if(value === "morans"){
+            leafOrder.distance(reorder.distance[value](adjacency));
+        }
+        else{
+            leafOrder.distance(reorder.distance[value]);
+        }
 
 	if (currentOrder == 'leafOrder') {
 	    orders.leafOrder = computeLeaforder;
@@ -243,7 +248,6 @@ function matrix(json) {
 	// 	orders.leafOrder = d3.range(n).sort(function(a, b) {
 	// 	    return nodes[b].leafOrder - nodes[a].leafOrder; });
     }
-
     matrix.order = order;
     matrix.distance = distance;
 

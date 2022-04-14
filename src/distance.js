@@ -87,4 +87,25 @@ export const distance = {
     }
     return s0 / s1;
   },
+  // A distance measure based on Moran's I
+  // N. van Beusekom, W. Meulemans, B. Speckmann, Simultaneous Orderings for Graph Collections
+  // IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 1-10, Jan. 2022
+  morans(matrix){
+    var m = 0;
+    var n = matrix.length * matrix[0].length;
+    for (var i = 0; i <matrix.length; i++) {
+        for (var j = 0; j < matrix[0].length; j++) {
+            m += matrix[i][j];
+        }
+    }
+    return (a,b) => {
+        var result = 0;
+        for (var i = 0; i < a.length; i++) {
+            if (isNum(a[i], b[i])) {
+                result += (a[i] * n - m) * (b[i] * n - m);
+            }
+        }
+        return -1 * result;
+    };
+  }
 };
