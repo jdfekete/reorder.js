@@ -39,7 +39,7 @@ suite.addBatch({
           [3,3,4,4]
       ];
 
-      assert.deepequal(reorder.union(mats), result);
+      assert.deepEqual(reorder.union(mats), result);
     },
   },
 });
