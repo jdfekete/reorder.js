@@ -47,6 +47,7 @@ export { intersect_sorted_ints } from './intersect';
 export { laplacian } from './laplacian';
 export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
+export { morans_i } from './morans_i';
 export { optimal_leaf_order } from './optimal_leaf_order';
 export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
@@ -70,6 +71,7 @@ export { spectral_order } from './spectral_order';
 export { stablepermute } from './stablepermute';
 export { sum } from './sum';
 export { transposeSlice } from './transpose';
+export { union } from './union';
 export {
   cmp_number,
   cmp_number_asc,
