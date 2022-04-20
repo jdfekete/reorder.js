@@ -88,6 +88,8 @@ export const distance = {
     return s0 / s1;
   },
   // A distance measure based on Moran's I
+  // Note that this distance can be both negative (similar) and positive (not similar, the higher the distance, the less similar a and b)
+  // 
   // N. van Beusekom, W. Meulemans, B. Speckmann, Simultaneous Orderings for Graph Collections
   // IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 1-10, Jan. 2022
   morans(matrix){

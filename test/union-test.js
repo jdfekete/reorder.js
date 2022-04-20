@@ -3,26 +3,43 @@ const reorder = require('../dist/reorder.cjs');
 const vows = require('vows');
 const assert = require('assert');
 
-const suite = vows.describe('reorder.morans_i');
+const suite = vows.describe('reorder.union');
 
 suite.addBatch({
-  morans_i: {
+  union: {
     simple() {
-      const mat1 = [
+      const mats = [[
+        [0,0,0,0],
+        [0,0,0,0],
+        [0,0,1,1],
+        [0,0,1,1]
+      ],
+      [
+        [0,0,0,0],
+        [0,0,0,0],
+        [1,1,1,1],
+        [1,1,1,1]
+      ],
+      [
+        [0,0,1,1],
+        [0,0,1,1],
+        [1,1,1,1],
+        [1,1,1,1]
+      ],
+      [
         [1,1,1,1],
         [1,1,1,1],
         [1,1,1,1],
         [1,1,1,1]
-      ];
-      const mat2 = [
-          [1,0,1,0],
-          [0,1,0,1],
-          [1,0,1,0],
-          [0,1,0,1]
+      ]];
+      const result = [
+          [1,1,2,2],
+          [1,1,2,2],
+          [3,3,4,4],
+          [3,3,4,4]
       ];
 
-      assert.equal(reorder.morans_i(mat1), 1);
-      assert.equal(reorder.morans_i(mat2), -1);
+      assert.deepequal(reorder.union(mats), result);
     },
   },
 });
