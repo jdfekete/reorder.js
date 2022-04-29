@@ -24,7 +24,6 @@ function matrix(json) {
     node.count = 0;
     matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
   });
-
   // Convert links to matrix; count character occurrences.
   json.links.forEach(function(link) {
     matrix[link.source][link.target].z += link.value;
