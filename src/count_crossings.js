@@ -28,23 +28,23 @@ export function count_crossings(graph, north, south) {
 
   for (let i = 0; i < north.length; i++) {
     const n = invert
-      ? graph.inEdges(north[i]).map((e) => south_inv[e.target.index])
-      : graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
+      ? graph.inEdges(north[i]).map((e) => [south_inv[e.target.index],e.value])
+      : graph.outEdges(north[i]).map((e) => [south_inv[e.source.index],e.value]);
     n.sort(cmp_number);
     southsequence = southsequence.concat(n);
   }
 
   // Insertion sort method
   let crosscount = 0;
-  for (var i = 1; i < southsequence.length; i++) {
-    let key = southsequence[i];
-    let j = i - 1;
-    while (j >= 0 && southsequence[j][0] > key[0]) {
-        southsequence[j + 1] = southsequence[j];
-        crosscount += key[1] * southsequence[j][1];
-        j = j - 1;
+    for (var i = 1; i < southsequence.length; i++) {
+        let key = southsequence[i];
+        let j = i - 1;
+        while (j >= 0 && southsequence[j][0] > key[0]) {
+            southsequence[j + 1] = southsequence[j];
+            crosscount += key[1] * southsequence[j][1];
+            j = j - 1;
+        }
+        southsequence[j + 1] = key;
     }
-    southsequence[j + 1] = key;
-  }
   return crosscount;
 }
