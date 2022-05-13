@@ -34,26 +34,17 @@ export function count_crossings(graph, north, south) {
     southsequence = southsequence.concat(n);
   }
 
-  let firstIndex = 1;
-  while (firstIndex < south.length) {
-    firstIndex <<= 1;
-  }
-
-  const treeSize = 2 * firstIndex - 1;
-  firstIndex -= 1;
-  const tree = zeroes(treeSize);
-
+  // Insertion sort method
   let crosscount = 0;
-  for (let i = 0; i < southsequence.length; i++) {
-    let index = southsequence[i] + firstIndex;
-    tree[index]++;
-    while (index > 0) {
-      if (index % 2) {
-        crosscount += tree[index + 1];
-      }
-      index = (index - 1) >> 1;
-      tree[index]++;
+  for (var i = 1; i < southsequence.length; i++) {
+    let key = southsequence[i];
+    let j = i - 1;
+    while (j >= 0 && southsequence[j][0] > key[0]) {
+        southsequence[j + 1] = southsequence[j];
+        crosscount += key[1] * southsequence[j][1];
+        j = j - 1;
     }
+    southsequence[j + 1] = key;
   }
   return crosscount;
 }

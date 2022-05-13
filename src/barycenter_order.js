@@ -9,6 +9,8 @@ export function barycenter_order(graph, comps, max_iter) {
   if (!comps) {
     comps = graph.components();
   }
+  console.log("Hello?");
+  console.log(comps);
   for (let i = 0; i < comps.length; i++) {
     const o = barycenter(graph, comps[i], max_iter);
     orders = [orders[0].concat(o[0]), orders[1].concat(o[1]), orders[2] + o[2]];

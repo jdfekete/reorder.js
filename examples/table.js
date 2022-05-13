@@ -133,85 +133,13 @@ class table{
     }
     
     quality(){
+        let permuted = reorder.permute_matrix(this.matrix,this.row_perm,this.col_perm);
+        let bandwidth = reorder.bandwidth_matrix(permuted);
+        let profile = reorder.profile(permuted);
+        let linarr = reorder.linear_arrangement(permuted);
+        let moran = reorder.morans_i(permuted);
         
-        var permuted = [];
-        for (var i = 0; i < this.row_perm.length; i++) {
-            permuted.push([]);
-            for (var j = 0; j < this.col_perm.length; j++) {
-                permuted[i].push(this.matrix[this.row_perm[i]][this.col_perm[j]]);
-            }
-        }
-        
-        var bandwidth = 0;
-        var linarr = 0;
-        for(var i=0 ; i< this.row_perm.length; i++){
-            for(var j=0 ; j<this.col_perm.length ; j++){
-                if(i!==j && this.matrix[i][j] === 1){
-                    var lambda = 0;
-                    var b = false;
-                    for(var k=0; k<this.row_perm.length; k++){    
-                        if(this.row_perm[k] === i || this.row_perm[k] === j){
-                            b = !b;
-                        }
-                        if(b){
-                            lambda++;
-                        }
-                    }
-                    linarr += lambda;
-                    if(lambda > bandwidth){
-                        bandwidth = lambda;
-                    }
-                }
-            }
-        }
-//        return max;
-        var profile = 0;
-        for(var i=0 ; i< this.row_perm.length; i++){
-            var min = this.col_perm.length ;
-            for(var j=0 ; j<this.col_perm.length ; j++){
-                if(this.row_perm[i]===this.row_perm[j] || this.matrix[this.row_perm[i]][this.col_perm[j]] === 1){
-                    if(j<min){
-                        min = j;
-                    }
-                    
-                }
-            }
-            profile += i - min;
-        }
-        
-        var bbadjacencies = 0;
-        var bwadjacencies = 0;
-        var wwadjacencies = 0;
-        for(var i=0 ; i< this.row_perm.length; i++){
-            for(var j=0 ; j<this.col_perm.length ; j++){
-                if(i<this.row_perm.length-1){
-                    if(permuted[i][j] === 1){
-                        bbadjacencies += permuted[i+1][j];
-                        bwadjacencies += 1 - permuted[i+1][j];
-                    }
-                    if(permuted[i][j] === 0){
-                        bwadjacencies += permuted[i+1][j];
-                        wwadjacencies += 1 - permuted[i+1][j];
-                    }
-                }
-                if(j<this.col_perm.length-1){
-                    if(permuted[i][j] === 1){
-                        bbadjacencies += permuted[i][j+1];
-                        bwadjacencies += 1 - permuted[i][j+1];
-                    }
-                    if(permuted[i][j] === 0){
-                        bwadjacencies += permuted[i][j+1];
-                        wwadjacencies += 1 - permuted[i][j+1];
-                    }
-                } 
-            }
-        }
-        
-        
-        
-        var moran = reorder.morans_i(permuted);
-        
-        return [bandwidth,profile,linarr,moran,bbadjacencies,bwadjacencies,wwadjacencies];
+        return [bandwidth,profile,linarr,moran];
     }
     
 }

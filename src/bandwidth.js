@@ -17,3 +17,21 @@ export function bandwidth(graph, order) {
   }
   return max;
 }
+
+/*
+ * Bandwith 
+ * Maximum distace between two endpoints over all edges
+ * 
+ * @matrix: a permuted matrix
+ */
+export function bandwidth_matrix(matrix) {
+  let max = 0;
+  for(let i = 0 ; i < matrix.length; i++){
+    for(let j = 0 ; j < matrix[0].length ; j++){
+        if(matrix[i][j] > 0) {
+            max = Math.max(max,Math.abs(i-j));
+        }
+    }
+  }
+  return max;
+}

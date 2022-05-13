@@ -35,3 +35,17 @@ export function permutetranspose(array, indexes) {
   }
   return array;
 }
+
+export function permute_matrix(matrix,row_perm,col_perm){
+    if(!col_perm){
+        col_perm = row_perm;
+    }
+    var permuted = [];
+    for (var i = 0; i < matrix.length; i++) {
+        permuted.push([]);
+        for (var j = 0; j < matrix[0].length; j++) {
+            permuted[i].push(matrix[row_perm[i]][col_perm[j]]);
+        }
+    }
+    return permuted;
+}

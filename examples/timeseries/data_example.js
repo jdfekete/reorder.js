@@ -1,10 +1,14 @@
-var matrices_example = [];
-var col_labels_example = [];
-var row_labels_example = [];
+let matrices_example = [];
+let col_labels_example = [];
+let row_labels_example = [];
 
-var margin = {top: 30, right: 0, bottom: 10, left: 30},
-    width = 800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+/* The example used for the teaser image of:
+ * 
+ * Simultaneous Matrix Orderings for Graph Collections.
+ * Nathan van Beusekom, Wouter Meulemans, and Bettina Speckmann.
+ * IEEE Transactions on Visualization and Computer Graphics, 28(1), pp 1-10, 2021.
+ * https://arxiv.org/abs/2109.12050 
+ */
 function load_example(callback){
 
 matrices_example = [
@@ -48,7 +52,7 @@ matrices_example = [
 //    [1,0,0,1,0,1,1,0]]
 //];
     const labels = [];
-    for (var i = 0; i < matrices_example[0].length; i++) {
+    for (let i = 0; i < matrices_example[0].length; i++) {
         labels.push(i);
     }
     col_labels_example = labels;

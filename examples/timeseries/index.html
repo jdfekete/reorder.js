@@ -17,9 +17,8 @@ line {
     <script src="data_vis.js"></script>
     <script src="data_sch.js"></script>
     <script src="data_flt.js"></script>
-    <script src="data_survey.js"></script>
     <script src="data_example.js"></script>
-    <script src="data_videoteaser.js"></script>
+    <script src="order_functions.js"></script>
     <script>
         var tables = [];
     </script>
@@ -29,35 +28,38 @@ line {
         <label for="dataset">Choose a dataset:</label>
         <select name="dataset" id="dataset" onChange="updateData()">
             <option value="flt">FLT</option>
-          <option value="sch">SCH</option>
-          <option value="vis">VIS</option>
-          <option value="survey">Behrisch etal. survey (2016) matrices</option>
-          <option value="example">Our constructed example</option>
-          <option value="videoteaser">Teaser from video</option>
+          <option value="sch">SCH (large)</option>
+          <option value="vis">VIS (large)</option>
+          <option value="example">Constructed example</option>
         </select>
         <label for="timestep">Choose x (timestep):</label>
         <input type="number" id="timestep" name="timestep" min="1" max="100" value="1">
         <label id="loading"></label>
+        <label for="distance">Distance:</label>
+        <select id="distance">
+            <option value="euclidean">Euclidean</option>
+            <option value="morans">Morans</option>
+            <option value="manhattan">Manhattan</option>
+            <option value="chebyshev">Chebyshev</option>
+            <option value="hamming">Hamming</option>
+            <option value="jaccard">Jaccard</option>
+            <option value="braycurtis">Braycurtis</option>
+        </select>
         <div style="margin-top:4px;margin-bottom: 4px">
-        <button type="button" onclick="random_permute(tables,'quality')">Random Order</button>
-        <button type="button" onclick="initial_order_permute(tables,'quality')">Initial Order</button>
-        <button type="button" onclick="max_mi_gx(tables,'quality')">Optimize Moran's I (NN-2OPT) on Graph Gx</button>
+        <button type="button" onclick="random_permute(tables)">Random Order</button>
+        <button type="button" onclick="initial_order_permute(tables)">Initial Order</button>
+        <button type="button" onclick="max_mi_gx(tables)">NN-2OPT on Graph Gx</button>
         
         </div>
         <div style="margin-top:4px;margin-bottom: 4px">
-        <button type="button" onclick="gx_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Leaf Order Permute on Graph Gx (Euclidean distance)</button>
-        <button type="button" onclick="gx_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Leaf Order Permute on Graph Gx (Morans distance)</button>
-        <button type="button" onclick="union_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Union Leaf Order Permute (Euclidean distance)</button>
-        <button type="button" onclick="union_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Union Leaf Order Permute (Moran's distance)</button>
-        </div><div>
-        <button type="button" onclick="simultaneous_l2_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Simultaneous Leaf Order Permute (Euclidean distance)</button>
-        <button type="button" onclick="simultaneous_morans_leaf_order_permute(tables,'quality',document.getElementById('square').checked)">Simultaneous Leaf Order Permute (Moran's distance)</button>
-        <label for="square">Square distances</label><input type="checkbox" id="square" name="square" value="square">
+        <button type="button" onclick="gx_leaf_order_permute(tables)">Leaf Order Permute on Graph Gx</button>
+        <button type="button" onclick="union_leaf_order_permute(tables)">Union Leaf Order Permute</button>
+        <button type="button" onclick="simultaneous_leaf_order_permute(tables)">Simultaneous Leaf Order Permute</button>
         </div>
         <div style="margin-top:4px;margin-bottom: 4px">
-        <button type="button" onclick="gx_barycenter_permute(tables,'quality')">Barycenter Permute on Graph Gx</button>
-        <button type="button" onclick="union_barycenter_permute(tables,'quality')">Union Barycenter Permute</button>
-        <button type="button" onclick="simultaneous_barycenter_permute(tables,'quality')">Simultaneous Barycenter Permute</button>
+        <button type="button" onclick="gx_barycenter_permute(tables)">Barycenter Permute on Graph Gx</button>
+        <button type="button" onclick="union_barycenter_permute(tables)">Union Barycenter Permute</button>
+        <button type="button" onclick="simultaneous_barycenter_permute(tables)">Simultaneous Barycenter Permute</button>
         </div>
     </div>
     <div style='float:left;margin-right: 20px' id='heatmap'></div>
@@ -71,561 +73,35 @@ line {
   </body>
   <script>
 
-var matrices;
-var col_labels;
-var row_labels;
+    // Global variables
+    var matrices;
+    var col_labels;
+    var row_labels;
 
-var margin = {top: 30, right: 0, bottom: 10, left: 30},
-    width = 800 - margin.left - margin.right,
-    height = 800 - margin.top - margin.bottom;
+    var margin = {top: 30, right: 0, bottom: 10, left: 30},
+        width = 800 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
 
-updateData();
+    updateData();
 
-function updateData(){
-    d3.select("#heatmap").selectAll("*").remove();
-    var dataset = document.getElementById('dataset').value;
-    if(dataset === "flt"){
-        load_flt((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-    if(dataset === "sch"){
-        load_sch((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-    if(dataset === "vis"){
-        load_vis((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-    if(dataset === "survey"){
-        load_survey((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-    if(dataset === "example"){ 
-       load_example((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-    if(dataset === "videoteaser"){ 
-       load_videoteaser((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
-    }
-}
-
-function computeQualities(t,str,time){
-    var output = "";
-    var bandwidth = [];
-    var profile = [];
-    var linarr = [];
-    var moran = [];
-    for(let i = 0; i<t.length; i++){
-        var qualities = t[i].quality();
-        bandwidth.push(qualities[0]);
-        profile.push(qualities[1]);
-        linarr.push(qualities[2]);
-        moran.push(qualities[3]);
-    }
-    document.getElementById(str+"mean").innerHTML = "Mean<br>BW: " + d3.mean(bandwidth) + "<br>PR: " + d3.mean(profile) + "<br>LA: " + d3.mean(linarr)  + "<br>MI: " + d3.mean(moran)   + "<br>Time: " + time;
-    document.getElementById(str+"min").innerHTML = "Min<br>BW: " + d3.min(bandwidth) + "<br>PR: " + d3.min(profile) + "<br>LA: " + d3.min(linarr) + "<br>MI: " + d3.min(moran);
-    document.getElementById(str+"max").innerHTML = "Max<br>BW: " + d3.max(bandwidth) + "<br>PR: " + d3.max(profile) + "<br>LA: " + d3.max(linarr) + "<br>MI: " + d3.max(moran);
-    document.getElementById(str+"med").innerHTML = "Median<br>BW: " + d3.median(bandwidth) + "<br>PR: " + d3.median(profile) + "<br>LA: " + d3.median(linarr) + "<br>MI: " + d3.median(moran);
-}
-
-function initial_order_permute(t,str) {
-      var row_perm = reorder.permutation(matrices[0].length),
-          col_perm = reorder.permutation(matrices[0][0].length);
-      for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, col_perm);
-      }
-      computeQualities(t,str);
-}
-
-function random_permute(t,str) {
-      var r1 = reorder.randomPermutation(matrices[0].length),
-          r2 = reorder.randomPermutation(matrices[0][0].length);
-      for(let i = 0; i<tables.length; i++){
-        t[i].order(r1,r1);
-      }
-      computeQualities(t,str);
-}
-
-function max_mi_gx(t,str) {
-    var timestep = document.getElementById("timestep").value - 1;
-      if(timestep < 0 || timestep >= matrices.length){
-        document.getElementById("loading").innerHTML = "Timestep (x) is not valid for this dataset";  
-        return;
-      }
-      else{
-        document.getElementById("loading").innerHTML = ""; 
-      }
-    var start = new Date().getTime();
-    
-    var rows = reorder.permutation(matrices[timestep].length);
-
-    var n = 0;
-    var m = 0;
-    for (var i = 0; i < matrices[timestep].length; i++) {
-        for (var j = 0; j < matrices[timestep][0].length; j++) {
-            n++;
-            if(matrices[timestep][i][j] === 1){
-                m++;
-            }
+    function updateData(){
+        d3.select("#heatmap").selectAll("*").remove();
+        var dataset = document.getElementById('dataset').value;
+        if(dataset === "flt"){
+            load_flt((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
         }
-    }
-    var best_morans = -1;
-    var best_order = [];
-    for (var i = 0; i < rows.length; i++) {
-        var initial = rows[0];
-        var res = [];
-        res.push(initial);
-        while(res.length < rows.length){
-          var nearest = -1;
-          for (var i = 1; i < rows.length; i++) {
-              if(!res.includes(rows[i])){
-                  var last = matrices[timestep][res[res.length-1]];
-                  var r1 = matrices[timestep][rows[i]];
-                  var r2 = matrices[timestep][nearest];
-                  if(nearest === -1){
-                      nearest = rows[i];
-                  }
-                  else if(weighted_value_rows(last,r1,n,m) > weighted_value_rows(last,r2,n,m)){
-                      nearest = rows[i];
-                  }
-                  else{
-                  }
-              }
-          }
-          res.push(nearest);
+        if(dataset === "sch"){
+            load_sch((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
         }
-        best_order = res;
-        var oldm = 0;
-        var newm = get_MI(t[timestep],res);
-        while(newm-oldm > 0.0001){
-            for (var i = 0; i < res.length; i++) {
-                for (var j = i+2; j < res.length-1; j++) {
-                    // i and i+1 and j and j+1
-                    var check = [];
-                    for (var n = 0; n < res.length; n++) {
-                        check[n] = res[n];
-                    }
-                    check[i+1] = res[j];
-                    check[j] = res[i+1];
-                    for (var x = 0; x < (j-(i+1)); x++) {
-                         check[i+1+x] = res[j-x];
-                    }
-                    var oldq = weighted_value_rows(matrices[timestep][res[i]],matrices[timestep][res[i+1]],n,m) + weighted_value_rows(matrices[timestep][res[j]],matrices[timestep][res[j+1]],n,m);
-                    var newq = weighted_value_rows(matrices[timestep][check[i]],matrices[timestep][check[i+1]],n,m) + weighted_value_rows(matrices[timestep][check[j]],matrices[timestep][check[j+1]],n,m);
-                    if(newq > oldq){
-                        res = check;
-                    }
-                }
-            }
-            oldm = newm;
-            newm = get_MI(t[timestep],res);
-            if(newm > best_morans){
-                best_morans = newm;
-                best_order = res;
-            }
+        if(dataset === "vis"){
+            load_vis((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
         }
-    }
-    var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<t.length; i++){
-        t[i].order(best_order, best_order);
-      }
-    computeQualities(t,str,time);
-}
-
-function weighted_value_rows(r1,r2,cells,m){
-    var result = 0;
-    for (var i = 0; i < r1.length; i++) {
-        result += (r1[i] * cells - m) * (r2[i] * cells - m);
-    }
-    return result;
-}
-
-function union_l2_leaf_order_permute(t,str,square) {
-  // L2
-  var start = new Date().getTime();
-  var pile = [];
-  for(var i=0 ; i< matrices[0].length; i++){
-      if(!pile[i]){
-              pile.push([]);
-      }
-      for(var j=0 ; j<matrices[0][0].length ; j++){
-          if(!pile[i][j]){
-              pile[i].push(0);
-          }
-          for(var k = 0; k<matrices.length; k++){
-              pile[i][j] = pile[i][j] + matrices[k][i][j];
-          }
-      }
-  }
-
-  var transpose = reorder.transpose(pile),
-      dist_rows = reorder.dist()(pile,square),
-      dist_cols = reorder.dist()(transpose);
-      var
-      order = reorder.optimal_leaf_order();
-      var row_perm = order.distanceMatrix(dist_rows)(matrices[0]);
-//      col_perm = order.distanceMatrix(dist_cols)(transpose);
-      
-      var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, row_perm);
-      }
-      return computeQualities(t,str,time);
-      
-}
-
-function union_morans_leaf_order_permute(t,str,square){
-    // Morans Distance
-    var start = new Date().getTime();
-  var pile = [];
-  for(var i=0 ; i< matrices[0].length; i++){
-      if(!pile[i]){
-              pile.push([]);
-      }
-      for(var j=0 ; j<matrices[0][0].length ; j++){
-          if(!pile[i][j]){
-              pile[i].push(0);
-          }
-          for(var k = 0; k<matrices.length; k++){
-              pile[i][j] = pile[i][j] + matrices[k][i][j];
-          }
-      }
-  }
-
-  var n = 0;
-    var m = 0;
-    for (var i = 0; i < pile.length; i++) {
-        for (var j = 0; j < pile[0].length; j++) {
-            n++;
-            m += pile[i][j];
+        if(dataset === "example"){ 
+           load_example((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
         }
     }
 
-  var dist = [];
-    for(var i=0 ; i< pile.length; i++){
-        if(!dist[i]){
-                dist.push([]);
-        }
-        for(var j=0 ; j<pile[0].length ; j++){
-            if(!dist[i][j]){
-                dist[i].push(0);
-            }
-            var d = weighted_value_rows(pile[i],pile[j],n,m);
-                if(square){
-                    if(d >= 0){
-                        dist[i][j] = -d * d;
-                    }
-                    else{
-                        dist[i][j] = d * d;
-                    }
-                }
-                else{
-                    dist[i][j] = -d;
-                }
-        }
-    }
-    var order = reorder.optimal_leaf_order();
-    var row_perm = order.distanceMatrix(dist)(matrices[0]);
-//      col_perm = order.distanceMatrix(dist_cols)(transpose);
-      
-      var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, row_perm);
-      }
-      return computeQualities(t,str,time);
-}
 
-function gx_l2_leaf_order_permute(t,str) {
-      var timestep = document.getElementById("timestep").value - 1;
-      if(timestep < 0 || timestep >= matrices.length){
-        document.getElementById("loading").innerHTML = "Timestep (x) is not valid for this dataset";  
-        return;
-      }
-      else{
-        document.getElementById("loading").innerHTML = ""; 
-      }
-      var start = new Date().getTime();
-      var transpose = reorder.transpose(matrices[timestep]);
-      var dist_rows = reorder.dist()(matrices[timestep]),
-      dist_cols = reorder.dist()(transpose),
-      order = reorder.optimal_leaf_order(),
-      row_perm = order.distanceMatrix(dist_rows)(matrices[timestep]),
-      col_perm = order.distanceMatrix(dist_cols)(transpose);
-
-      for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, row_perm);
-      }
-      var end = new Date().getTime();
-      var time = end - start;
-
-      computeQualities(t,str,time);
-      
-}
-
-function gx_morans_leaf_order_permute(t,str) {
-      var timestep = document.getElementById("timestep").value - 1;
-      if(timestep < 0 || timestep >= matrices.length){
-        document.getElementById("loading").innerHTML = "Timestep (x) is not valid for this dataset";  
-        return;
-      }
-      else{
-        document.getElementById("loading").innerHTML = ""; 
-      }
-      var start = new Date().getTime();
-      
-      var n = 0;
-        var m = 0;
-        for (var i = 0; i < matrices[timestep].length; i++) {
-            for (var j = 0; j < matrices[timestep][0].length; j++) {
-                n++;
-                m += matrices[timestep][i][j];
-            }
-        }
-
-      var dist = [];
-        for(var i=0 ; i< matrices[timestep].length; i++){
-            if(!dist[i]){
-                    dist.push([]);
-            }
-            for(var j=0 ; j<matrices[timestep][0].length ; j++){
-                if(!dist[i][j]){
-                    dist[i].push(0);
-                }
-                var d = weighted_value_rows(matrices[timestep][i],matrices[timestep][j],n,m);
-                dist[i][j] = -d;
-            }
-        }
-      
-      var order = reorder.optimal_leaf_order();
-      var row_perm = order.distanceMatrix(dist)(matrices[0]);
-
-      for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, row_perm);
-      }
-      var end = new Date().getTime();
-      var time = end - start;
-
-      computeQualities(t,str,time);
-      
-}
-
-function simultaneous_l2_leaf_order_permute(t,str,square) {
-    var start = new Date().getTime();
-    var transposed = [];
-    for(let i = 0; i<matrices.length; i++){
-      transposed[i] = reorder.transpose(matrices[i]);
-    }
-    var dist_rows = reorder.dist()(matrices,square);
-    var
-    order = reorder.optimal_leaf_order();
-    var row_perm = order.distanceMatrix(dist_rows)(matrices[0]);
-    
-    var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-      t[i].order(row_perm, row_perm);
-    }
-    return computeQualities(t,str,time);
-}
-
-function simultaneous_morans_leaf_order_permute(t,str,square) {
-    var start = new Date().getTime();
-    var transposed = [];
-    for(let i = 0; i<matrices.length; i++){
-      transposed[i] = reorder.transpose(matrices[i]);
-    }
-    var dist = [];
-    for (var k = 0; k < matrices.length; k++) {
-        
-        var n = 0;
-        var m = 0;
-        for (var i = 0; i < matrices[k].length; i++) {
-            for (var j = 0; j < matrices[k][0].length; j++) {
-                n++;
-                m += matrices[k][i][j];
-            }
-        }
-        
-        
-        for(var i=0 ; i< matrices[k].length; i++){
-            if(!dist[i]){
-                    dist.push([]);
-            }
-            for(var j=0 ; j<matrices[k][0].length ; j++){
-                if(!dist[i][j]){
-                    dist[i].push(0);
-                }   
-                    var d = weighted_value_rows(matrices[k][i],matrices[k][j],n,m);
-                    if(square){
-                        if(d >= 0){
-                            dist[i][j] += -d * d;
-                        }
-                        else{
-                            dist[i][j] += d * d;
-                        }
-                    }
-                    else{
-                        dist[i][j] += -d;
-                    }
-            }
-        }
-    }
-        
-    var order = reorder.optimal_leaf_order();
-    var row_perm = order.distanceMatrix(dist)(matrices[0]);
-//      col_perm = order.distanceMatrix(dist_cols)(transposed[0]);
-    
-    var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-      t[i].order(row_perm, row_perm);
-    }
-    return computeQualities(t,str,time);
-}
-
-function gx_barycenter_permute(t,str) {
-        var timestep = document.getElementById("timestep").value - 1;
-        if(timestep < 0 || timestep >= matrices.length){
-          document.getElementById("loading").innerHTML = "Timestep (x) is not valid for this dataset";  
-          return;
-        }
-        else{
-          document.getElementById("loading").innerHTML = ""; 
-        }
-        var nodes = [];
-        var links = [];
-        for(let i = 0; i < matrices[timestep].length; i++){
-            nodes[i] = {"name": col_labels[i], "group" : 1};
-        }
-        
-        for(let i = 0; i < matrices[timestep].length; i++){
-            for(var j=0; j<matrices[timestep][0].length; j++){
-                if(matrices[timestep][i][j] === 1){
-                    links.push({"source" : i, "target" : j, "value" : 1});
-                }
-                
-            }
-        }
-        
-        var graph = reorder.graph()
-	  .nodes(nodes)
-	  .links(links)
-	  .init();
-        order = reorder.barycenter_order(graph);
-        improved = reorder.adjacent_exchange(graph,
-						 order[0],
-						 order[1]);
-        var row_perm = improved[0],
-            col_perm = improved[1];
-
-      for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, col_perm);
-      }
-      computeQualities(t,str);
-}
-
-function union_barycenter_permute(t,str) {
-    var start = new Date().getTime();
-    var pile = [];
-    for(var i=0 ; i< matrices[0].length; i++){
-        if(!pile[i]){
-          pile.push([]);
-        }
-        for(var j=0 ; j<matrices[0][0].length ; j++){
-            if(!pile[i][j]){
-                pile[i].push(0);
-            }
-            for(var k = 0; k<matrices.length; k++){
-                pile[i][j] = pile[i][j] + matrices[k][i][j];
-            }
-        }
-    }
-
-    var nodes = [];
-    var links = [];
-    for(let i = 0; i < matrices[0].length; i++){
-        nodes[i] = {"name": col_labels[i], "group" : 1};
-    }
-
-    for(let i = 0; i < matrices[0].length; i++){
-        for(var j=0; j<matrices[0][0].length; j++){
-            if(pile[i][j] !== 0){
-                links.push({"source" : i, "target" : j, "value" : pile[i][j]});
-            }
-
-        }
-    }
-
-    var graph = reorder.graph()
-      .nodes(nodes)
-      .links(links)
-      .init();
-
-    order = reorder.barycenter_order(graph);
-    improved = reorder.adjacent_exchange(graph,
-                                             order[0],
-                                             order[1]);
-    var row_perm = improved[0],
-        col_perm = improved[1];
-
-    var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-      t[i].order(row_perm, col_perm);
-    }
-    return computeQualities(t,str,time);
-}
-
-function simultaneous_barycenter_permute(t,str) {
-    var start = new Date().getTime();
-        
-        var graphs = [];
-        for(let k = 0; k<matrices.length; k++){
-            var nodes = [];
-            var links = [];
-            for(let i = 0; i < matrices[0].length; i++){
-                nodes[i] = {"name": col_labels[i], "group" : 1};
-            }
-
-            for(let i = 0; i < matrices[0].length; i++){
-                for(var j=0; j<matrices[0][0].length; j++){
-                    if(matrices[k][i][j] === 1){
-                        links.push({"source" : i, "target" : j, "value" : 1});
-                    }
-
-                }
-            }
-
-            var graph = reorder.graph()
-              .nodes(nodes)
-              .links(links)
-              .init();
-            graphs[k] = graph;
-        }
-        var order = reorder.barycenter_order(graphs);
-        var improved = reorder.adjacent_exchange(graphs,
-						 order[0],
-						 order[1]);
-        var row_perm = improved[0],
-            col_perm = improved[1];
-      
-    var end = new Date().getTime();
-    var time = end - start;
-    for(let i = 0; i<tables.length; i++){
-        t[i].order(row_perm, col_perm);
-      }
-    return computeQualities(t,str,time);
-}
-
-function get_MI(ti,order){
-    var permuted = [];
-    for (var a = 0; a < ti.row_perm.length; a++) {
-        permuted.push([]);
-        for (var b = 0; b < ti.col_perm.length; b++) {
-            permuted[a].push(ti.matrix[order[a]][order[b]]);
-        }
-    }
-    var mi = ti.computeMorans(permuted)[0];
-    return mi;
-}
       
     </script>
 </html>
