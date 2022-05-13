@@ -86,7 +86,7 @@ line {
 
     function updateData(){
         d3.select("#heatmap").selectAll("*").remove();
-        var dataset = document.getElementById('dataset').value;
+        let dataset = document.getElementById('dataset').value;
         if(dataset === "flt"){
             load_flt((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
         }

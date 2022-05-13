@@ -36,7 +36,7 @@ export function count_crossings(graph, north, south) {
 
   // Insertion sort method
   let crosscount = 0;
-    for (var i = 1; i < southsequence.length; i++) {
+    for (let i = 1; i < southsequence.length; i++) {
         let key = southsequence[i];
         let j = i - 1;
         while (j >= 0 && southsequence[j][0] > key[0]) {

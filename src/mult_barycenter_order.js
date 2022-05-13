@@ -47,7 +47,7 @@ function count_all_crossings(graphs,layer1,layer2){
     let sum = 0;
     let max = 0;
     for(let i = 0; i<graphs.length; i++){
-        var c = count_crossings(graphs[i],layer1,layer2);
+        let c = count_crossings(graphs[i],layer1,layer2);
         sum += c;
         if(c > max){
             max = c;
@@ -120,22 +120,22 @@ export function barycenter(graphs, comp, max_iter) {
   ) {
     med = {};
     // Compute median of medians
-    for (var t = 0; t < graphs.length; t++) {
+    for (let t = 0; t < graphs.length; t++) {
         nodes = graphs[t].nodes();
         for (let i = 0; i < layer.length; i++) {
-        v = nodes[layer[i]];
-        if(t === 0){
-              med[v.index] = [];
-        }
-        if (layer == layer1) {
-          neighbors = graphs[t].outEdges(v.index);
-        } else {
-          neighbors = graphs[t].inEdges(v.index);
-        }
+            v = nodes[layer[i]];
+            if(t === 0){
+                  med[v.index] = [];
+            }
+            if (layer == layer1) {
+                neighbors = graphs[t].outEdges(v.index);
+            } else {
+                neighbors = graphs[t].inEdges(v.index);
+            }
             neighbors = neighbors.map(inv_neighbor);
-          if(neighbors.length>0){
-            med[v.index].push(+median(neighbors));
-          }
+            if(neighbors.length>0){
+                med[v.index].push(+median(neighbors));
+            }
         }
     }
     nodes = graphs[0].nodes();
