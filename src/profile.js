@@ -3,13 +3,16 @@
  * The sum of: for each vertex u: the distance in the ordering to the smallest index vertex v, given the edge (u,v) exists
  * 
  * E.g. (column-based calculation, '-' are not used for profile calculation)
- * [1,1,0,0,1,1]
- * [-,1,0,1,0,0]
- * [-,-,1,0,1,0]
- * [-,-,-,1,0,1]
- * [-,-,-,-,1,0]
- * [-,-,-,-,-,1]
- * =0+1+0+2+4+5 = 12
+ *               PR =
+ * [1,-,-,-,-,-] 0 +
+ * [1,1,-,-,-,-] 1 +
+ * [0,0,1,-,-,-] 0 +
+ * [0,1,0,1,-,-] 2 +
+ * [1,0,1,0,1,-] 4 +
+ * [1,0,0,1,0,1] 5
+ *                 = 12
+ * 
+ * WARNING: This is NOT a proper metric for DIRECTED graphs
  * 
  * @matrix: a permuted matrix
  */

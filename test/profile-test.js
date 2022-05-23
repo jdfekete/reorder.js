@@ -3,10 +3,10 @@ const reorder = require('../dist/reorder.cjs');
 const vows = require('vows');
 const assert = require('assert');
 
-const suite = vows.describe('reorder.morans_i');
+const suite = vows.describe('reorder.profile');
 
 suite.addBatch({
-  morans_i: {
+  profile: {
     simple() {
       const mat1 = [
         [1,1,1,1],
@@ -15,14 +15,14 @@ suite.addBatch({
         [1,1,1,1]
       ];
       const mat2 = [
+          [1,0,0,1],
+          [0,1,0,0],
           [1,0,1,0],
-          [0,1,0,1],
-          [1,0,1,0],
-          [0,1,0,1]
+          [1,0,0,1]
       ];
 
-      assert.equal(reorder.morans_i(mat1), 1);
-      assert.equal(reorder.morans_i(mat2), -1);
+      assert.equal(reorder.profile(mat1), 3);
+      assert.equal(reorder.profile(mat2), 6);
     },
   },
 });

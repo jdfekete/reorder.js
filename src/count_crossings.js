@@ -28,23 +28,32 @@ export function count_crossings(graph, north, south) {
 
   for (let i = 0; i < north.length; i++) {
     const n = invert
-      ? graph.inEdges(north[i]).map((e) => [south_inv[e.target.index],e.value])
-      : graph.outEdges(north[i]).map((e) => [south_inv[e.source.index],e.value]);
+      ? graph.inEdges(north[i]).map((e) => south_inv[e.target.index])
+      : graph.outEdges(north[i]).map((e) => south_inv[e.source.index]);
     n.sort(cmp_number);
     southsequence = southsequence.concat(n);
   }
 
-  // Insertion sort method
+  let firstIndex = 1;
+  while (firstIndex < south.length) {
+    firstIndex <<= 1;
+  }
+
+  const treeSize = 2 * firstIndex - 1;
+  firstIndex -= 1;
+  const tree = zeroes(treeSize);
+
   let crosscount = 0;
-    for (let i = 1; i < southsequence.length; i++) {
-        let key = southsequence[i];
-        let j = i - 1;
-        while (j >= 0 && southsequence[j][0] > key[0]) {
-            southsequence[j + 1] = southsequence[j];
-            crosscount += key[1] * southsequence[j][1];
-            j = j - 1;
-        }
-        southsequence[j + 1] = key;
+  for (let i = 0; i < southsequence.length; i++) {
+    let index = southsequence[i] + firstIndex;
+    tree[index]++;
+    while (index > 0) {
+      if (index % 2) {
+        crosscount += tree[index + 1];
+      }
+      index = (index - 1) >> 1;
+      tree[index]++;
     }
+  }
   return crosscount;
 }
