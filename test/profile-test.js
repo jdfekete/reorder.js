@@ -17,12 +17,12 @@ suite.addBatch({
       const mat2 = [
           [1,0,0,1],
           [0,1,0,0],
-          [1,0,1,0],
+          [0,0,1,0],
           [1,0,0,1]
       ];
 
-      assert.equal(reorder.profile(mat1), 3);
-      assert.equal(reorder.profile(mat2), 6);
+      assert.equal(reorder.profile(mat1), 6);
+      assert.equal(reorder.profile(mat2), 3);
     },
   },
 });

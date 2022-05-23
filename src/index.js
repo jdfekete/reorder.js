@@ -50,7 +50,7 @@ export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
 export { morans_i } from './morans_i';
 export { mult_adjacent_exchange } from './mult_adjacent_exchange';
-export { mult_barycenter_order } from './mult_barycenter_order';
+export { mult_barycenter_order, mult_barycenter, count_all_crossings } from './mult_barycenter_order';
 export { mult_dist } from './mult_dist';
 export { nn_2opt } from './nn_2opt';
 export { optimal_leaf_order } from './optimal_leaf_order';

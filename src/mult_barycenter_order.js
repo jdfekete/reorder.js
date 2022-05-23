@@ -6,7 +6,7 @@ import { count_crossings } from './count_crossings';
 export function mult_barycenter_order(graphs, comps, max_iter) {
     let orders = [[], [], 0];
     comps = graphs[0].components();
-    const o = barycenter(graphs, comps.flat(), max_iter);
+    const o = mult_barycenter(graphs, comps.flat(), max_iter);
     orders = [orders[0].concat(o[0]), orders[1].concat(o[1]), orders[2] + o[2]];
     return orders;
     
@@ -43,7 +43,7 @@ function median(neighbors) {
   }
 }
 
-function count_all_crossings(graphs,layer1,layer2){
+export function count_all_crossings(graphs,layer1,layer2){
     let sum = 0;
     let max = 0;
     for(let i = 0; i<graphs.length; i++){
@@ -56,7 +56,7 @@ function count_all_crossings(graphs,layer1,layer2){
     return sum;
 }
 
-export function barycenter(graphs, comp, max_iter) {
+export function mult_barycenter(graphs, comp, max_iter) {
   var nodes = graphs[0].nodes();
   let crossings;
   let iter;
@@ -142,14 +142,14 @@ export function barycenter(graphs, comp, max_iter) {
     for (let i = 0; i < layer.length; i++) {
         v = nodes[layer[i]];
         if(med[v.index].length>0){
-            med[v.index] = d3.median(med[v.index]);
+            med[v.index] = median(med[v.index]); // d3 or this median?
         }
         else{
             med[v.index] = 0;
         }
     }
     
-    layer.sort(barycenter_sort(graphs[0])); // ??
+    layer.sort(barycenter_sort(graphs[0])); // ?? TODO
     for (let i = 0; i < layer.length; i++) {
       inv_layer = inverse_permutation(layer);
     }
@@ -167,4 +167,3 @@ export function barycenter(graphs, comp, max_iter) {
   }
   return [best_layer1, best_layer2, best_crossings];
 }
-// TODO change to not work with one graph.
