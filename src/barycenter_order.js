@@ -59,7 +59,7 @@ export function barycenter(graph, comp, max_iter) {
   if(!graph.directed()){
       layer1 = layer2;
   }
-  debugger;
+  
   if (comp.length < 3) {
     return [layer1, layer2, count_crossings(graph, layer1, layer2)];
   }
