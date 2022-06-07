@@ -71,11 +71,11 @@ class table{
 
     var row_labels = this.row_labels;
     row.append("text")
-	.attr("x", -w/4)
+	.attr("x", Math.max(-10,-w/4))
 	.attr("y", h / 2)
 	.attr("dy", ".32em")
 	.attr("text-anchor", "end")
-        .attr("font-size",h/2)
+        .attr("font-size",Math.min(25,h/2))
 	.text(function(d, i) { return row_labels[i]; });
 
     var col = this.svg.selectAll(".col")
@@ -92,11 +92,11 @@ class table{
     var col_labels = this.col_labels;
     col.append("text")
 	.attr("x", w/2)
-	.attr("y", -h/2)
+	.attr("y", Math.max(-20,-h/2))
 	.attr("dy", ".32em")
 	.attr("text-anchor", "middle")
         .attr("transform", "rotate(90)")
-        .attr("font-size",h/2)
+        .attr("font-size", Math.min(25,h/2))
 	.text(function(d, i) { return col_labels[i]; });
 
     svg.append("rect")

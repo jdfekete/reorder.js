@@ -65,9 +65,7 @@ matrices_example = [
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         const t1 = new table({matrix: matrices_example[i], row_labels_example: labels, col_labels_example: labels},svg);
-        console.log(t1);
         tables_example[i] = t1;
     }
-    console.log(tables_example);
     callback(matrices_example, col_labels_example, row_labels_example, tables_example);
 }

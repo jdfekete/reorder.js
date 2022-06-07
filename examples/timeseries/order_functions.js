@@ -32,7 +32,6 @@ function computeQualities(t,time){
     document.getElementById("qualitymed").innerHTML = "Median<br>BW: " + d3.median(bandwidth) + "<br>PR: " + d3.median(profile) + "<br>LA: " + d3.median(linarr) + "<br>MI: " + d3.median(moran);
 }
 
-// BELOW IS FINE
 function initial_order_permute(t) {
     let row_perm = reorder.permutation(matrices[0].length),
         col_perm = reorder.permutation(matrices[0][0].length);
@@ -51,9 +50,7 @@ function random_permute(t) {
     }
     computeQualities(t);
 }
-// ABOVE IS FINE
 
-// TODO: move to src
 function max_mi_gx(t) {
     let timestep = getTimestep();
     let start = new Date().getTime();
@@ -92,7 +89,7 @@ function union_leaf_order_permute(t,square) {
     for(let i = 0; i<t.length; i++){
       t[i].order(row_perm, row_perm);
     }
-  //  return computeQualities(t,time);
+    computeQualities(t,time);
       
 }
 
@@ -133,7 +130,7 @@ function simultaneous_leaf_order_permute(t) {
     for(let i = 0; i<t.length; i++){
       t[i].order(row_perm, row_perm);
     }
-    return computeQualities(t,time);
+    computeQualities(t,time);
 }
 
 function gx_barycenter_permute(t) {
@@ -156,6 +153,7 @@ function gx_barycenter_permute(t) {
     let graph = reorder.graph()
       .nodes(nodes)
       .links(links)
+      .directed(false)
       .init();
     order = reorder.barycenter_order(graph);
     improved = reorder.adjacent_exchange(graph,
@@ -231,6 +229,7 @@ function simultaneous_barycenter_permute(t) {
         let graph = reorder.graph()
           .nodes(nodes)
           .links(links)
+          .directed(false)
           .init();
         graphs[k] = graph;
     }

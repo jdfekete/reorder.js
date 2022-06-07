@@ -39,23 +39,23 @@ suite.addBatch({
       ];
       
       const mat2 = [
-        [0, 1, 1, 0, 0],
-        [1, 0, 0, 1, 0],
-        [1, 1, 1, 1, 0],
         [0, 0, 1, 0, 1],
+        [1, 0, 0, 1, 0],
+        [1, 0, 1, 1, 0],
+        [1, 0, 1, 0, 1],
       ];
       
       dotest([mat,mat2]);
     },
-    hard() {
-      for (let i = 10; i < 100; i += 20) {
-        for (let j = 10; j < 100; j += 20) {
-          const mat = reorder.random_matrix(0.2, i, j, false);
-          const mat2 = reorder.random_matrix(0.2, i, j, false);
-          dotest([mat,mat2]);
-        }
-      }
-    },
+//    hard() {
+//      for (let i = 10; i < 100; i += 20) {
+//        for (let j = 10; j < 100; j += 20) {
+//          const mat = reorder.random_matrix(0.2, i, j, false);
+//          const mat2 = reorder.random_matrix(0.2, i, j, false);
+//          dotest([mat,mat2]);
+//        }
+//      }
+//    },
   },
 });
 

@@ -9,10 +9,6 @@ export function mult_barycenter_order(graphs, comps, max_iter) {
     const o = mult_barycenter(graphs, comps.flat(), max_iter);
     orders = [orders[0].concat(o[0]), orders[1].concat(o[1]), orders[2] + o[2]];
     return orders;
-    
-  
-  
-  return orders;
 }
 
 // Take the list of neighbor indexes and return the median according to
@@ -63,21 +59,30 @@ export function mult_barycenter(graphs, comp, max_iter) {
   let layer;
   let neighbors;
   let med;
+  let directed = false;
   
-  const layer1 = comp;
-  const layer2 = comp;
+  let layer1 = comp.filter((n) => {for(let i = 0; i<graphs.length;i++){
+          if(graphs[i].outDegree(n) !== 0){return true;}
+          return false;
+  }});
+  let layer2 = comp.filter((n) => {for(let i = 0; i<graphs.length;i++){
+          if(graphs[i].inDegree(n) !== 0){return true;}
+          return false;
+  }});
   
-  
-  
-  if (comp.length === 1){
-      return [comp,comp,0];
+  for(let i = 0; i<graphs.length; i++){
+    if(graphs[i].directed()){
+        directed = true;
+    }
   }
-  
+  // If the layers are equal, we want to modify them simultaneously (for undirected graphs)
+  if(!directed){
+      layer1 = layer2;
+  }
   
   if (comp.length < 3) {
-    return [layer1, layer2, count_all_crossings(graph, layer1, layer2,timesteps)];
+    return [layer1, layer2, count_all_crossings(graphs, layer1, layer2)];
   }
-
 
   if (!max_iter) {
     max_iter = 24;
