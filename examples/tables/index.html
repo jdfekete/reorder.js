@@ -44,10 +44,10 @@ var matrix = [[1, 0, 0, 0, 1, 0, 0, 0],
     col_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
       
-table({matrix: matrix, row_labels: row_labels, col_labels: col_labels});
+const t1 = new table({matrix: matrix, row_labels: row_labels, col_labels: col_labels},svg);
 
 function random_permute() {
-      table.order(reorder.randomPermutation(matrix.length),
+      t1.order(reorder.randomPermutation(matrix.length),
 		  reorder.randomPermutation(matrix[0].length));
 }
 
@@ -59,11 +59,11 @@ function optimal_leaf_order_permute() {
       row_perm = order.distanceMatrix(dist_rows)(matrix),
       col_perm = order.distanceMatrix(dist_cols)(transpose);
       
-      table.order(row_perm, col_perm);
+      t1.order(row_perm, col_perm);
 }
 
 function initial_order_permute() {
-      table.order(reorder.permutation(matrix.length),
+      t1.order(reorder.permutation(matrix.length),
 		  reorder.permutation(matrix[0].length));
 }
       

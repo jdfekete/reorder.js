@@ -24,7 +24,6 @@ function matrix(json) {
     node.count = 0;
     matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
   });
-
   // Convert links to matrix; count character occurrences.
   json.links.forEach(function(link) {
     matrix[link.source][link.target].z += link.value;
@@ -224,7 +223,12 @@ function matrix(json) {
     }
 
     function distance(value) {
-	leafOrder.distance(reorder.distance[value]);
+        if(value === "morans"){
+            leafOrder.distance(reorder.distance[value](adjacency));
+        }
+        else{
+            leafOrder.distance(reorder.distance[value]);
+        }
 
 	if (currentOrder == 'leafOrder') {
 	    orders.leafOrder = computeLeaforder;
@@ -243,7 +247,6 @@ function matrix(json) {
 	// 	orders.leafOrder = d3.range(n).sort(function(a, b) {
 	// 	    return nodes[b].leafOrder - nodes[a].leafOrder; });
     }
-
     matrix.order = order;
     matrix.distance = distance;
 

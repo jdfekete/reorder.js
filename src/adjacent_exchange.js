@@ -10,7 +10,7 @@ import { inverse_permutation } from './permutation';
 // optimal with respect to transposition of adjacent vertices. It
 // typically provides an additional 20-50% reduction in edge crossings.
 
-function count_in_crossings(graph, v, w, inv) {
+export function count_in_crossings(graph, v, w, inv) {
   const v_edges = graph.inEdges(v);
   const w_edges = graph.inEdges(w);
   let cross = 0;
@@ -26,7 +26,7 @@ function count_in_crossings(graph, v, w, inv) {
   return cross;
 }
 
-function count_out_crossings(graph, v, w, inv) {
+export function count_out_crossings(graph, v, w, inv) {
   const v_edges = graph.outEdges(v);
   const w_edges = graph.outEdges(w);
   let cross = 0;

@@ -12,7 +12,7 @@ function dotest(mat) {
   const perms = reorder.barycenter_order(graph);
   // console.log('VOrder: %j, HOrder: %j, Crossings: %d',
   // 		perms[1], perms[0], perms[2]);
-  // reorder.displaymat(mat, perms[1], perms[0]);
+  // reorder.displaymat(mat, perms[1], perms [0]);
   assert.isTrue(initial_crossings > perms[2]);
   const perms2 = reorder.adjacent_exchange(graph, perms[0], perms[1]);
   if (perms2[2]) {

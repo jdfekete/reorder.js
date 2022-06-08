@@ -31,7 +31,7 @@
       "build": "rollup -c",
       "dev": "rollup -c rollup.config.dev.js -w",
       "pretest": "npm run build",
-      "test": "vows --nocolor; echo",
+      "test": "vows test/*.js --nocolor; echo",
       "cover": "nyc --silent vows --nocolor",
       "cover:report": "nyc report --reporter=lcov --reporter=text",
       "clean": "rm -rf node_modules dist",

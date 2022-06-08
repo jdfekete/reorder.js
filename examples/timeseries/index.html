@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Heatmap</title>
+    <style>
+body {
+  font: 10px sans-serif;
+}
+line {
+  stroke: #000;
+}
+    </style>
+    <script src="/d3.v3.js"></script>
+    <script src="/reorder.js"></script>
+    <script src="/table.js"></script>
+    <script src="data_vis.js"></script>
+    <script src="data_sch.js"></script>
+    <script src="data_flt.js"></script>
+    <script src="data_example.js"></script>
+    <script src="order_functions.js"></script>
+    <script>
+        var tables = [];
+    </script>
+  </head>
+  <body>
+    <div style="float:left">
+        <label for="dataset">Choose a dataset:</label>
+        <select name="dataset" id="dataset" onChange="updateData()">
+            <option value="flt">FLT</option>
+          <option value="sch">SCH (large)</option>
+          <option value="vis">VIS (large)</option>
+          <option value="example">Constructed example</option>
+        </select>
+        <label for="timestep">Choose x (timestep):</label>
+        <input type="number" id="timestep" name="timestep" min="1" max="100" value="1">
+        <label id="loading"></label>
+        <label for="distance">Distance:</label>
+        <select id="distance">
+            <option value="euclidean">Euclidean</option>
+            <option value="morans">Morans</option>
+            <option value="manhattan">Manhattan</option>
+            <option value="chebyshev">Chebyshev</option>
+            <option value="hamming">Hamming</option>
+            <option value="jaccard">Jaccard</option>
+            <option value="braycurtis">Braycurtis</option>
+        </select>
+        <div style="margin-top:4px;margin-bottom: 4px">
+        <button type="button" onclick="random_permute(tables)">Random Order</button>
+        <button type="button" onclick="initial_order_permute(tables)">Initial Order</button>
+        <button type="button" onclick="max_mi_gx(tables)">NN-2OPT on Graph Gx</button>
+        
+        </div>
+        <div style="margin-top:4px;margin-bottom: 4px">
+        <button type="button" onclick="gx_leaf_order_permute(tables)">Leaf Order Permute on Graph Gx</button>
+        <button type="button" onclick="union_leaf_order_permute(tables)">Union Leaf Order Permute</button>
+        <button type="button" onclick="simultaneous_leaf_order_permute(tables)">Simultaneous Leaf Order Permute</button>
+        </div>
+        <div style="margin-top:4px;margin-bottom: 4px">
+        <button type="button" onclick="gx_barycenter_permute(tables)">Barycenter Permute on Graph Gx</button>
+        <button type="button" onclick="union_barycenter_permute(tables)">Union Barycenter Permute</button>
+        <button type="button" onclick="simultaneous_barycenter_permute(tables)">Simultaneous Barycenter Permute</button>
+        </div>
+    </div>
+    <div style='float:left;margin-right: 20px' id='heatmap'></div>
+    <div style='float:left;margin-right: 20px'>
+    <p>Quality of matrices:</p>
+    <div style='float:left;margin-right: 20px' id='qualitymean'></div>
+    <div style='float:left;margin-right: 20px' id='qualitymin'></div>
+    <div style='float:left;margin-right: 20px' id='qualitymax'></div>
+    <div style='float:left;margin-right: 20px' id='qualitymed'></div>
+    </div>
+  </body>
+  <script>
+
+    // Global variables
+    var matrices;
+    var col_labels;
+    var row_labels;
+
+    var margin = {top: 30, right: 0, bottom: 10, left: 30},
+        width = 800 - margin.left - margin.right,
+        height = 800 - margin.top - margin.bottom;
+
+    updateData();
+
+    function updateData(){
+        d3.select("#heatmap").selectAll("*").remove();
+        let dataset = document.getElementById('dataset').value;
+        if(dataset === "flt"){
+            load_flt((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
+        }
+        if(dataset === "sch"){
+            load_sch((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
+        }
+        if(dataset === "vis"){
+            load_vis((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
+        }
+        if(dataset === "example"){ 
+           load_example((a, b, c, d) => {matrices = a; col_labels = b; row_labels = c; tables = d;});
+        }
+    }
+
+
+      
+    </script>
+</html>
+

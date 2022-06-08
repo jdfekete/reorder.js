@@ -1,4 +1,8 @@
-export { adjacent_exchange } from './adjacent_exchange';
+export {
+  adjacent_exchange,
+  count_in_crossings,
+  count_out_crossings,
+} from './adjacent_exchange';
 export { zeroes, dot, length, normalize, mean, transpose } from './aliases';
 export {
   all_pairs_distance,
@@ -6,7 +10,7 @@ export {
   floyd_warshall_with_path,
   floyd_warshall_path,
 } from './all_pairs_distance';
-export { bandwidth } from './bandwidth';
+export { bandwidth, bandwidth_matrix } from './bandwidth';
 export { barycenter_order, barycenter } from './barycenter_order';
 export { bfs, bfs_distances, all_pairs_distance_bfs } from './bfs';
 export { bfs_order } from './bfs_order';
@@ -45,15 +49,37 @@ export { graph_random_erdos_renyi, graph_random } from './graph_random';
 export { hcluster } from './hcluster';
 export { intersect_sorted_ints } from './intersect';
 export { laplacian } from './laplacian';
+export { linear_arrangement } from './linear_arrangement';
 export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
+export { morans_i } from './morans_i';
+export { mult_adjacent_exchange } from './mult_adjacent_exchange';
+export {
+  mult_barycenter_order,
+  mult_barycenter,
+  count_all_crossings,
+} from './mult_barycenter_order';
+export { mult_dist } from './mult_dist';
+export { nn_2opt } from './nn_2opt';
 export { optimal_leaf_order } from './optimal_leaf_order';
 export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
-export { array_to_dicts, dicts_to_array, pcp, parcoords, parcoords_es } from './pcp';
+export {
+  array_to_dicts,
+  dicts_to_array,
+  pcp,
+  parcoords,
+  parcoords_es,
+} from './pcp';
 export { permutation, inverse_permutation } from './permutation';
-export { permute, permute_inplace, permutetranspose } from './permute';
+export {
+  permute,
+  permute_inplace,
+  permutetranspose,
+  permute_matrix,
+} from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
+export { profile } from './profile';
 export {
   randomPermute,
   randomPermutation,
@@ -70,6 +96,7 @@ export { spectral_order } from './spectral_order';
 export { stablepermute } from './stablepermute';
 export { sum } from './sum';
 export { transposeSlice } from './transpose';
+export { union } from './union';
 export {
   cmp_number,
   cmp_number_asc,
