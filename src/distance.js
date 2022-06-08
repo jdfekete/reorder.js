@@ -89,25 +89,25 @@ export const distance = {
   },
   // A distance measure based on Moran's I
   // Note that this distance can be both negative (similar) and positive (not similar, the higher the distance, the less similar a and b)
-  // 
+  //
   // N. van Beusekom, W. Meulemans, B. Speckmann, Simultaneous Orderings for Graph Collections
   // IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 1-10, Jan. 2022
-  morans(matrix){
+  morans(matrix) {
     let m = 0;
     const n = matrix.length * matrix[0].length;
-    for (let i = 0; i <matrix.length; i++) {
-        for (let j = 0; j < matrix[0].length; j++) {
-            m += matrix[i][j];
-        }
+    for (let i = 0; i < matrix.length; i++) {
+      for (let j = 0; j < matrix[0].length; j++) {
+        m += matrix[i][j];
+      }
     }
-    return (a,b) => {
-        let result = 0;
-        for (let i = 0; i < a.length; i++) {
-            if (isNum(a[i], b[i])) {
-                result += (a[i] * n - m) * (b[i] * n - m);
-            }
+    return (a, b) => {
+      let result = 0;
+      for (let i = 0; i < a.length; i++) {
+        if (isNum(a[i], b[i])) {
+          result += (a[i] * n - m) * (b[i] * n - m);
         }
-        return -1 * result;
+      }
+      return -1 * result;
     };
-  }
+  },
 };

@@ -1,7 +1,6 @@
 import { inverse_permutation } from './permutation';
 import { count_in_crossings, count_out_crossings } from './adjacent_exchange';
 
-
 // TODO Cite simult
 // Accorging to
 // E. R. Gansner, E. Koutsofios, S. C. North, and K.-P. Vo. 1993. A
@@ -13,19 +12,19 @@ import { count_in_crossings, count_out_crossings } from './adjacent_exchange';
 // optimal with respect to transposition of adjacent vertices. It
 // typically provides an additional 20-50% reduction in edge crossings.
 
-function count_all_in_crossings(graphs,a,b,layer){
-    let sum = 0;
-    for(let i = 0; i<graphs.length; i++){
-        sum += count_in_crossings(graphs[i],a,b,layer);
-    }
-    return sum;
+function count_all_in_crossings(graphs, a, b, layer) {
+  let sum = 0;
+  for (let i = 0; i < graphs.length; i++) {
+    sum += count_in_crossings(graphs[i], a, b, layer);
+  }
+  return sum;
 }
-function count_all_out_crossings(graphs,a,b,layer){
-    let sum = 0;
-    for(let i = 0; i<graphs.length; i++){
-        sum += count_out_crossings(graphs[i],a,b,layer);
-    }
-    return sum;
+function count_all_out_crossings(graphs, a, b, layer) {
+  let sum = 0;
+  for (let i = 0; i < graphs.length; i++) {
+    sum += count_out_crossings(graphs[i], a, b, layer);
+  }
+  return sum;
 }
 
 /**

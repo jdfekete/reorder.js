@@ -36,16 +36,16 @@ export function permutetranspose(array, indexes) {
   return array;
 }
 
-export function permute_matrix(matrix,row_perm,col_perm){
-    if(!col_perm){
-        col_perm = row_perm;
+export function permute_matrix(matrix, row_perm, col_perm) {
+  if (!col_perm) {
+    col_perm = row_perm;
+  }
+  let permuted = [];
+  for (let i = 0; i < matrix.length; i++) {
+    permuted.push([]);
+    for (let j = 0; j < matrix[0].length; j++) {
+      permuted[i].push(matrix[row_perm[i]][col_perm[j]]);
     }
-    let permuted = [];
-    for (let i = 0; i < matrix.length; i++) {
-        permuted.push([]);
-        for (let j = 0; j < matrix[0].length; j++) {
-            permuted[i].push(matrix[row_perm[i]][col_perm[j]]);
-        }
-    }
-    return permuted;
+  }
+  return permuted;
 }

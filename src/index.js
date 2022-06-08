@@ -1,4 +1,8 @@
-export { adjacent_exchange, count_in_crossings, count_out_crossings } from './adjacent_exchange';
+export {
+  adjacent_exchange,
+  count_in_crossings,
+  count_out_crossings,
+} from './adjacent_exchange';
 export { zeroes, dot, length, normalize, mean, transpose } from './aliases';
 export {
   all_pairs_distance,
@@ -50,15 +54,30 @@ export { mat2graph } from './mat2graph';
 export { meantranspose, meancolumns } from './mean';
 export { morans_i } from './morans_i';
 export { mult_adjacent_exchange } from './mult_adjacent_exchange';
-export { mult_barycenter_order, mult_barycenter, count_all_crossings } from './mult_barycenter_order';
+export {
+  mult_barycenter_order,
+  mult_barycenter,
+  count_all_crossings,
+} from './mult_barycenter_order';
 export { mult_dist } from './mult_dist';
 export { nn_2opt } from './nn_2opt';
 export { optimal_leaf_order } from './optimal_leaf_order';
 export { order } from './order';
 export { pca1d, pca_order } from './pca_order';
-export { array_to_dicts, dicts_to_array, pcp, parcoords, parcoords_es } from './pcp';
+export {
+  array_to_dicts,
+  dicts_to_array,
+  pcp,
+  parcoords,
+  parcoords_es,
+} from './pcp';
 export { permutation, inverse_permutation } from './permutation';
-export { permute, permute_inplace, permutetranspose, permute_matrix } from './permute';
+export {
+  permute,
+  permute_inplace,
+  permutetranspose,
+  permute_matrix,
+} from './permute';
 export { poweriteration, poweriteration_n } from './poweriteration';
 export { profile } from './profile';
 export {

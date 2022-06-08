@@ -39,21 +39,10 @@ suite.addBatch({
       const row_order = res.rows;
       const col_order = res.cols;
       const erows = reorder.sort_order([
-        -1.044914,
-        0.97013,
-        1.675125,
-        -0.439146,
-        -0.321923,
-        -1.239397,
+        -1.044914, 0.97013, 1.675125, -0.439146, -0.321923, -1.239397,
       ]);
       const ecols = reorder.sort_order([
-        -0.396887,
-        0.68218,
-        0.384491,
-        -0.871822,
-        -1.314724,
-        1.915459,
-        2.425954,
+        -0.396887, 0.68218, 0.384491, -0.871822, -1.314724, 1.915459, 2.425954,
         -0.302626,
       ]);
 
@@ -104,17 +93,10 @@ suite.addBatch({
       const col_order = res.cols;
       const row_order = res.rows;
       const erows = reorder.sort_order([
-        -0.928335,
-        -1.1010641,
-        1.5381971,
-        -0.2229937,
-        0.7141957,
+        -0.928335, -1.1010641, 1.5381971, -0.2229937, 0.7141957,
       ]);
       const ecols = reorder.sort_order([
-        -1.127688,
-        -0.8747596,
-        0.4626773,
-        1.4348968,
+        -1.127688, -0.8747596, 0.4626773, 1.4348968,
       ]);
 
       assert.permutationEqual(row_order, erows);

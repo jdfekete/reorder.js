@@ -54,12 +54,12 @@ export function barycenter(graph, comp, max_iter) {
 
   let layer1 = comp.filter((n) => graph.outDegree(n) !== 0);
   let layer2 = comp.filter((n) => graph.inDegree(n) !== 0);
-  
+
   // If the layers are equal, we want to modify them simultaneously (for undirected graphs)
-  if(!graph.directed()){
-      layer1 = layer2;
+  if (!graph.directed()) {
+    layer1 = layer2;
   }
-  
+
   if (comp.length < 3) {
     return [layer1, layer2, count_crossings(graph, layer1, layer2)];
   }
