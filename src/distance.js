@@ -4,7 +4,7 @@ function isNum(a, b) {
 export const distance = {
   euclidean(a, b) {
     let s = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         const x = a[i] - b[i];
         s += x * x;
@@ -14,7 +14,7 @@ export const distance = {
   },
   manhattan(a, b) {
     let s = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         s += Math.abs(a[i] - b[i]);
       }
@@ -24,7 +24,7 @@ export const distance = {
   minkowski(p) {
     return (a, b) => {
       let s = 0;
-      for (let i = a.length; i > 0; i--) {
+      for (let i = a.length-1; i >= 0; i--) {
         if (isNum(a[i], b[i])) {
           s += Math.pow(Math.abs(a[i] - b[i]), p);
         }
@@ -34,7 +34,7 @@ export const distance = {
   },
   chebyshev(a, b) {
     let max = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         const x = Math.abs(a[i] - b[i]);
         if (x > max) {
@@ -46,7 +46,7 @@ export const distance = {
   },
   hamming(a, b) {
     let d = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         if (a[i] !== b[i]) {
           d++;
@@ -58,7 +58,7 @@ export const distance = {
   jaccard(a, b) {
     let n = 0;
     let s = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         if (a[i] === b[i]) {
           s++;
@@ -74,7 +74,7 @@ export const distance = {
   braycurtis(a, b) {
     let s0 = 0;
     let s1 = 0;
-    for (let i = a.length; i > 0; i--) {
+    for (let i = a.length-1; i >= 0; i--) {
       const ai = a[i];
       const bi = b[i];
       if (isNum(ai, bi)) {
