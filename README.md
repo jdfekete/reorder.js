@@ -39,6 +39,8 @@ The library is used by several systems, including [Bertifier](https://www.aviz.f
 
 ## Thanks
 
+Thanks to [Nathan van Beusekom @nvbeusekom](https://github.com/nvbeusekom) for the addition of the Moran's I metric, the implementation of simultaneous reordering, and TSP.
+
 Thanks to [Curran Kelleher @curran](https://github.com/curran) for adapting the library to modern JavaScript modules.
 
 Thanks to [Philippe Rivière @fil](https://github.com/fil) for porting the "Les Misérables" example to [observablehq](https://observablehq.com/@fil/hello-reorder-js)
