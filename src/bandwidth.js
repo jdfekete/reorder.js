@@ -1,6 +1,12 @@
 import { range } from './range';
 import { inverse_permutation } from './permutation';
 
+/**
+ * Compute the bandwidth of a graph, given and order.
+ * @param  {Graph} graph - the graph 
+ * @param {list} order - a permutation
+ * @returns {integer} the bandwidth 
+ */
 export function bandwidth(graph, order) {
   if (!order) {
     order = range(graph.nodes().length);
@@ -18,11 +24,12 @@ export function bandwidth(graph, order) {
   return max;
 }
 
-/*
- * Bandwith
- * Maximum distace between two endpoints over all edges
- *
- * @matrix: a permuted matrix
+/**
+ * Compute the bandwidth of an adjacency matrix,
+ * i.e. the maximum distace between two endpoints 
+ * over all edges.
+ * @param  {Matrix} matrix - the matrix
+ * @returns {integer} the bandwidth 
  */
 export function bandwidth_matrix(matrix) {
   let max = 0;
