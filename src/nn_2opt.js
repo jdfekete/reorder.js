@@ -28,7 +28,7 @@ export function nn_2opt() {
     if (distanceMatrix === null) {
       distanceMatrix = dist().distance(distance)(matrix);
     }
-    let lowest_dist = -1;
+    let lowest_dist = Number.MIN_VALUE;
     let best_order = [];
     // Try each row as the initial permutation
     for (let s = 0; s < distanceMatrix.length; s++) {
@@ -83,6 +83,7 @@ export function nn_2opt() {
         }
       }
     }
+    console.log(best_order);
     return best_order;
   }
 
@@ -102,6 +103,8 @@ export function nn_2opt() {
     distanceMatrix = null;
     return nn_2opt;
   };
+
+  nn_2opt.distanceMatrix = nn_2opt.distance_matrix; // compatability
 
   return nn_2opt;
 }

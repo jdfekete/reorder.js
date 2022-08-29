@@ -51,7 +51,7 @@ function random_permute(t) {
     computeQualities(t);
 }
 
-function max_mi_gx(t) {
+function nn_2opt_gx(t) {
     let timestep = getTimestep();
     let start = new Date().getTime();
     
@@ -60,7 +60,7 @@ function max_mi_gx(t) {
     let dist_rows = dist(matrices[timestep]);
 //      let transpose = reorder.transpose(matrices[timestep]),
 //      dist_cols = reorder.dist()(transpose);
-    let order = reorder.optimal_leaf_order(),
+    let order = reorder.nn_2opt(),
     row_perm = order.distanceMatrix(dist_rows)(matrices[timestep]);
 //      let col_perm = order.distanceMatrix(dist_cols)(transpose);
     let end = new Date().getTime();
