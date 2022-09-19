@@ -101,6 +101,15 @@ function matrix(json) {
 
 	return nodes.map(function(n) { return n.spectral; });
     }
+    
+    function computeNN2OPT() {
+	var order = leafOrder(adjacency);
+
+	order.forEach(function(lo, i) {
+	    nodes[i].leafOrder = lo;
+	});
+	return nodes.map(function(n) { return n.leafOrder; });
+    }
 
   // Precompute the orders.
     var orders = {
@@ -114,7 +123,8 @@ function matrix(json) {
 	leafOrderDist: computeLeaforderDist,
 	barycenter: computeBarycenter,
 	rcm: computeRCM,
-	spectral: computeSpectral
+	spectral: computeSpectral,
+        nn2opt: computeNN2OPT
     };
 
   // The default sort order.
@@ -238,6 +248,11 @@ function matrix(json) {
 	else if (currentOrder == 'leafOrderDist') {
 	    orders.leafOrderDist = computeLeaforderDist;
 	    order("leafOrderDist");
+	    //d3.select("#order").property("selectedIndex", 4);
+	}
+        else if (currentOrder == 'nn2opt') {
+	    orders.nn2opt = computeNN2OPT;
+	    order("nn2opt");
 	    //d3.select("#order").property("selectedIndex", 4);
 	}
 

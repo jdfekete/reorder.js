@@ -28,13 +28,13 @@ export function nn_2opt() {
     if (distanceMatrix === null) {
       distanceMatrix = dist().distance(distance)(matrix);
     }
-    let lowest_dist = -1;
-    let best_order = [];
-    // Try each row as the initial permutation
+    let lowest_dist_all = Number.MAX_VALUE;
+    let best_order_all = [];
+    
+    // Try each row as the initial permutation for NN-2OPT
     for (let s = 0; s < distanceMatrix.length; s++) {
-      let initial = s;
       let order = [];
-      order.push(initial);
+      order.push(s);
       // NN
       while (order.length < distanceMatrix.length) {
         let nearest = -1;
@@ -52,44 +52,49 @@ export function nn_2opt() {
         }
         order.push(nearest);
       }
-      let oldm = 0;
-      let newm = getTotal(order);
+      let newdist = getTotal(order);
+      let olddist = newdist - (epsilon + 1);
       // 2-OPT
-      while (newm - oldm > epsilon) {
+      let lowest_dist_2opt = Number.MAX_VALUE;
+      let best_order_2opt = [];
+      while (newdist - olddist > epsilon) {
         for (let i = 0; i < order.length; i++) {
           for (let j = i + 2; j < order.length - 1; j++) {
             // edge 1: (i,i+1) edge2: (j,j+1)
-            let olddist = distanceMatrix[i][i + 1] + distanceMatrix[j][j + 1];
-            let newdist = distanceMatrix[i][j] + distanceMatrix[i + 1][j + 1];
-            if (newdist < olddist) {
+            let currentd = distanceMatrix[order[i]][order[i + 1]] + distanceMatrix[order[j]][order[j + 1]];
+            let candidated = distanceMatrix[order[i]][order[j]] + distanceMatrix[order[i + 1]][order[j + 1]];
+            if (candidated < currentd) {               
               let check = [];
               for (let k = 0; k < order.length; k++) {
                 check[k] = order[k];
               }
               // Reverse i+1 to j
-              for (let k = 0; k < j - (i + 1); k++) {
-                // TODO: check indices
+              for (let k = 0; k <= j - (i + 1); k++) {
                 check[i + 1 + k] = order[j - k];
               }
               order = check;
             }
           }
         }
-        oldm = newm;
-        newm = getTotal(order);
-        if (newm > lowest_dist) {
-          lowest_dist = newm;
-          best_order = order;
+        olddist = newdist;
+        newdist = getTotal(order);
+        if (newdist < lowest_dist_2opt) {
+          lowest_dist_2opt = newdist;
+          best_order_2opt = order;
         }
       }
+      if (lowest_dist_2opt < lowest_dist_all) {
+          lowest_dist_all = lowest_dist_2opt;
+          best_order_all = best_order_2opt;
+        }
     }
-    return best_order;
+    return best_order_all;
   }
 
   function getTotal(order) {
     let sum = 0;
     for (let i = 0; i < order.length - 1; i++) {
-      sum += distanceMatrix[i][i + 1];
+      sum += distanceMatrix[order[i]][order[i + 1]];
     }
     return sum;
   }
@@ -102,6 +107,8 @@ export function nn_2opt() {
     distanceMatrix = null;
     return nn_2opt;
   };
+
+  nn_2opt.distanceMatrix = nn_2opt.distance_matrix; // compatability
 
   return nn_2opt;
 }
