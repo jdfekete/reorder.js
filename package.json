@@ -50,11 +50,10 @@
    "devDependencies": {
       "@rollup/plugin-commonjs": "^19.0.0",
       "@rollup/plugin-node-resolve": "^13.0.0",
-      "jsdoc": "^3.6.6",
+      "jsdoc": "^4.0.0",
       "jshint": "^2.12.0",
       "jsonfile": "6.1.0",
       "nyc": "^15.1.0",
-      "parcoord-es": "^2.2.10",
       "parse-path": ">=5.0.0",
       "prettier": "^2.3.0",
       "release-it": "^15.1.1",
