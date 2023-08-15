@@ -61,8 +61,7 @@ export function hcluster() {
       if (i != id) {
         console.log('i = %d, id = %d', i, id);
       }
-      clusters[i] = [];
-      clusters[i][0] = {
+      clusters[i] = {
         left: null,
         right: null,
         dist: 0,
@@ -86,8 +85,8 @@ export function hcluster() {
       const c2 = dMin[c1];
 
       // create node to store cluster info
-      const c1Cluster = clusters[c1][0];
-      const c2Cluster = clusters[c2][0];
+      const c1Cluster = clusters[c1];
+      const c2Cluster = clusters[c2];
 
       const newCluster = {
         left: c1Cluster,
@@ -103,7 +102,7 @@ export function hcluster() {
         size: c1Cluster.size + c2Cluster.size,
         depth: 1 + Math.max(c1Cluster.depth, c2Cluster.depth),
       };
-      clusters[c1].splice(0, 0, newCluster);
+      clusters[c1] = newCluster;
       cSize[c1] += cSize[c2];
 
       // overwrite row c1 with respect to the linkage type
