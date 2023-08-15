@@ -103,7 +103,6 @@ export function hcluster() {
         depth: 1 + Math.max(c1Cluster.depth, c2Cluster.depth),
       };
       clusters[c1] = newCluster;
-      cSize[c1] += cSize[c2];
 
       // overwrite row c1 with respect to the linkage type
       for (let j = 0; j < n; j++) {
@@ -130,6 +129,7 @@ export function hcluster() {
             break;
         }
       }
+      cSize[c1] += cSize[c2];
 
       for (let i = 0; i < n; i++) {
         distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
