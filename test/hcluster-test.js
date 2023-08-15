@@ -37,6 +37,33 @@ suite.addBatch({
         .hcluster()
         .distance(reorder.distance.manhattan)
         .linkage('average');
+      checkDistanceValues(hcluster(VECTORS_6x1), [1, 2, 4.5, 5, 48.75]);
+    },
+  },
+  single_6_values: {
+    simple() {
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('single');
+      checkDistanceValues(hcluster(VECTORS_6x1), [1, 2, 3, 5, 43]);
+    },
+  },
+  complete_6_values: {
+    simple() {
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('complete');
+      checkDistanceValues(hcluster(VECTORS_6x1), [1, 2, 5, 6, 54]);
+    },
+  },
+  average_6_values: {
+    simple() {
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('average');
       checkDistanceValues(hcluster(VECTORS_3x1), [1, 3.5]);
     },
   },
