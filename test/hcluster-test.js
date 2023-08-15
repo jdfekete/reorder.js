@@ -14,81 +14,76 @@ const VECTORS_250x4 = [[0.11101498181274083,0.526013657199041,0.3284532794903056
 suite.addBatch({
   single_3_values: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.distance(reorder.distance.manhattan);
-      hcluster.linkage('single');
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('single');
       checkDistanceValues(hcluster(VECTORS_3x1), [1, 3]);
     },
   },
   complete_3_values: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.distance(reorder.distance.manhattan);
-      hcluster.linkage('complete');
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('complete');
       checkDistanceValues(hcluster(VECTORS_3x1), [1, 4]);
     },
   },
   average_3_values: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.distance(reorder.distance.manhattan);
-      hcluster.linkage('average');
+      const hcluster = reorder
+        .hcluster()
+        .distance(reorder.distance.manhattan)
+        .linkage('average');
       checkDistanceValues(hcluster(VECTORS_3x1), [1, 3.5]);
     },
   },
   single_3: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('single');
+      const hcluster = reorder.hcluster().linkage('single');
       checkParentChildDistanceRelationship(hcluster(VECTORS_3x1));
     },
   },
   complete_3: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('complete');
+      const hcluster = reorder.hcluster().linkage('complete');
       checkParentChildDistanceRelationship(hcluster(VECTORS_3x1));
     },
   },
   average_3: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('average');
+      const hcluster = reorder.hcluster().linkage('average');
       checkParentChildDistanceRelationship(hcluster(VECTORS_3x1));
     },
   },
   single_100: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('single');
+      const hcluster = reorder.hcluster().linkage('single');
       checkParentChildDistanceRelationship(hcluster(VECTORS_100x1));
     },
   },
   complete_100: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('complete');
+      const hcluster = reorder.hcluster().linkage('complete');
       checkParentChildDistanceRelationship(hcluster(VECTORS_100x1));
     },
   },
   average_100: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('average');
+      const hcluster = reorder.hcluster().linkage('average');
       checkParentChildDistanceRelationship(hcluster(VECTORS_100x1));
     },
   },
   single_250: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('single');
+      const hcluster = reorder.hcluster().linkage('single');
       checkParentChildDistanceRelationship(hcluster(VECTORS_250x4));
     },
   },
   complete_250: {
     simple() {
-      const hcluster = reorder.hcluster();
-      hcluster.linkage('complete');
+      const hcluster = reorder.hcluster().linkage('complete');
       checkParentChildDistanceRelationship(hcluster(VECTORS_250x4));
     },
   },
