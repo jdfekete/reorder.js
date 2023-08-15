@@ -122,7 +122,7 @@ export function hcluster() {
           case 'average':
             distMatrix[j][c1] = distMatrix[c1][j] =
               (cSize[c1] * distMatrix[c1][j] + cSize[c2] * distMatrix[c2][j]) /
-              (cSize[c1] + cSize[j]);
+              (cSize[c1] + cSize[c2]);
             break;
         }
       }
