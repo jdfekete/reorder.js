@@ -108,6 +108,11 @@ export function hcluster() {
 
       // overwrite row c1 with respect to the linkage type
       for (let j = 0; j < n; j++) {
+        if (j === c1 || j === c2) {
+          // skip since these cases can cause issues with other linkage types
+          // such as 'wards' (not implemented here)
+          continue;
+        }
         switch (linkage) {
           case 'single':
             if (distMatrix[c1][j] > distMatrix[c2][j]) {
@@ -126,7 +131,6 @@ export function hcluster() {
             break;
         }
       }
-      distMatrix[c1][c1] = Infinity;
 
       for (let i = 0; i < n; i++) {
         distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
