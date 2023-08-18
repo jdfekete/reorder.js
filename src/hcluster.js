@@ -136,23 +136,30 @@ export function hcluster() {
       }
 
       // update dmin and replace ones that previous pointed to c2 to point to c1
-      for (let j = 0; j < n; j++) {
-        if (linkage === 'single') {
+      if (linkage === 'single') {
+        for (let j = 0; j < n; j++) {
           if (dMin[j] === c2) {
             dMin[j] = c1;
           }
-        } else if (dMin[j] === c2 || dMin[j] === c1) {
-          for (let k = 0; k < n; k++) {
-            if (distMatrix[j][k] < distMatrix[j][dMin[j]]) {
-              dMin[j] = k;
-            }
+          if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) {
+            dMin[c1] = j;
           }
         }
-        if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) {
-          dMin[c1] = j;
+      }
+      else {
+        for (let j = 0; j < n; j++) {
+          if (dMin[j] === c2 || dMin[j] === c1) {
+            for (let k = 0; k < n; k++) {
+              if (distMatrix[j][k] < distMatrix[j][dMin[j]]) {
+                dMin[j] = k;
+              }
+            }
+          }
+          if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) {
+            dMin[c1] = j;
+          }
         }
       }
-
       // keep track of the last added cluster
       root = newCluster;
     }
