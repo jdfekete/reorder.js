@@ -61,8 +61,7 @@ export function hcluster() {
       if (i != id) {
         console.log('i = %d, id = %d', i, id);
       }
-      clusters[i] = [];
-      clusters[i][0] = {
+      clusters[i] = {
         left: null,
         right: null,
         dist: 0,
@@ -86,8 +85,8 @@ export function hcluster() {
       const c2 = dMin[c1];
 
       // create node to store cluster info
-      const c1Cluster = clusters[c1][0];
-      const c2Cluster = clusters[c2][0];
+      const c1Cluster = clusters[c1];
+      const c2Cluster = clusters[c2];
 
       const newCluster = {
         left: c1Cluster,
@@ -103,11 +102,15 @@ export function hcluster() {
         size: c1Cluster.size + c2Cluster.size,
         depth: 1 + Math.max(c1Cluster.depth, c2Cluster.depth),
       };
-      clusters[c1].splice(0, 0, newCluster);
-      cSize[c1] += cSize[c2];
+      clusters[c1] = newCluster;
 
       // overwrite row c1 with respect to the linkage type
       for (let j = 0; j < n; j++) {
+        if (j === c1 || j === c2) {
+          // skip since these cases can cause issues with other linkage types
+          // such as 'wards' (not implemented here)
+          continue;
+        }
         switch (linkage) {
           case 'single':
             if (distMatrix[c1][j] > distMatrix[c2][j]) {
@@ -122,11 +125,11 @@ export function hcluster() {
           case 'average':
             distMatrix[j][c1] = distMatrix[c1][j] =
               (cSize[c1] * distMatrix[c1][j] + cSize[c2] * distMatrix[c2][j]) /
-              (cSize[c1] + cSize[j]);
+              (cSize[c1] + cSize[c2]);
             break;
         }
       }
-      distMatrix[c1][c1] = Infinity;
+      cSize[c1] += cSize[c2];
 
       for (let i = 0; i < n; i++) {
         distMatrix[i][c2] = distMatrix[c2][i] = Infinity;
@@ -134,8 +137,16 @@ export function hcluster() {
 
       // update dmin and replace ones that previous pointed to c2 to point to c1
       for (let j = 0; j < n; j++) {
-        if (dMin[j] == c2) {
-          dMin[j] = c1;
+        if (linkage === 'single') {
+          if (dMin[j] === c2) {
+            dMin[j] = c1;
+          }
+        } else if (dMin[j] === c2 || dMin[j] === c1) {
+          for (let k = 0; k < n; k++) {
+            if (distMatrix[j][k] < distMatrix[j][dMin[j]]) {
+              dMin[j] = k;
+            }
+          }
         }
         if (distMatrix[c1][j] < distMatrix[c1][dMin[c1]]) {
           dMin[c1] = j;
