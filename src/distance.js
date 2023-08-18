@@ -3,9 +3,9 @@ function isNum(a, b) {
 }
 export const distance = {};
 
-distance.euclidean = function(a, b) {
+distance.euclidean = function (a, b) {
   let s = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     if (isNum(a[i], b[i])) {
       const x = a[i] - b[i];
       s += x * x;
@@ -14,9 +14,9 @@ distance.euclidean = function(a, b) {
   return Math.sqrt(s);
 };
 
-distance.manhattan = function(a, b) {
+distance.manhattan = function (a, b) {
   let s = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     if (isNum(a[i], b[i])) {
       s += Math.abs(a[i] - b[i]);
     }
@@ -24,10 +24,10 @@ distance.manhattan = function(a, b) {
   return s;
 };
 
-distance.minkowski = function(p) {
+distance.minkowski = function (p) {
   return (a, b) => {
     let s = 0;
-    for (let i = a.length-1; i >= 0; i--) {
+    for (let i = a.length - 1; i >= 0; i--) {
       if (isNum(a[i], b[i])) {
         s += Math.pow(Math.abs(a[i] - b[i]), p);
       }
@@ -36,10 +36,9 @@ distance.minkowski = function(p) {
   };
 };
 
-
-distance.chebyshev = function(a, b) {
+distance.chebyshev = function (a, b) {
   let max = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     if (isNum(a[i], b[i])) {
       const x = Math.abs(a[i] - b[i]);
       if (x > max) {
@@ -50,9 +49,9 @@ distance.chebyshev = function(a, b) {
   return max;
 };
 
-distance.hamming = function(a, b) {
+distance.hamming = function (a, b) {
   let d = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     if (isNum(a[i], b[i])) {
       if (a[i] !== b[i]) {
         d++;
@@ -62,10 +61,10 @@ distance.hamming = function(a, b) {
   return d;
 };
 
-distance.jaccard = function(a, b) {
+distance.jaccard = function (a, b) {
   let n = 0;
   let s = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     if (isNum(a[i], b[i])) {
       if (a[i] === b[i]) {
         s++;
@@ -79,10 +78,10 @@ distance.jaccard = function(a, b) {
   return s / n;
 };
 
-distance.braycurtis = function(a, b) {
+distance.braycurtis = function (a, b) {
   let s0 = 0;
   let s1 = 0;
-  for (let i = a.length-1; i >= 0; i--) {
+  for (let i = a.length - 1; i >= 0; i--) {
     const ai = a[i];
     const bi = b[i];
     if (isNum(ai, bi)) {
@@ -101,7 +100,7 @@ distance.braycurtis = function(a, b) {
 //
 // N. van Beusekom, W. Meulemans, B. Speckmann, Simultaneous Orderings for Graph Collections
 // IEEE Transactions on Visualization and Computer Graphics, vol. 28, no. 1, pp. 1-10, Jan. 2022
-distance.morans = function(matrix) {
+distance.morans = function (matrix) {
   let m = 0;
   const n = matrix.length * matrix[0].length;
   for (let i = 0; i < matrix.length; i++) {
@@ -119,4 +118,3 @@ distance.morans = function(matrix) {
     return -1 * result;
   };
 };
-

@@ -1,6 +1,6 @@
 {
    "name": "reorder.js",
-   "version": "2.2.5",
+   "version": "2.2.6",
    "description": "Matrix reordering in JavaScript.",
    "keywords": [
       "es6",

@@ -30,7 +30,7 @@ export function nn_2opt() {
     }
     let lowest_dist_all = Number.MAX_VALUE;
     let best_order_all = [];
-    
+
     // Try each row as the initial permutation for NN-2OPT
     for (let s = 0; s < distanceMatrix.length; s++) {
       let order = [];
@@ -61,9 +61,13 @@ export function nn_2opt() {
         for (let i = 0; i < order.length; i++) {
           for (let j = i + 2; j < order.length - 1; j++) {
             // edge 1: (i,i+1) edge2: (j,j+1)
-            let currentd = distanceMatrix[order[i]][order[i + 1]] + distanceMatrix[order[j]][order[j + 1]];
-            let candidated = distanceMatrix[order[i]][order[j]] + distanceMatrix[order[i + 1]][order[j + 1]];
-            if (candidated < currentd) {               
+            let currentd =
+              distanceMatrix[order[i]][order[i + 1]] +
+              distanceMatrix[order[j]][order[j + 1]];
+            let candidated =
+              distanceMatrix[order[i]][order[j]] +
+              distanceMatrix[order[i + 1]][order[j + 1]];
+            if (candidated < currentd) {
               let check = [];
               for (let k = 0; k < order.length; k++) {
                 check[k] = order[k];
@@ -84,9 +88,9 @@ export function nn_2opt() {
         }
       }
       if (lowest_dist_2opt < lowest_dist_all) {
-          lowest_dist_all = lowest_dist_2opt;
-          best_order_all = best_order_2opt;
-        }
+        lowest_dist_all = lowest_dist_2opt;
+        best_order_all = best_order_2opt;
+      }
     }
     return best_order_all;
   }

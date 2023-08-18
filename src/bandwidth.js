@@ -3,9 +3,9 @@ import { inverse_permutation } from './permutation';
 
 /**
  * Compute the bandwidth of a graph, given and order.
- * @param  {Graph} graph - the graph 
+ * @param  {Graph} graph - the graph
  * @param {list} order - a permutation
- * @returns {integer} the bandwidth 
+ * @returns {integer} the bandwidth
  */
 export function bandwidth(graph, order) {
   if (!order) {
@@ -26,10 +26,10 @@ export function bandwidth(graph, order) {
 
 /**
  * Compute the bandwidth of an adjacency matrix,
- * i.e. the maximum distace between two endpoints 
+ * i.e. the maximum distace between two endpoints
  * over all edges.
  * @param  {Matrix} matrix - the matrix
- * @returns {integer} the bandwidth 
+ * @returns {integer} the bandwidth
  */
 export function bandwidth_matrix(matrix) {
   let max = 0;
