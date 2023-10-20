@@ -50,6 +50,7 @@
    "devDependencies": {
       "@rollup/plugin-commonjs": "^19.0.0",
       "@rollup/plugin-node-resolve": "^13.0.0",
+      "@rollup/plugin-terser": "^0.4.4",
       "jsdoc": "^4.0.0",
       "jshint": "^2.12.0",
       "jsonfile": "6.1.0",
@@ -61,7 +62,6 @@
       "rollup-plugin-livereload": "^2.0.0",
       "rollup-plugin-local-resolve": "^1.0.7",
       "rollup-plugin-serve": "^1.1.0",
-      "rollup-plugin-terser": "^7.0.2",
       "rollup-plugin-version-injector": "^1.3.3",
       "seedrandom": "3.0.5",
       "underscore": ">=1.13.1",
