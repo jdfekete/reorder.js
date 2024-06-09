@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/jdfekete/reorder.js/actions/workflows/tests.yml/badge.svg?branch=master&event=push)](https://github.com/jdfekete/reorder.js/actions/workflows/tests.yml)
 
-[Reorder.js](https://github.com/jdfekete/reorder.js/) is a JavaScript library for reordering matrices, i.e. either tables, graphs vertices, or parallel coordinates axes.
+[Reorder.js](https://github.com/jdfekete/reorder.js/) is a JavaScript library for reordering matrices to visualize them, i.e. either table rows and columns, graphs vertices, or parallel coordinates axes.
 
 Want to learn more? [See the wiki.](https://github.com/jdfekete/reorder.js/wiki)
 
